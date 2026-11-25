@@ -1,0 +1,29 @@
+bcdd check --strict scelta_sola.csc
+righe: 6 (riconosciute 6, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Sola VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 3: [E22] la dimensione modo ha una sola scelta (uno): ne servono almeno due; una parte che può mancare si scrive con [0 .. 1]
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 4: GUARANTEE s1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 4: GUARANTEE s1
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+esito: 1 errore

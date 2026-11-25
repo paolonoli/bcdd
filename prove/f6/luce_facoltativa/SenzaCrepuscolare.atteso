@@ -1,0 +1,35 @@
+bcdd check --strict SenzaCrepuscolare.csc
+righe: 10 (riconosciute 10, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY SenzaCrepuscolare VERSION 0.3, senza STATUS
+    riga 3: OFFERS Pressione in Pressione.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 4: OFFERS Luce in Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 6: pulsante : Pulsante in Pulsante.csc alla riga 1: VERSION 0.2, senza STATUS, nessun errore
+    riga 7: lampada : Lampada in Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 1
+  riga 6: [E14] la parte pulsante usa il connettore Buio: nessun'altra parte di SenzaCrepuscolare lo offre, né SenzaCrepuscolare lo usa da fuori
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 8: GUARANTEE g1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 8: GUARANTEE g1
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 2
+  riga 6: pulsante usa Buio: nessuno la offre
+  riga 7: lampada usa Comando: la offre pulsante (riga 6)
+
+esito: 1 errore

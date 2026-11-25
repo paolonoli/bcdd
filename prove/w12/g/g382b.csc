@@ -1,0 +1,13 @@
+PROFILE T VERSION 0.1
+  PURPOSE "p"
+  EXTENSION A
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (x: Real) : Real
+    FORM "A x"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO ABS(x)
+  END
+END

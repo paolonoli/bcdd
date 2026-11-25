@@ -1,0 +1,13 @@
+PROFILE T VERSION 0.1
+  PURPOSE "p"
+  EXTENSION A
+    KIND SCOPE
+    LEVEL CSC
+    PARAMS (c: Condition)
+    FORM "A c"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO WHILE c AND c
+  END
+END

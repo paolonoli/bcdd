@@ -1,0 +1,49 @@
+bcdd check --dir prove/f3/luce Chiude.csc
+righe: 27 (riconosciute 20, commenti 0, vuote 3, non riconosciute 4)
+blocchi: 4
+  riga 1: ENTITY DueParole VERSION 0.1, senza STATUS
+    riga 5: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+  riga 8: ENTITY SenzaDuePunti VERSION 0.1, senza STATUS
+    riga 12: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+  riga 15: ENTITY Assegna VERSION 0.1, senza STATUS
+    riga 19: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+  riga 22: ENTITY Stringa VERSION 0.1, senza STATUS
+    riga 26: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 8
+  riga 5: [E14] la parte lampada usa il connettore Comando: nessun'altra parte di DueParole lo offre, né DueParole lo usa da fuori
+  riga 5: [E17] la parte lampada offre il connettore Luce: nessun'altra parte di DueParole lo usa, né DueParole lo offre da fuori
+  riga 12: [E14] la parte lampada usa il connettore Comando: nessun'altra parte di SenzaDuePunti lo offre, né SenzaDuePunti lo usa da fuori
+  riga 12: [E17] la parte lampada offre il connettore Luce: nessun'altra parte di SenzaDuePunti lo usa, né SenzaDuePunti lo offre da fuori
+  riga 19: [E14] la parte lampada usa il connettore Comando: nessun'altra parte di Assegna lo offre, né Assegna lo usa da fuori
+  riga 19: [E17] la parte lampada offre il connettore Luce: nessun'altra parte di Assegna lo usa, né Assegna lo offre da fuori
+  riga 26: [E14] la parte lampada usa il connettore Comando: nessun'altra parte di Stringa lo offre, né Stringa lo usa da fuori
+  riga 26: [E17] la parte lampada offre il connettore Luce: nessun'altra parte di Stringa lo usa, né Stringa lo offre da fuori
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 4
+  riga 4: pulsante uno : Pulsante
+  riga 11: pulsante Pulsante
+  riga 18: pulsante := Pulsante
+  riga 25: "pulsante" : Pulsante
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 4
+  riga 5: lampada usa Comando: nessuno la offre
+  riga 12: lampada usa Comando: nessuno la offre
+  riga 19: lampada usa Comando: nessuno la offre
+  riga 26: lampada usa Comando: nessuno la offre
+
+esito: 8 errori; righe non riconosciute: 4 (vedi sezione 5)

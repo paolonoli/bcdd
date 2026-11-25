@@ -1,0 +1,2 @@
+BINDING Comando VERSION 0.1 filo
+END

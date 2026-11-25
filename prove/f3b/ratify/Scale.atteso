@@ -1,0 +1,36 @@
+bcdd check Scale.csc
+righe: 11 (riconosciute 11, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Scale VERSION 0.1, senza STATUS
+    riga 3: OFFERS Pressione in Pressione.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 4: OFFERS Luce in Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 3
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 5: GUARANTEE g1 verbale
+  riga 7: GUARANTEE g1a verbale
+  riga 9: GUARANTEE g2 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 5: GUARANTEE g1
+  riga 7: GUARANTEE g1a
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+14. DA GIUDICARE: 1
+  riga 7: GUARANTEE g1a DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: nessun errore

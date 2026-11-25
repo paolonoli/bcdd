@@ -1,0 +1,19 @@
+# build products
+/bcdd
+/bcdd.exe
+/bcdd-editor
+/bcdd-editor.exe
+nimcache/
+tests/nimcache/
+tests/tbcdd
+tests/teditor
+tests/bcdd_prova
+tests/bcdd-editor_prova
+tests/*.exe
+tests/windows/*.exe
+*.exe
+*.tmp
+# captures and probes made by hand
+*.xwd
+*.png.tmp
+/y.png

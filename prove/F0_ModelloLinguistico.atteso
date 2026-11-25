@@ -1,0 +1,27 @@
+bcdd check ModelloLinguistico.csc
+righe: 19 (riconosciute 9, commenti 6, vuote 4, non riconosciute 0)
+blocchi: 1
+  riga 4: CSC ModelloLinguistico VERSION 0.1, STATUS HYPOTHESIS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 12: GUARANTEE m-1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 12: GUARANTEE m-1
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 1
+  Testo: righe 9, 10
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore

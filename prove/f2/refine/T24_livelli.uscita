@@ -1,0 +1,30 @@
+bcdd refine Livelli.csc
+CSC Livelli: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 0 domande, 4 proposte (scartate dal controllo: 2)
+
+PROPOSTA 1 di 4, dettaglia g1 (riga 10)
+  GUARANTEE g1b DETAILS g1 STATUS HYPOTHESIS: VERBAL "Una pressione a luce accesa non la spegne"
+                                              VERIFY BY JUDGEMENT "l'operatore, premendo a luce accesa"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+PROPOSTA 2 di 4, dettaglia g1a (riga 12)
+  GUARANTEE g1a2 DETAILS g1a STATUS HYPOTHESIS: VERBAL "Anche quando la scala è al buio"
+                                                VERIFY BY JUDGEMENT "l'operatore, di notte"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+PROPOSTA 3 di 4: SCARTATA dal controllo
+  ragione: dettaglia g1a1, già al livello 2 sotto la riga base g1: al più due livelli di DETAILS
+  tipo: GUARANTEE, id: g1a1b, dettaglia: g1a1
+  testo: Il cronometro parte al primo contatto
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+PROPOSTA 4 di 4: SCARTATA dal controllo
+  ragione: dettaglia g1a1a, già al livello 3 sotto la riga base g1: al più due livelli di DETAILS
+  tipo: GUARANTEE, id: g1a1a1, dettaglia: g1a1a
+  testo: Anche per dieci secondi
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+riepilogo: accettate 2, scartate da te 0, scartate dal controllo 2
+scrivo 2 proposte (4 righe) in Livelli.csc? s = sì, n = no: s
+scritto Livelli.csc: 2 proposte (4 righe)

@@ -1,0 +1,5 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  STATE p : Boolean INITIAL false
+  GUARANTEE g1: ALWAYS p WITHIN 1 s
+END

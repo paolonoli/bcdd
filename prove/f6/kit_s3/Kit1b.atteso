@@ -1,0 +1,67 @@
+bcdd check --strict --dir ../kit Kit1b.csc
+righe: 123 (riconosciute 104, commenti 18, vuote 1, non riconosciute 0)
+blocchi: 1
+  riga 5: ENTITY Kit1b VERSION 0.2, STATUS HYPOTHESIS
+    riga 8: OFFERS Modalita in ../kit/Modalita.csc alla riga 8: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 9: OFFERS Misura in ../kit/Misura.csc alla riga 5: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 10: OFFERS LetturaLivello in ../kit/LetturaLivello.csc alla riga 6: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 11: OFFERS Ricablaggio in ../kit/Ricablaggio.csc alla riga 8: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 12: OFFERS RilevamentoLivello in ../kit/RilevamentoLivello.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 13: USES Programma in ../kit/Programma.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 14: USES IngressoAmplificatore in ../kit/IngressoAmplificatore.csc alla riga 5: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 16: computer : Calcolatore1b in ../kit/Calcolatore1b.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 17: flusso : SchedaFlusso in ../kit/SchedaFlusso.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 18: cattura : SchedaCattura in ../kit/SchedaCattura.csc alla riga 6: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 19: loop : CavoLoop in ../kit/CavoLoop.csc alla riga 5: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 43: USES Morsetti in ../kit/Morsetti.csc alla riga 7: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 45: microfono : MicrofonoMisura in ../kit/MicrofonoMisura.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 46: di : DirectBox in ../kit/DirectBox.csc alla riga 6: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 88: microfono : MicrofonoMisura in ../kit/MicrofonoMisura.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+
+1. ERRORI: 1
+  riga 18: [E14] la parte cattura usa il connettore SegnaleLivello: nessun'altra parte di Kit1b lo offre, né Kit1b lo usa da fuori (in: sensore = microfono)
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 5
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 20: GUARANTEE k1 verbale
+  riga 22: GUARANTEE k2 verbale
+  riga 24: GUARANTEE k4 verbale
+  riga 47: GUARANTEE k3 verbale
+  riga 89: GUARANTEE km2 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 10
+  riga 16: computer usa AudioUsb: la offrono flusso (riga 17), cattura (riga 18)
+  riga 17: flusso usa Programma: la usa Kit1b da fuori (riga 13)
+  riga 17: flusso usa IngressoAmplificatore: la usa Kit1b da fuori (riga 14)
+  riga 18: cattura usa SegnaleMisura: la offre microfono (riga 45) (in: sensore = di)
+  riga 18: cattura usa SegnaleMisura: la offre microfono (riga 88) (in: sensore = microfono)
+  riga 18: cattura usa SegnaleLivello: la offre di (riga 46) (in: con di)
+  riga 18: cattura usa SegnaleLivello: nessuno la offre (in: sensore = di, senza di; sensore = microfono)
+  riga 18: cattura usa Riferimento: la offre loop (riga 19)
+  riga 19: loop usa UscitaAnalogica: la offre flusso (riga 17)
+  riga 46: di usa Morsetti: la usa Kit1b da fuori (riga 43) (in: con di)
+
+9. COMPOSIZIONI: 3
+  riga 5: ENTITY Kit1b: 3
+    sensore = di, con di
+    sensore = di, senza di
+    sensore = microfono
+
+10. ASSENZE DICHIARATE: 2
+  riga 18: senza di: la parte cattura usa il connettore SegnaleLivello: nessun'altra parte di Kit1b lo offre, né Kit1b lo usa da fuori
+  riga 43: senza di: il connettore pubblico Morsetti di Kit1b (usato) non è affidato a nessuna parte
+
+esito: 1 errore

@@ -1,0 +1,39 @@
+bcdd check 03_details_inesistente.csc
+righe: 12 (riconosciute 8, commenti 1, vuote 3, non riconosciute 0)
+blocchi: 1
+  riga 3: CSC Dettagli VERSION 0.1, senza STATUS
+
+1. ERRORI: 2
+  riga 10: [E02] DETAILS nomina un id che non è una GUARANTEE né una ASSUME di questa CSC: g2
+  riga 11: [E02] DETAILS nomina un id che non è una GUARANTEE né una ASSUME di questa CSC: arrivo
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 4
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 8: GUARANTEE g1 verbale
+  riga 9: GUARANTEE g1a verbale
+  riga 10: GUARANTEE g2a verbale
+  riga 11: GUARANTEE g3a verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 4
+  riga 8: GUARANTEE g1
+  riga 9: GUARANTEE g1a
+  riga 10: GUARANTEE g2a
+  riga 11: GUARANTEE g3a
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+14. DA GIUDICARE: 3
+  riga 9: GUARANTEE g1a DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 10: GUARANTEE g2a DETAILS g2: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 11: GUARANTEE g3a DETAILS arrivo: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: 2 errori

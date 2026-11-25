@@ -1,0 +1,30 @@
+bcdd check DaFuori.csc
+righe: 7 (riconosciute 7, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY DaFuori VERSION 0.1, senza STATUS
+    riga 3: OFFERS Luce in Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 4: USES Comando in Comando.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 6: lampada : Lampada in Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 1
+  riga 6: lampada usa Comando: la usa DaFuori da fuori (riga 4)
+
+esito: nessun errore

@@ -1,0 +1,1 @@
+{"formato": "bcdd-refine-2", "domande": ["ÿ"], "proposte": []}

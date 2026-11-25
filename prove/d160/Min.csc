@@ -1,0 +1,7 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  TYPE M := {a, b}
+  STATE s : M INITIAL a
+  SCENARIO x EXPECT ADMITTED
+    @0 s   s = c
+END

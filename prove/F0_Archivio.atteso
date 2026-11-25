@@ -1,0 +1,34 @@
+bcdd check Archivio.csc
+righe: 37 (riconosciute 29, commenti 5, vuote 3, non riconosciute 0)
+blocchi: 1
+  riga 7: CSC Archivio VERSION 0.4, STATUS HYPOTHESIS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 5
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 18: GUARANTEE w-1 verbale
+  riga 20: GUARANTEE w-2 verbale
+  riga 24: GUARANTEE w-3 verbale
+  riga 27: GUARANTEE w-4 verbale
+  riga 32: GUARANTEE w-5 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 5
+  riga 18: GUARANTEE w-1
+  riga 20: GUARANTEE w-2
+  riga 24: GUARANTEE w-3
+  riga 27: GUARANTEE w-4
+  riga 32: GUARANTEE w-5
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore

@@ -1,0 +1,43 @@
+bcdd check 06_details_in_giro.csc
+righe: 11 (riconosciute 8, commenti 1, vuote 2, non riconosciute 0)
+blocchi: 1
+  riga 3: CSC Giri VERSION 0.1, senza STATUS
+
+1. ERRORI: 2
+  riga 6: [E05] DETAILS in giro: g1 -> g3 -> g2 -> g1
+  riga 9: [E05] DETAILS in giro: g4 -> g4
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 5
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 6: GUARANTEE g1 verbale
+  riga 7: GUARANTEE g2 verbale
+  riga 8: GUARANTEE g3 verbale
+  riga 9: GUARANTEE g4 verbale
+  riga 10: GUARANTEE g5 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 5
+  riga 6: GUARANTEE g1
+  riga 7: GUARANTEE g2
+  riga 8: GUARANTEE g3
+  riga 9: GUARANTEE g4
+  riga 10: GUARANTEE g5
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+14. DA GIUDICARE: 5
+  riga 6: GUARANTEE g1 DETAILS g3: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 7: GUARANTEE g2 DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 8: GUARANTEE g3 DETAILS g2: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 9: GUARANTEE g4 DETAILS g4: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 10: GUARANTEE g5 DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: 2 errori

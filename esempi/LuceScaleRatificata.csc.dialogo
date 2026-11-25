@@ -1,0 +1,23 @@
+-- bcdd refine: domande dell'LLM e risposte della persona. Si può modificare o cancellare a mano.
+
+GIRO 2026-10-17T12:17:35+02:00 CSC LuceScale
+DOMANDA Per g2: quanto tempo resta accesa la luce dopo l'ultima pressione, e con quale tolleranza?
+RISPOSTA 1 minuto, con 5 s di tolleranza
+DOMANDA Per g3: che cosa succede se qualcuno preme il pulsante mentre la luce è già accesa?
+RISPOSTA il tempo di accensione riparte da capo
+DOMANDA Per g3: la luce avvisa chi è sulle scale prima di spegnersi?
+RISPOSTA resta accesa a luce ridotta per alcuni secondi prima di spegnersi
+DOMANDA Per g1 e a1: che cosa succede se qualcuno tiene il pulsante premuto a lungo?
+RISPOSTA conta come una sola pressione
+
+GIRO 2026-10-17T12:20:10+02:00 CSC LuceScale
+DOMANDA g2 dice che la luce si spegne del tutto 60 s ± 5 s dopo l'ultima pressione, e g3b dice che prima di spegnersi resta a luminosità ridotta per alcuni secondi: il minuto comprende la luce ridotta oppure la luce ridotta viene dopo il minuto?
+RISPOSTA il minuto comprende la luce ridotta: a 60 s ± 5 s la luce è già spenta del tutto
+DOMANDA Per g3b: quanto dura la luce a luminosità ridotta prima dello spegnimento completo, e con quale tolleranza?
+RISPOSTA 10 s ± 2 s
+DOMANDA Per g3b: quanto è ridotta la luminosità durante l'avviso, per chi la osserva sulle scale?
+RISPOSTA circa metà della luminosità piena
+DOMANDA Per g1a: se qualcuno tiene il pulsante premuto a lungo, da quando si contano i 60 s dello spegnimento?
+RISPOSTA da quando il pulsante viene premuto
+DOMANDA Per a1: quanti pulsanti accendono la luce delle scale?
+RISPOSTA un pulsante per piano, e tutti fanno la stessa cosa

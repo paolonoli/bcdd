@@ -1,0 +1,23 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2a",
+      "dettaglia": "g2",
+      "testo": "La luce si spegne fra 170 e 190 secondi dopo l'ultima pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2b",
+      "dettaglia": "g2",
+      "testo": "Una pressione a luce accesa fa ripartire da capo i tre minuti",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [], "interfaccia": []}

@@ -1,0 +1,4 @@
+ENTITY Lamp VERSION 0.1
+  PURPOSE "A lamp"
+  OFFERS Light
+END

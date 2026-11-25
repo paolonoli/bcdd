@@ -1,0 +1,43 @@
+bcdd check --strict dettagli_comune.csc
+righe: 11 (riconosciute 11, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY DettaglioComune VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 3: [E02] DETAILS nomina una GUARANTEE che non vale in tutte le composizioni di questa riga: u1 (sta in VARIANT modo = uno)
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 3
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 3: GUARANTEE c1 verbale
+  riga 6: GUARANTEE u1 verbale
+  riga 9: GUARANTEE d1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 3
+  riga 3: GUARANTEE c1
+  riga 6: GUARANTEE u1
+  riga 9: GUARANTEE d1
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+9. COMPOSIZIONI: 2
+  riga 1: ENTITY DettaglioComune: 2
+    modo = uno
+    modo = due
+
+10. ASSENZE DICHIARATE: 0
+
+14. DA GIUDICARE: 1
+  riga 3: GUARANTEE c1 DETAILS u1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: 1 errore

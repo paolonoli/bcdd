@@ -1,0 +1,39 @@
+bcdd check Analizzatore.csc
+righe: 26 (riconosciute 22, commenti 1, vuote 3, non riconosciute 0)
+blocchi: 1
+  riga 3: CSC Analizzatore VERSION 0.1, STATUS HYPOTHESIS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 5
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 11: GUARANTEE a-1 verbale
+  riga 14: GUARANTEE a-2 verbale
+  riga 16: GUARANTEE a-3 verbale
+  riga 18: GUARANTEE a-4 verbale
+  riga 22: GUARANTEE a-4a verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 5
+  riga 11: GUARANTEE a-1
+  riga 14: GUARANTEE a-2
+  riga 16: GUARANTEE a-3
+  riga 18: GUARANTEE a-4
+  riga 22: GUARANTEE a-4a
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 2
+  Testo: riga 8
+  Struttura: riga 9
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+14. DA GIUDICARE: 1
+  riga 22: GUARANTEE a-4a DETAILS a-4: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: nessun errore

@@ -1,0 +1,30 @@
+bcdd check b3_senza_end.csc
+righe: 13 (riconosciute 7, commenti 1, vuote 4, non riconosciute 0, non lette 1)
+blocchi: 1
+  riga 3: CSC Comando VERSION 0.1, STATUS HYPOTHESIS
+
+1. ERRORI: 1
+  riga 13: [E07] blocco non chiuso: manca END di BINDING Comando
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 9: GUARANTEE c1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 9: GUARANTEE c1
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+11. BLOCCHI NON LETTI: 1
+  riga 13: BINDING Comando VERSION 0.1
+
+esito: 1 errore

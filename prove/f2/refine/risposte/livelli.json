@@ -1,0 +1,39 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1b",
+      "dettaglia": "g1",
+      "testo": "Una pressione a luce accesa non la spegne",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, premendo a luce accesa"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1a2",
+      "dettaglia": "g1a",
+      "testo": "Anche quando la scala è al buio",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, di notte"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1a1b",
+      "dettaglia": "g1a1",
+      "testo": "Il cronometro parte al primo contatto",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1a1a1",
+      "dettaglia": "g1a1a",
+      "testo": "Anche per dieci secondi",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [], "interfaccia": []}

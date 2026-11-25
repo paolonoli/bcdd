@@ -1,0 +1,33 @@
+bcdd check --dir prove/f3/luce Chiede.csc
+righe: 7 (riconosciute 7, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Chiede VERSION 0.1, senza STATUS
+    riga 3: OFFERS Luce in prove/f3/luce/Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 5: pulsante : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 6: lampada : LampadaV in LampadaV.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 3
+  riga 5: [E17] la parte pulsante offre il connettore Pressione: nessun'altra parte di Chiede lo usa, né Chiede lo offre da fuori
+  riga 5: [E17] la parte pulsante offre il connettore Comando: nessun'altra parte di Chiede lo usa, né Chiede lo offre da fuori
+  riga 6: [E14] la parte lampada usa il connettore Comando VERSION 0.2: nessun'altra parte di Chiede lo offre, né Chiede lo usa da fuori
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 1
+  riga 6: lampada usa Comando VERSION 0.2: nessuno la offre
+
+esito: 3 errori

@@ -1,0 +1,40 @@
+bcdd refine Scale.csc
+ENTITY Scale: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 0 domande, 3 proposte, 2 sostituzioni (scartate dal controllo: 3)
+
+SOSTITUZIONE 1 di 2, al posto di g1a (riga 7)
+  adesso:
+    GUARANTEE g1a DETAILS g1 STATUS HYPOTHESIS: VERBAL "La luce accesa da una pressione è piena"
+                                                VERIFY BY JUDGEMENT "l'operatore, guardando"
+  diventa:
+    GUARANTEE g1a DETAILS g1 STATUS HYPOTHESIS: VERBAL "La luce accesa da una pressione è piena entro 0,5 s"
+                                                VERIFY BY JUDGEMENT "l'operatore, con un cronometro"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+SOSTITUZIONE 2 di 2: SCARTATA dal controllo
+  ragione: sostituisce g2, che è contratto (riga 9): una riga ratificata non si sostituisce
+  id: g2
+  testo: Senza pressioni la luce resta spenta
+  verifica: JUDGEMENT, verifica_testo: l'operatore, per un'ora
+
+PROPOSTA 1 di 3, dettaglia g1 (riga 5)
+  GUARANTEE g1b DETAILS g1 STATUS HYPOTHESIS: VERBAL "Anche una pressione di un attimo accende la luce"
+                                              VERIFY BY JUDGEMENT "l'operatore, con una pressione breve"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+PROPOSTA 2 di 3: SCARTATA dal controllo
+  ragione: tipo ASSUME: un'entità non ha ASSUME (serve GUARANTEE)
+  tipo: ASSUME, id: a1, dettaglia: g1
+  testo: Chi preme tiene premuto almeno 0,1 s
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+PROPOSTA 3 di 3: SCARTATA dal controllo
+  ragione: dettaglia una riga che non è una GUARANTEE della ENTITY Scale: l1
+  tipo: GUARANTEE, id: l1a, dettaglia: l1
+  testo: La luce ridotta è circa metà di quella piena
+  verifica: JUDGEMENT, verifica_testo: l'operatore, guardando
+
+riepilogo: accettate 2 (sostituzioni: 1), scartate da te 0, scartate dal controllo 3
+scrivo 1 sostituzione e 1 proposta (2 righe) in Scale.csc? s = sì, n = no: s
+scritto Scale.csc: 1 sostituzione e 1 proposta (2 righe)

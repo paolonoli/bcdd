@@ -1,0 +1,27 @@
+bcdd check --strict ord_dopo_corpo.csc
+righe: 8 (riconosciute 5, commenti 0, vuote 0, non riconosciute 3)
+blocchi: 1
+  riga 1: CSC Tardi VERSION 0.1, STATUS HYPOTHESIS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 3
+  riga 2: IMPORT PROFILE Segnale
+  riga 6: STATUS RATIFIED BY D-9
+  riga 7: IMPORT PROFILE Segnale VERSION 0.3
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore; righe non riconosciute: 3 (--strict)

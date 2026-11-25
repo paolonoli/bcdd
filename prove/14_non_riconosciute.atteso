@@ -1,0 +1,55 @@
+bcdd check 14_non_riconosciute.csc
+righe: 26 (riconosciute 12, commenti 1, vuote 1, non riconosciute 12)
+blocchi: 1
+  riga 4: CSC Estranee VERSION 0.1, STATUS HYPOTHESIS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 2
+  formale: 2
+  estensione dichiarata: 0
+  non riconosciuta: 2
+  riga 15: GUARANTEE g1 formale
+  riga 16: GUARANTEE g2 non riconosciuta
+  riga 18: GUARANTEE g3 verbale
+  riga 19: GUARANTEE g4 non riconosciuta
+  riga 22: GUARANTEE g5 verbale
+  riga 24: ASSUME a1 formale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 6
+  riga 15: GUARANTEE g1
+  riga 16: GUARANTEE g2
+  riga 18: GUARANTEE g3
+  riga 19: GUARANTEE g4
+  riga 22: GUARANTEE g5
+  riga 24: ASSUME a1
+
+5. RIGHE NON RICONOSCIUTE: 12
+  riga 2: riga fuori da ogni blocco
+  riga 7: TYPE Colore := {}
+  riga 8: EVENT IN  pressione FACE utente
+  riga 12: VERIFY BY JUDGEMENT "VERIFY da sola, dopo una riga che non è una garanzia"
+  riga 13: questa riga è inventata
+  riga 14: guarantee g6: VERBAL "parola chiave in minuscolo" VERIFY BY JUDGEMENT "l'operatore"
+  riga 16: GUARANTEE g2: VERBAL "verificata in un modo che F1 non conosce"
+  riga 17: VERIFY BY MAGIC "nessuno"
+  riga 19: GUARANTEE g4: VERBAL "una seconda verifica rende la riga non riconosciuta"
+  riga 20: VERIFY BY JUDGEMENT "l'operatore"
+  riga 21: VERIFY BY INSPECTION "il registro"
+  riga 25: @0 pressione
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+14. DA GIUDICARE: 1
+  riga 22: GUARANTEE g5 DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+15. CONTROLLI NON ESEGUITI: 2
+  copertura degli inneschi: riga 15
+  coerenza di presupposti e promesse: righe 15, 24
+
+esito: nessun errore; righe non riconosciute: 12 (vedi sezione 5)

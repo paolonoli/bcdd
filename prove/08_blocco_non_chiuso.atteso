@@ -1,0 +1,27 @@
+bcdd check 08_blocco_non_chiuso.csc
+righe: 7 (riconosciute 4, commenti 1, vuote 2, non riconosciute 0)
+blocchi: 2
+  riga 3: CSC Prima VERSION 0.1, senza STATUS
+  riga 6: CSC Seconda VERSION 0.1, senza STATUS
+
+1. ERRORI: 2
+  riga 3: [E07] blocco non chiuso: manca END di CSC Prima
+  riga 6: [E07] blocco non chiuso: manca END di CSC Seconda
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 2 errori

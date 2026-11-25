@@ -1,0 +1,27 @@
+bcdd check 13_tempo_dei_passi.csc
+righe: 19 (riconosciute 14, commenti 1, vuote 4, non riconosciute 0)
+blocchi: 1
+  riga 3: CSC Tempi VERSION 0.1, senza STATUS
+
+1. ERRORI: 3
+  riga 11: [E12] il tempo del passo diminuisce: @3 s dopo @5 s
+  riga 12: [E12] il tempo del passo diminuisce: @4000 ms dopo @5 s
+  riga 17: [E12] passi con e senza unità di tempo nello stesso SCENARIO
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 3 errori

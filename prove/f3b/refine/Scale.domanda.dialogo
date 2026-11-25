@@ -1,0 +1,5 @@
+-- bcdd refine: domande dell'LLM e risposte della persona. Si può modificare o cancellare a mano.
+
+GIRO 2026-10-18T10:00:00+02:00 ENTITY Scale
+DOMANDA Entro quanto tempo dalla pressione la luce è piena?
+RISPOSTA entro 0,5 s

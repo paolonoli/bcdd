@@ -1,0 +1,8 @@
+BINDING Pressione VERSION 0.1
+END
+BINDING Pressione VERSION 0.1
+END
+BINDING Pressione VERSION 0.1 AS filo
+END
+BINDING Pressione VERSION 0.1 AS filo
+END

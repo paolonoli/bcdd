@@ -1,0 +1,7 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  STATE x : Real INITIAL 0.0
+  STATE a : Real INITIAL 0.0
+  STATE t : Real INITIAL 0.5
+  DEFINE VICINO := ABS(x - a) <= t
+END

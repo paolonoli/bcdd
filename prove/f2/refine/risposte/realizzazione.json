@@ -1,0 +1,20 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [
+    {
+      "testo": "Quale thread gestisce il temporizzatore della luce?",
+      "scelte": ["un thread dedicato", "il thread principale"]
+    }
+  ],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2a",
+      "dettaglia": "g2",
+      "testo": "Un thread dedicato legge una coda di eventi e spegne la luce con un timer di sistema",
+      "verifica": "INSPECTION",
+      "verifica_testo": "il codice sorgente"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [], "interfaccia": []}

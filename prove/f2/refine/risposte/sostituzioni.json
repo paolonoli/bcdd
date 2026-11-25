@@ -1,0 +1,67 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [],
+  "nuove_csc": [],
+  "sostituzioni": [
+    {
+      "id": "g1",
+      "testo": "Una pressione accende la luce entro un secondo",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g1b",
+      "testo": "Una pressione a luce accesa non la spegne e non cambia il tempo",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g9",
+      "testo": "Una riga che non c'è",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g2b",
+      "testo": "La luce è accesa",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g-",
+      "testo": "Un id non valido",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g1a",
+      "testo": "La luce si accende entro un secondo dalla pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g1a",
+      "testo": "La luce si accende entro mezzo secondo dalla pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g2a",
+      "testo": "La luce si spegne dopo un minuto",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un orologio"
+    },
+    {
+      "id": "g2a",
+      "testo": "La luce si spegne dopo \"un minuto\"",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g2a",
+      "testo": "La luce si spegne fra 55 e 65 secondi dopo l'ultima pressione",
+      "verifica": "INSPECTION",
+      "verifica_testo": "il registro delle accensioni"
+    }
+  ], "interfaccia": []}

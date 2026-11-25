@@ -1,0 +1,32 @@
+bcdd check --dir prove/f3/luce LampadaWiFi.csc
+righe: 8 (riconosciute 8, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY LampadaWiFi VERSION 0.1, senza STATUS
+    riga 3: USES Trasmissione in Trasmissione.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 4: OFFERS Luce in prove/f3/luce/Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 6: ricevitore : Ricevitore in Ricevitore.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 7: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 2
+  riga 6: ricevitore usa Trasmissione: la usa LampadaWiFi da fuori (riga 3)
+  riga 7: lampada usa Comando: la offre ricevitore (riga 6)
+
+esito: nessun errore

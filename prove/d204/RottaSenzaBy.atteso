@@ -1,0 +1,31 @@
+bcdd check RottaSenzaBy.csc
+righe: 10 (riconosciute 7, commenti 2, vuote 0, non riconosciute 1)
+blocchi: 1
+  riga 3: CSC (intestazione non valida), STATUS non valido
+
+1. ERRORI: 2
+  riga 3: [E09] intestazione non valida: attesa CSC Nome VERSION numero
+  riga 4: [E04] STATUS RATIFIED senza decisione: serve BY D-numero
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 2
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 6: GUARANTEE g1 verbale
+  riga 8: GUARANTEE g2 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 6: GUARANTEE g1
+  riga 8: GUARANTEE g2
+
+5. RIGHE NON RICONOSCIUTE: 1
+  riga 3: CSC Rotta VERSIONE 0.1
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 2 errori; righe non riconosciute: 1 (vedi sezione 5)

@@ -1,0 +1,45 @@
+bcdd check --strict 21_verbal_senza_verify.csc
+righe: 21 (riconosciute 12, commenti 2, vuote 4, non riconosciute 3)
+blocchi: 1
+  riga 4: CSC SenzaVerifica VERSION 0.1, senza STATUS
+
+1. ERRORI: 3
+  riga 9: [E13] VERBAL senza VERIFY: serve VERIFY BY JUDGEMENT o INSPECTION e una stringa
+  riga 11: [E13] VERBAL senza VERIFY: serve VERIFY BY JUDGEMENT o INSPECTION e una stringa
+  riga 13: [E13] VERBAL senza VERIFY: serve VERIFY BY JUDGEMENT o INSPECTION e una stringa
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 4
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 2
+  riga 9: GUARANTEE g1 verbale
+  riga 10: ASSUME a1 verbale
+  riga 13: GUARANTEE g1a verbale
+  riga 14: GUARANTEE g2 verbale
+  riga 15: GUARANTEE g3 non riconosciuta
+  riga 17: GUARANTEE g4 non riconosciuta
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 6
+  riga 9: GUARANTEE g1
+  riga 10: ASSUME a1
+  riga 13: GUARANTEE g1a
+  riga 14: GUARANTEE g2
+  riga 15: GUARANTEE g3
+  riga 17: GUARANTEE g4
+
+5. RIGHE NON RICONOSCIUTE: 3
+  riga 15: GUARANTEE g3: VERBAL "Verifica scritta male: non riconosciuta, non E13"
+  riga 16: VERIFY BY MAGIC "nessuno"
+  riga 17: GUARANTEE g4: VERBAL "Qualcosa dopo la stringa che non è VERIFY: non riconosciuta" PERCHÉ
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+14. DA GIUDICARE: 1
+  riga 13: GUARANTEE g1a DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: 3 errori; righe non riconosciute: 3 (--strict)

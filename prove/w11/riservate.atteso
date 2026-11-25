@@ -1,0 +1,31 @@
+bcdd check riservate.csc
+righe: 12 (riconosciute 5, commenti 1, vuote 0, non riconosciute 6)
+blocchi: 1
+  riga 2: CSC Valori VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 1
+  riga 9: GUARANTEE ? non riconosciuta
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 6
+  riga 4: STATE PATTERN : Boolean INITIAL false
+  riga 5: STATE SCOPE : Boolean INITIAL false
+  riga 6: EVENT IN FUNCTION
+  riga 7: EVENT IN DECLARATION
+  riga 8: CAPABILITY RELATION
+  riga 9: GUARANTEE SCENARIO-FORM: VERBAL "x" VERIFY BY JUDGEMENT "y"
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore; righe non riconosciute: 6 (vedi sezione 5)

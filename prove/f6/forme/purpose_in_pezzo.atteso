@@ -1,0 +1,39 @@
+bcdd check --strict purpose_in_pezzo.csc
+righe: 10 (riconosciute 9, commenti 0, vuote 0, non riconosciute 1)
+blocchi: 1
+  riga 1: ENTITY Scopo VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 4: [E21] PURPOSE non può stare in un pezzo VARIANT: scrivilo prima del primo VARIANT
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 2
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 5: GUARANTEE p1 verbale
+  riga 8: GUARANTEE p2 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 5: GUARANTEE p1
+  riga 8: GUARANTEE p2
+
+5. RIGHE NON RICONOSCIUTE: 1
+  riga 4: PURPOSE "non qui"
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+9. COMPOSIZIONI: 2
+  riga 1: ENTITY Scopo: 2
+    modo = uno
+    modo = due
+
+10. ASSENZE DICHIARATE: 0
+
+esito: 1 errore; righe non riconosciute: 1 (--strict)

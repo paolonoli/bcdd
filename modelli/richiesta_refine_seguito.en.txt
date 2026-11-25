@@ -1,0 +1,9 @@
+ANSWERS OF THE PERSON IN THIS ROUND
+The person was asked the questions below, and these are their answers. The answers take
+precedence over what you would have assumed: redo the proposals taking them into account, and do not propose anything that
+contradicts them. If an answer makes obsolete a line that is still pending approval, propose to replace it
+(see REPLACEMENTS) and do not add a new line next to it.
+{{RISPOSTE}}
+
+THIS TIME NO QUESTIONS
+Answer with the same format described above, but with "domande" equal to the empty list [].

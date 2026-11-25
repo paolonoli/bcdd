@@ -1,0 +1,36 @@
+bcdd check 16_scenario.csc
+righe: 35 (riconosciute 29, commenti 2, vuote 4, non riconosciute 0)
+blocchi: 1
+  riga 4: CSC LuceScale VERSION 2, STATUS RATIFIED BY D-1
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 5
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 16: GUARANTEE g1 verbale
+  riga 17: GUARANTEE g1a verbale
+  riga 20: GUARANTEE g1b verbale
+  riga 22: GUARANTEE g1c verbale
+  riga 24: ASSUME a1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 17: GUARANTEE g1a
+  riga 22: GUARANTEE g1c
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+14. DA GIUDICARE: 3
+  riga 17: GUARANTEE g1a DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 20: GUARANTEE g1b DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 22: GUARANTEE g1c DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: nessun errore

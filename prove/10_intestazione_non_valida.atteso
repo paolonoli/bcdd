@@ -1,0 +1,31 @@
+bcdd check 10_intestazione_non_valida.csc
+righe: 11 (riconosciute 3, commenti 2, vuote 2, non riconosciute 4)
+blocchi: 2
+  riga 4: CSC (intestazione non valida), senza STATUS
+  riga 8: REFINEMENT VIEW (intestazione non valida)
+
+1. ERRORI: 2
+  riga 4: [E09] intestazione non valida: attesa CSC Nome VERSION numero
+  riga 8: [E15] REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 4
+  riga 4: CSC Senza Versione
+  riga 8: REFINEMENT Parti
+  riga 9: COMPOSED OF
+  riga 10: a : Qualcosa
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 2 errori; righe non riconosciute: 4 (vedi sezione 5)

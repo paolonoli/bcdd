@@ -1,0 +1,33 @@
+bcdd check 02_id_ripetuto.csc
+righe: 17 (riconosciute 10, commenti 3, vuote 4, non riconosciute 0)
+blocchi: 2
+  riga 5: CSC Ripetizioni VERSION 0.1, senza STATUS
+  riga 15: CSC Ripetizioni VERSION 0.2, senza STATUS
+
+1. ERRORI: 4
+  riga 8: [E01] nome già usato alla riga 8: valore
+  riga 9: [E01] nome già usato alla riga 8: arrivo
+  riga 12: [E01] nome già usato alla riga 11: g1
+  riga 15: [E01] nome già usato alla riga 5: Ripetizioni
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 2
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 11: GUARANTEE g1 verbale
+  riga 12: GUARANTEE g1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 11: GUARANTEE g1
+  riga 12: GUARANTEE g1
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 4 errori

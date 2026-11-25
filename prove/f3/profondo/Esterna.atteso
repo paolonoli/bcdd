@@ -1,0 +1,30 @@
+bcdd check Esterna.csc
+righe: 6 (riconosciute 6, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Esterna VERSION 0.1, senza STATUS
+    riga 5: m : Media in Media.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 1
+  riga 5: [E17] la parte m offre il connettore Ombra: nessun'altra parte di Esterna lo usa, né Esterna lo offre da fuori
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 1
+  riga 3: Assente
+
+8. USI DENTRO LE ENTITÀ: 1
+  riga 5: m usa Assente: la usa Esterna da fuori (riga 3)
+
+esito: 1 errore

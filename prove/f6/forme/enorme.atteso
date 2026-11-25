@@ -1,0 +1,192 @@
+bcdd check --strict enorme.csc
+righe: 243 (riconosciute 243, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Enorme VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 1: [E23] l'entità Enorme ha più di 64 composizioni: bcdd non le controlla una per una. Togli una scelta, o dividi l'entità in entità più piccole
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 80
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 4: GUARANTEE g1si verbale
+  riga 7: GUARANTEE g1no verbale
+  riga 10: GUARANTEE g2si verbale
+  riga 13: GUARANTEE g2no verbale
+  riga 16: GUARANTEE g3si verbale
+  riga 19: GUARANTEE g3no verbale
+  riga 22: GUARANTEE g4si verbale
+  riga 25: GUARANTEE g4no verbale
+  riga 28: GUARANTEE g5si verbale
+  riga 31: GUARANTEE g5no verbale
+  riga 34: GUARANTEE g6si verbale
+  riga 37: GUARANTEE g6no verbale
+  riga 40: GUARANTEE g7si verbale
+  riga 43: GUARANTEE g7no verbale
+  riga 46: GUARANTEE g8si verbale
+  riga 49: GUARANTEE g8no verbale
+  riga 52: GUARANTEE g9si verbale
+  riga 55: GUARANTEE g9no verbale
+  riga 58: GUARANTEE g10si verbale
+  riga 61: GUARANTEE g10no verbale
+  riga 64: GUARANTEE g11si verbale
+  riga 67: GUARANTEE g11no verbale
+  riga 70: GUARANTEE g12si verbale
+  riga 73: GUARANTEE g12no verbale
+  riga 76: GUARANTEE g13si verbale
+  riga 79: GUARANTEE g13no verbale
+  riga 82: GUARANTEE g14si verbale
+  riga 85: GUARANTEE g14no verbale
+  riga 88: GUARANTEE g15si verbale
+  riga 91: GUARANTEE g15no verbale
+  riga 94: GUARANTEE g16si verbale
+  riga 97: GUARANTEE g16no verbale
+  riga 100: GUARANTEE g17si verbale
+  riga 103: GUARANTEE g17no verbale
+  riga 106: GUARANTEE g18si verbale
+  riga 109: GUARANTEE g18no verbale
+  riga 112: GUARANTEE g19si verbale
+  riga 115: GUARANTEE g19no verbale
+  riga 118: GUARANTEE g20si verbale
+  riga 121: GUARANTEE g20no verbale
+  riga 124: GUARANTEE g21si verbale
+  riga 127: GUARANTEE g21no verbale
+  riga 130: GUARANTEE g22si verbale
+  riga 133: GUARANTEE g22no verbale
+  riga 136: GUARANTEE g23si verbale
+  riga 139: GUARANTEE g23no verbale
+  riga 142: GUARANTEE g24si verbale
+  riga 145: GUARANTEE g24no verbale
+  riga 148: GUARANTEE g25si verbale
+  riga 151: GUARANTEE g25no verbale
+  riga 154: GUARANTEE g26si verbale
+  riga 157: GUARANTEE g26no verbale
+  riga 160: GUARANTEE g27si verbale
+  riga 163: GUARANTEE g27no verbale
+  riga 166: GUARANTEE g28si verbale
+  riga 169: GUARANTEE g28no verbale
+  riga 172: GUARANTEE g29si verbale
+  riga 175: GUARANTEE g29no verbale
+  riga 178: GUARANTEE g30si verbale
+  riga 181: GUARANTEE g30no verbale
+  riga 184: GUARANTEE g31si verbale
+  riga 187: GUARANTEE g31no verbale
+  riga 190: GUARANTEE g32si verbale
+  riga 193: GUARANTEE g32no verbale
+  riga 196: GUARANTEE g33si verbale
+  riga 199: GUARANTEE g33no verbale
+  riga 202: GUARANTEE g34si verbale
+  riga 205: GUARANTEE g34no verbale
+  riga 208: GUARANTEE g35si verbale
+  riga 211: GUARANTEE g35no verbale
+  riga 214: GUARANTEE g36si verbale
+  riga 217: GUARANTEE g36no verbale
+  riga 220: GUARANTEE g37si verbale
+  riga 223: GUARANTEE g37no verbale
+  riga 226: GUARANTEE g38si verbale
+  riga 229: GUARANTEE g38no verbale
+  riga 232: GUARANTEE g39si verbale
+  riga 235: GUARANTEE g39no verbale
+  riga 238: GUARANTEE g40si verbale
+  riga 241: GUARANTEE g40no verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 80
+  riga 4: GUARANTEE g1si
+  riga 7: GUARANTEE g1no
+  riga 10: GUARANTEE g2si
+  riga 13: GUARANTEE g2no
+  riga 16: GUARANTEE g3si
+  riga 19: GUARANTEE g3no
+  riga 22: GUARANTEE g4si
+  riga 25: GUARANTEE g4no
+  riga 28: GUARANTEE g5si
+  riga 31: GUARANTEE g5no
+  riga 34: GUARANTEE g6si
+  riga 37: GUARANTEE g6no
+  riga 40: GUARANTEE g7si
+  riga 43: GUARANTEE g7no
+  riga 46: GUARANTEE g8si
+  riga 49: GUARANTEE g8no
+  riga 52: GUARANTEE g9si
+  riga 55: GUARANTEE g9no
+  riga 58: GUARANTEE g10si
+  riga 61: GUARANTEE g10no
+  riga 64: GUARANTEE g11si
+  riga 67: GUARANTEE g11no
+  riga 70: GUARANTEE g12si
+  riga 73: GUARANTEE g12no
+  riga 76: GUARANTEE g13si
+  riga 79: GUARANTEE g13no
+  riga 82: GUARANTEE g14si
+  riga 85: GUARANTEE g14no
+  riga 88: GUARANTEE g15si
+  riga 91: GUARANTEE g15no
+  riga 94: GUARANTEE g16si
+  riga 97: GUARANTEE g16no
+  riga 100: GUARANTEE g17si
+  riga 103: GUARANTEE g17no
+  riga 106: GUARANTEE g18si
+  riga 109: GUARANTEE g18no
+  riga 112: GUARANTEE g19si
+  riga 115: GUARANTEE g19no
+  riga 118: GUARANTEE g20si
+  riga 121: GUARANTEE g20no
+  riga 124: GUARANTEE g21si
+  riga 127: GUARANTEE g21no
+  riga 130: GUARANTEE g22si
+  riga 133: GUARANTEE g22no
+  riga 136: GUARANTEE g23si
+  riga 139: GUARANTEE g23no
+  riga 142: GUARANTEE g24si
+  riga 145: GUARANTEE g24no
+  riga 148: GUARANTEE g25si
+  riga 151: GUARANTEE g25no
+  riga 154: GUARANTEE g26si
+  riga 157: GUARANTEE g26no
+  riga 160: GUARANTEE g27si
+  riga 163: GUARANTEE g27no
+  riga 166: GUARANTEE g28si
+  riga 169: GUARANTEE g28no
+  riga 172: GUARANTEE g29si
+  riga 175: GUARANTEE g29no
+  riga 178: GUARANTEE g30si
+  riga 181: GUARANTEE g30no
+  riga 184: GUARANTEE g31si
+  riga 187: GUARANTEE g31no
+  riga 190: GUARANTEE g32si
+  riga 193: GUARANTEE g32no
+  riga 196: GUARANTEE g33si
+  riga 199: GUARANTEE g33no
+  riga 202: GUARANTEE g34si
+  riga 205: GUARANTEE g34no
+  riga 208: GUARANTEE g35si
+  riga 211: GUARANTEE g35no
+  riga 214: GUARANTEE g36si
+  riga 217: GUARANTEE g36no
+  riga 220: GUARANTEE g37si
+  riga 223: GUARANTEE g37no
+  riga 226: GUARANTEE g38si
+  riga 229: GUARANTEE g38no
+  riga 232: GUARANTEE g39si
+  riga 235: GUARANTEE g39no
+  riga 238: GUARANTEE g40si
+  riga 241: GUARANTEE g40no
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+9. COMPOSIZIONI: 0
+  riga 1: ENTITY Enorme: più di 64, non controllate
+
+10. ASSENZE DICHIARATE: 0
+
+esito: 1 errore

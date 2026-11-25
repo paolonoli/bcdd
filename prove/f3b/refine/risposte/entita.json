@@ -1,0 +1,45 @@
+{
+  "formato": "bcdd-refine-4",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1b",
+      "dettaglia": "g1",
+      "testo": "Anche una pressione di un attimo accende la luce",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con una pressione breve"
+    },
+    {
+      "tipo": "ASSUME",
+      "id": "a1",
+      "dettaglia": "g1",
+      "testo": "Chi preme tiene premuto almeno 0,1 s",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "l1a",
+      "dettaglia": "l1",
+      "testo": "La luce ridotta è circa metà di quella piena",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, guardando"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [
+    {
+      "id": "g1a",
+      "testo": "La luce accesa da una pressione è piena entro 0,5 s",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "id": "g2",
+      "testo": "Senza pressioni la luce resta spenta",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, per un'ora"
+    }
+  ]
+}

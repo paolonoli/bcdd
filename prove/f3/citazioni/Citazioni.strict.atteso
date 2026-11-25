@@ -1,0 +1,33 @@
+bcdd check --strict Citazioni.csc
+righe: 11 (riconosciute 11, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Citazioni VERSION 0.1, senza STATUS
+    riga 8: OFFERS Sporco in Sporco.csc alla riga 1: VERSION 0.1, senza STATUS, 1 errore, righe non riconosciute: 1
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 6
+  riga 3: Assente
+  riga 4: Cartella (non è un file: Cartella.csc)
+  riga 5: NonUtf8 (non UTF-8: NonUtf8.csc)
+  riga 6: Chiuso (non leggibile: Chiuso.csc)
+  riga 7: Rotto
+  riga 10: SoloCsc (SoloCsc.csc non contiene ENTITY SoloCsc)
+
+8. USI DENTRO LE ENTITÀ: 0
+
+esito: nessun errore

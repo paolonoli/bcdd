@@ -1,0 +1,51 @@
+bcdd check --strict dettagli.csc
+righe: 17 (riconosciute 17, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Dettagli VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 15: [E02] DETAILS nomina una GUARANTEE che non vale in tutte le composizioni di questa riga: u1 (sta in VARIANT modo = uno)
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 6
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 3: GUARANTEE c1 verbale
+  riga 6: GUARANTEE u1 verbale
+  riga 8: GUARANTEE u1a verbale
+  riga 10: GUARANTEE u1b verbale
+  riga 13: GUARANTEE d1 verbale
+  riga 15: GUARANTEE d1a verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 6
+  riga 3: GUARANTEE c1
+  riga 6: GUARANTEE u1
+  riga 8: GUARANTEE u1a
+  riga 10: GUARANTEE u1b
+  riga 13: GUARANTEE d1
+  riga 15: GUARANTEE d1a
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+9. COMPOSIZIONI: 2
+  riga 1: ENTITY Dettagli: 2
+    modo = uno
+    modo = due
+
+10. ASSENZE DICHIARATE: 0
+
+14. DA GIUDICARE: 3
+  riga 8: GUARANTEE u1a DETAILS u1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 10: GUARANTEE u1b DETAILS c1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 15: GUARANTEE d1a DETAILS u1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+esito: 1 errore

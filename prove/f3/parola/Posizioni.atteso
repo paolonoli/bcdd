@@ -1,0 +1,57 @@
+bcdd check --dir prove/f3/luce Posizioni.csc
+righe: 30 (riconosciute 26, commenti 0, vuote 1, non riconosciute 3)
+blocchi: 2
+  riga 1: ENTITY Posizioni VERSION 0.1, senza STATUS
+    riga 3: prima : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 6: fraGaranzie : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 10: dopoStringa : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 11: OFFERS Luce in prove/f3/luce/Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 12: dopoOffers : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 15: dopoRigaInventata : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 17: dopoVerify : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 19: dopoSecondaComposed : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 24: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+  riga 27: ENTITY SenzaComposed VERSION 0.1, senza STATUS
+    riga 29: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 9
+  riga 3: [E17] la parte prima offre il connettore Pressione: nessun'altra parte di Posizioni lo usa, né Posizioni lo offre da fuori
+  riga 6: [E17] la parte fraGaranzie offre il connettore Pressione: nessun'altra parte di Posizioni lo usa, né Posizioni lo offre da fuori
+  riga 10: [E17] la parte dopoStringa offre il connettore Pressione: nessun'altra parte di Posizioni lo usa, né Posizioni lo offre da fuori
+  riga 12: [E17] la parte dopoOffers offre il connettore Pressione: nessun'altra parte di Posizioni lo usa, né Posizioni lo offre da fuori
+  riga 15: [E17] la parte dopoRigaInventata offre il connettore Pressione: nessun'altra parte di Posizioni lo usa, né Posizioni lo offre da fuori
+  riga 17: [E17] la parte dopoVerify offre il connettore Pressione: nessun'altra parte di Posizioni lo usa, né Posizioni lo offre da fuori
+  riga 19: [E17] la parte dopoSecondaComposed offre il connettore Pressione: nessun'altra parte di Posizioni lo usa, né Posizioni lo offre da fuori
+  riga 29: [E14] la parte lampada usa il connettore Comando: nessun'altra parte di SenzaComposed lo offre, né SenzaComposed lo usa da fuori
+  riga 29: [E17] la parte lampada offre il connettore Luce: nessun'altra parte di SenzaComposed lo usa, né SenzaComposed lo offre da fuori
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 3
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 4: GUARANTEE g1 verbale
+  riga 7: GUARANTEE g2 verbale
+  riga 20: GUARANTEE g3 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 3
+  riga 4: GUARANTEE g1
+  riga 7: GUARANTEE g2
+  riga 20: GUARANTEE g3
+
+5. RIGHE NON RICONOSCIUTE: 3
+  riga 14: FOO bar
+  riga 16: VERIFY BY INSPECTION "dopo una parte"
+  riga 18: COMPOSED OF
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 2
+  riga 24: lampada usa Comando: la offrono prima (riga 3), fraGaranzie (riga 6), dopoStringa (riga 10), dopoOffers (riga 12), dopoRigaInventata (riga 15), dopoVerify (riga 17), dopoSecondaComposed (riga 19)
+  riga 29: lampada usa Comando: nessuno la offre
+
+esito: 9 errori; righe non riconosciute: 3 (vedi sezione 5)

@@ -1,0 +1,26 @@
+bcdd check --strict variant_in_csc.csc
+righe: 5 (riconosciute 4, commenti 0, vuote 0, non riconosciute 1)
+blocchi: 1
+  riga 1: CSC Alfa VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 4: [E21] VARIANT non può stare in una CSC: le varianti si scrivono in un'entità
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 1
+  riga 4: VARIANT modo = uno
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 1 errore; righe non riconosciute: 1 (--strict)

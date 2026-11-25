@@ -1,0 +1,3 @@
+CSC NonUtf8 VERSION 0.1
+  PURPOSE "ÿ"
+END

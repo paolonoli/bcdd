@@ -1,0 +1,11 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  STATE a : Boolean INITIAL false
+  STATE b : Boolean INITIAL false
+  STATE c : Boolean INITIAL false
+  STATE x : Real INITIAL 0.0
+  GUARANTEE g1: ALWAYS a AND b OR c
+  GUARANTEE g2: ALWAYS a IMPLIES b IMPLIES c
+  GUARANTEE g3: ALWAYS 0.0 <= x <= 1.0
+  GUARANTEE g4: ALWAYS 2 ^ 3 ^ 2 > 1
+END

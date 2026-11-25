@@ -1,0 +1,42 @@
+bcdd check --dir prove/f3/luce Chiavi.csc
+righe: 21 (riconosciute 9, commenti 1, vuote 1, non riconosciute 10)
+blocchi: 1
+  riga 1: ENTITY Chiavi VERSION 0.1, senza STATUS
+    riga 3: OFFERS Luce in prove/f3/luce/Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 5: lampada : Lampada in prove/f3/luce/Lampada.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 18: pulsante : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 19: OFFERS Pressione in prove/f3/luce/Pressione.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 20: altro : Pulsante in prove/f3/luce/Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 10
+  riga 6: VERIFY BY INSPECTION "dopo una parte"
+  riga 7: VERBAL "dopo una parte"
+  riga 8: offers Luce
+  riga 9: OFFERS : Pulsante
+  riga 10: VERSION 0.1
+  riga 11: LINK a b
+  riga 12: END X
+  riga 15: extra : "una stringa
+  riga 16: END
+  riga 17: che va a capo"
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 1
+  riga 5: lampada usa Comando: la offrono pulsante (riga 18), altro (riga 20)
+
+esito: nessun errore; righe non riconosciute: 10 (vedi sezione 5)

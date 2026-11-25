@@ -1,0 +1,4 @@
+windows/build/
+windows/include/
+windows/nupkg/
+windows/*.res

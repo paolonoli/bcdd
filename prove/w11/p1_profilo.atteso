@@ -1,0 +1,26 @@
+bcdd check p1_profilo.csc
+righe: 14 (riconosciute 0, commenti 1, vuote 0, non riconosciute 0, non lette 13)
+blocchi: 0
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+11. BLOCCHI NON LETTI: 1
+  righe 2-14: PROFILE Segnale VERSION 0.3
+
+esito: nessun errore

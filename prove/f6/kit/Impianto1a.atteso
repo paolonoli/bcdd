@@ -1,0 +1,46 @@
+bcdd check --strict Impianto1a.csc
+righe: 16 (riconosciute 13, commenti 2, vuote 1, non riconosciute 0)
+blocchi: 1
+  riga 4: ENTITY Impianto1a VERSION 0.2, STATUS HYPOTHESIS
+    riga 7: OFFERS Modalita in Modalita.csc alla riga 8: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 8: OFFERS Misura in Misura.csc alla riga 5: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 9: OFFERS Ricablaggio in Ricablaggio.csc alla riga 8: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 10: OFFERS RilevamentoLivello in RilevamentoLivello.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 12: kit : Kit1a in Kit1a.csc alla riga 6: VERSION 0.2, STATUS HYPOTHESIS, nessun errore
+    riga 13: amplificatore : Amplificatore in Amplificatore.csc alla riga 3: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 14: diffusori : Diffusori in Diffusori.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 15: telefono : Telefono in Telefono.csc alla riga 6: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 5
+  riga 12: kit usa IngressoAmplificatore: la offre amplificatore (riga 13)
+  riga 12: kit usa Morsetti: la offre amplificatore (riga 13) (in: kit.sensore = di)
+  riga 14: diffusori usa Morsetti: la offre amplificatore (riga 13)
+  riga 15: telefono usa Modalita: la offre kit (riga 12)
+  riga 15: telefono usa LetturaLivello: la offre kit (riga 12)
+
+9. COMPOSIZIONI: 2
+  riga 4: ENTITY Impianto1a: 2
+    kit.sensore = di
+    kit.sensore = microfono
+
+10. ASSENZE DICHIARATE: 0
+
+esito: nessun errore

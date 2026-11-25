@@ -1,0 +1,40 @@
+bcdd check --strict scenari.csc
+righe: 22 (riconosciute 22, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 3
+  riga 1: CSC Ax VERSION 0.1, senza STATUS
+  riga 5: CSC Bx VERSION 0.1, senza STATUS
+  riga 9: ENTITY Scenari VERSION 0.1, senza STATUS
+    riga 11: OFFERS Ax in questo file alla riga 1
+    riga 16: OFFERS Bx in questo file alla riga 5
+
+1. ERRORI: 1
+  riga 14: [E20] Bx.b: Scenari non offre né usa il connettore Bx; uno scenario può citare solo i connettori di Scenari (in: modo = due)
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 20: GUARANTEE d1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 20: GUARANTEE d1
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+9. COMPOSIZIONI: 2
+  riga 9: ENTITY Scenari: 2
+    modo = uno
+    modo = due
+
+10. ASSENZE DICHIARATE: 0
+
+esito: 1 errore

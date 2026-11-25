@@ -1,0 +1,61 @@
+bcdd refine Luce.csc
+CSC Luce: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 0 domande, 9 proposte (scartate dal controllo: 8)
+
+PROPOSTA 1 di 9: SCARTATA dal controllo
+  ragione: dettaglia una riga che non è una GUARANTEE né una ASSUME della CSC Luce: g9
+  tipo: GUARANTEE, id: g9a, dettaglia: g9
+  testo: Dettaglio di una riga che non c'è
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+PROPOSTA 2 di 9: SCARTATA dal controllo
+  ragione: id già usato alla riga 10: g1
+  tipo: GUARANTEE, id: g1, dettaglia: g2
+  testo: Id già usato
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+PROPOSTA 3 di 9: SCARTATA dal controllo
+  ragione: testo con virgolette doppie: una stringa BCDD non le può contenere
+  tipo: GUARANTEE, id: g2b, dettaglia: g2
+  testo: La luce "lampeggia" prima di spegnersi
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+PROPOSTA 4 di 9: SCARTATA dal controllo
+  ragione: tipo non valido: REQUIREMENT (serve GUARANTEE o ASSUME)
+  tipo: REQUIREMENT, id: g2c, dettaglia: g2
+  testo: Tipo che non esiste
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+PROPOSTA 5 di 9: SCARTATA dal controllo
+  ragione: id non valido: g-
+  tipo: GUARANTEE, id: g-, dettaglia: g2
+  testo: Id scritto male
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+PROPOSTA 6 di 9: SCARTATA dal controllo
+  ragione: testo su più righe
+  tipo: GUARANTEE, id: g2d, dettaglia: g2
+  testo: Prima riga↵seconda riga
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+PROPOSTA 7 di 9: SCARTATA dal controllo
+  ragione: verifica non valida: MAGIC (serve JUDGEMENT o INSPECTION)
+  tipo: GUARANTEE, id: g2e, dettaglia: g2
+  testo: Verifica che non esiste
+  verifica: MAGIC, verifica_testo: nessuno
+
+PROPOSTA 8 di 9, dettaglia g1 (riga 10)
+  ASSUME a1 DETAILS g1 STATUS HYPOTHESIS: VERBAL "Il pulsante non resta premuto per più di un minuto"
+                                          VERIFY BY INSPECTION "il registro delle pressioni"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+PROPOSTA 9 di 9: SCARTATA dal controllo
+  ragione: id già usato dalla proposta 8: a1
+  tipo: GUARANTEE, id: a1, dettaglia: g2
+  testo: Stesso id della proposta precedente
+  verifica: JUDGEMENT, verifica_testo: l'operatore
+
+riepilogo: accettate 1, scartate da te 0, scartate dal controllo 8
+scrivo 1 proposta (2 righe) in Luce.csc? s = sì, n = no: s
+scritto Luce.csc: 1 proposta (2 righe)

@@ -1,0 +1,28 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [
+    {
+      "testo": "Dopo quanto tempo senza pressioni la luce si deve spegnere?",
+      "scelte": ["dopo un minuto", "dopo tre minuti", "dopo cinque minuti"]
+    }
+  ],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2a",
+      "dettaglia": "g2",
+      "testo": "La luce si spegne fra 170 e 190 secondi dopo l'ultima pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1a",
+      "dettaglia": "g1",
+      "testo": "La luce si accende entro mezzo secondo dalla pressione",
+      "verifica": "INSPECTION",
+      "verifica_testo": "il registro delle pressioni e dell'accensione"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [], "interfaccia": []}

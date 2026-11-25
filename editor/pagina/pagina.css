@@ -1,0 +1,289 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
+/* Copyright (c) 2026, Noli Paolo */
+.tema-notte{--bg:#0D1117;--surface:#161B22;--border:#30363D;--border2:#444C56;--text:#E6EDF3;--muted:#9DA7B3;--well:#0F141A;--wellb:#262C34;--dot:#252B33;--code:#0F141A;--offer:#58A6FF;--use:#F0883E;--onacc:#0D1117;--frame:#6E7681;--box:#010409;--boxb:#444C56;--boxt:#E6EDF3;--boxmuted:#8B949E;--ipo:#3A3110;--ipob:#9E8A2C;--ok:#11321E;--okb:#2E8B4E;--okt:#7EE2A0;--bad:#F85149;--badbg:#3A1714;--badt:#FFA198;--badb:#8E2A23;--chip:#262C34;--chipt:#C9D1D9;color-scheme:dark}
+.tema-giorno{--bg:#F1F2EE;--surface:#FFFFFF;--border:#D6D9D1;--border2:#C9CDC4;--text:#1C2128;--muted:#4A535E;--well:#F7F8F5;--wellb:#E3E5DF;--dot:#D3D6CE;--code:#FAFAF7;--offer:#2563A8;--use:#C2620E;--onacc:#FFFFFF;--frame:#8A939C;--box:#1C2128;--boxb:#1C2128;--boxt:#FFFFFF;--boxmuted:#AEB6BF;--ipo:#FFF1B8;--ipob:#E2C64F;--ok:#DDF2E3;--okb:#5DA874;--okt:#135C2E;--bad:#B42318;--badbg:#FDE8E6;--badt:#8F1B12;--badb:#E9A39B;--chip:#E6E8E3;--chipt:#343B44;color-scheme:light}
+.tema-notte{--qb:#1F4A7A;--qbg:#0F2136;--qt:#79C0FF;--qbtn:#2F5E94;--pb:#6E3F14;--pbg:#24170B;--pt:#FFA657;--new:#3D2614;--newb:#B5652A;--donebg:#10261A;--doneb:#2E6B43}
+.tema-giorno{--qb:#C9D6E6;--qbg:#F2F6FB;--qt:#1A4778;--qbtn:#9DB4D1;--pb:#E8B98A;--pbg:#FFF8F1;--pt:#8A4308;--new:#FFE2C4;--newb:#E08A3C;--donebg:#EEF6F0;--doneb:#B9DCC4}
+/* variabili nuove, per tema (gli altri colori sono quelli di prima) */
+.tema-notte{--hl-chiave:#79C0FF;--hl-stringa:#E3B98A;--hl-commento:#A0AAB5;--hl-numero:#7EE0C4;--hl-segno:#F2A2C8;--hl-contesto:#D2A8FF;--hl-estensione:#FFD47A;--hl-ritirata:#E5A09A;--hover:#1F2630;--dis-t:#6E7681;--dis-bg:#0F141A;--dis-b:#262C34;--shadow:rgba(1,4,9,.6)}
+.tema-giorno{--hl-chiave:#0B4F9E;--hl-stringa:#7A3E00;--hl-commento:#4F5964;--hl-numero:#00695C;--hl-segno:#9B1C63;--hl-contesto:#6A2FB0;--hl-estensione:#7A5200;--hl-ritirata:#8C2A22;--hover:#ECEEE8;--dis-t:#757D87;--dis-bg:#F7F8F5;--dis-b:#E3E5DF;--shadow:rgba(28,33,40,.22)}
+
+/* ==== 1. Scale: caratteri, spazi, raggi, altezze. La densità si regola qui, in un punto solo ====
+   Caratteri: testo 12 px, secondario 11 px, codice 11 px (l'operatore vuole l'interfaccia più piccola); la compattezza viene da spazi, altezze di riga e riquadri, non dal corpo. */
+:root {
+  --font: system-ui, 'Segoe UI', 'Noto Sans', 'Ubuntu', 'DejaVu Sans', 'Liberation Sans', sans-serif;
+  --mono: 'DejaVu Sans Mono', 'Liberation Mono', 'Ubuntu Mono', 'Noto Sans Mono', monospace;
+  --t-s: .6875rem; --t-b: .75rem; --t-l: .8125rem; --t-xl: .875rem; --t-code: .6875rem;   /* 11 12 13 14 px; codice 11 px (corretto) */
+  --lh: 1.35; --lh-code: 1.38;                                                          /* interlinea del testo e del codice */
+  --sp-1: .125rem; --sp-2: .25rem; --sp-3: .375rem; --sp-4: .5rem;                     /* 2 4 6 8 px */
+  --r: .3125rem; --r-l: .5rem; --r-pill: 999px;                                        /* controlli 5, riquadri 8 px */
+  --h-btn: 1.25rem; --h-campo: 1.375rem; --h-tab: 1.25rem; --h-riga: 1.25rem;            /* 20 22 20 20 px */
+  --ind-albero: 10px;                                                                  /* rientro per livello dell'albero (letto da pagina.js) */
+  --larg-albero-0: 196px;                                                              /* larghezza di partenza dell'albero */
+}
+
+/* ==== 2. Base ==== */
+html, body { margin: 0; padding: 0; }
+/* Pagina alta quanto la finestra, come in un'applicazione di posta: nessuna barra sulla pagina intera, scorre solo la parte centrale */
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font: var(--t-b)/var(--lh) var(--font); }
+button { font-family: inherit; }
+.mono { font-family: var(--mono); }
+.muto { color: var(--muted); }
+.piccolo { font-size: var(--t-s); }
+[hidden] { display: none !important; }
+/* Barre di scorrimento classiche, come Security-Scanner: quelle sottili di WebKit compaiono e svaniscono
+   a ogni movimento del mouse, e con l'inoltro X di SSH ogni passo dell'animazione ridisegna la finestra */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 6px; border: 2px solid var(--surface); }
+::-webkit-scrollbar-corner { background: var(--surface); }
+/* Il fuoco da tastiera si vede sempre (costa un ridisegno solo quando si preme Tab) */
+:focus-visible { outline: 2px solid var(--offer); outline-offset: 2px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offset: 0; }
+
+/* ==== 3. Struttura: intestazione, colonne, riquadri ==== */
+#app { height: 100vh; box-sizing: border-box; padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); }
+header { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: var(--sp-3); flex: 0 0 auto; }
+.testa-sx { display: flex; align-items: baseline; gap: var(--sp-3); min-width: 0; flex: 1 1 auto; }
+.testa-dx { display: flex; gap: var(--sp-2); align-items: center; flex: 0 0 auto; white-space: nowrap; }
+.nome-app { flex: 0 0 auto; }
+.nome-app { font-size: var(--t-xl); font-weight: 700; white-space: nowrap; }
+#percorso button.pc { background: none; border: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline dotted; }
+#percorso .pc-ora { color: var(--text); }
+#percorso { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.colonne { display: flex; flex-wrap: nowrap; gap: var(--sp-3); align-items: stretch; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+/* Banco e Scheda occupano l'altezza disponibile fino alla barra STATO e scorrono dentro il proprio riquadro */
+.colonne > .pannello { min-height: 0; overflow-y: auto; }
+/* Sotto questa larghezza i due riquadri vanno uno sotto l'altro e scorre la fascia centrale */
+@media (max-width: 900px) { .colonne { flex-wrap: wrap; align-content: flex-start; } .divisore { display: none; } .colonne > .pannello { flex: 1 1 100%; overflow-y: visible; } }
+.pannello { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-l); padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+/* Larghezza dei due riquadri: la proporzione sta nelle variabili --quota-banco e --quota-scheda di .colonne (nomi che non collidono con --pb del tema), le cambia il divisore e resta quando la finestra cambia */
+.banco { flex: var(--quota-banco, 5) 1 0; min-width: 300px; }
+.scheda { flex: var(--quota-scheda, 5) 1 0; min-width: 300px; }
+/* il riquadro Entità a sinistra del Banco; la sua larghezza la cambia il divisore (--larg-albero, mai definita nel CSS) */
+.alberello { position: relative; flex: 0 0 var(--larg-albero, var(--larg-albero-0)); min-width: 160px; box-sizing: border-box; }
+.colonne > .alberello { overflow: hidden; }
+.divisore { flex: 0 0 6px; cursor: col-resize; border-radius: 4px; background: transparent; }
+.divisore.trascina { background: var(--border2); }
+.sez-testa { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: nowrap; gap: var(--sp-2); }
+/* la testa di ogni riquadro sta su una riga; il titolo non si stringe, la frase accanto si accorcia con «…» (il testo intero sta nel title) */
+.sez-testa > * { white-space: nowrap; }
+.sez-testa > :not(.sez-titolo) { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.sez-testa > .mini { flex: 0 0 auto; }
+.sez-titolo { font-size: var(--t-s); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.scheda, .scheda > *, .modulo, .modulo > *, .stato, .stato-riga > *, #stato-msg, #stato-problemi, .esito, .avviso { min-width: 0; overflow-wrap: anywhere; }
+
+/* ==== 4. Bottoni: primario (pieno), accento (pieno blu, solo l'LLM), secondario (contorno), neutro, distruttivo (rosso) ==== */
+.btn { min-height: var(--h-btn); padding: 0 var(--sp-2); border-radius: var(--r); border: 1px solid var(--border2); background: var(--surface); color: var(--text); font-size: var(--t-b); cursor: pointer; }
+.btn.primario { border: none; background: var(--text); color: var(--surface); font-weight: 600; }
+.btn.accento { border: none; background: var(--offer); color: var(--onacc); font-weight: 600; }
+.btn.togli { border-color: var(--badb); color: var(--badt); }
+.btn.neutro { background: transparent; border-color: transparent; color: var(--muted); display: inline-flex; align-items: center; gap: var(--sp-2); }
+.btn.mini { min-height: 0; padding: 0 var(--sp-2); border-width: 0; font-size: var(--t-s); line-height: 1.4; }
+.btn.tema { display: flex; align-items: center; gap: var(--sp-2); }
+.azioni { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: center; }
+.azioni .dx { margin-left: auto; }
+/* la barra del Banco sta su una riga; quello che non ci sta va nel menu «Altro…» */
+#azioni { flex-wrap: nowrap; position: relative; }
+#azioni > .btn { flex: 0 0 auto; white-space: nowrap; }
+.menu-altro { position: absolute; top: 100%; right: 0; z-index: 5; margin-top: 4px; padding: var(--sp-2); display: flex; flex-direction: column; align-items: stretch; gap: var(--sp-2);
+  background: var(--surface); border: 1px solid var(--border2); border-radius: var(--r-l); }
+.menu-altro .btn { white-space: nowrap; text-align: left; margin-left: 0; }
+/* Un bottone spento ha colori suoi (testo almeno 3:1), mai l'opacità: sul rosso e sul pieno spariva */
+button:disabled, .btn:disabled, .btn.primario:disabled, .btn.accento:disabled, .btn.togli:disabled, .btn.neutro:disabled, .scelta:disabled, .cc-scelta:disabled {
+  background: var(--dis-bg); color: var(--dis-t); border: 1px solid var(--dis-b); cursor: not-allowed; opacity: 1; font-weight: inherit; }
+.btn.neutro:disabled { background: transparent; border-color: transparent; }
+.tab { min-height: var(--h-tab); padding: 0 var(--sp-4); border-radius: var(--r); border: none; font-size: var(--t-b); font-weight: 600; cursor: pointer; background: transparent; color: var(--muted); }
+.tab.on { background: var(--text); color: var(--surface); }
+.tab:disabled, .tab.on:disabled { background: transparent; color: var(--dis-t); border: none; }
+.gruppo { display: flex; background: var(--surface); border: 1px solid var(--border2); border-radius: var(--r-l); padding: 2px; }
+.interruttore { position: relative; display: inline-block; width: 32px; height: 16px; border-radius: 10px; background: var(--border2); }
+.pomello { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF; }
+.tema-giorno .interruttore { background: var(--offer); }
+.tema-giorno .pomello { left: 18px; }
+.elenco { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+.scelta { min-height: var(--h-tab); padding: 0 var(--sp-2); border-radius: var(--r-pill); border: 1px solid var(--border2); background: var(--surface); color: var(--text); font-size: var(--t-b); cursor: pointer; }
+.gruppo-modello { display: inline-flex; gap: 2px; align-items: center; }
+.scelta.on { background: var(--text); color: var(--surface); }
+/* La risposta al passaggio del mouse c'è solo in locale: via rete ogni cambio di aspetto è un fotogramma intero della finestra */
+body:not(.remoto) .btn, body:not(.remoto) .tab, body:not(.remoto) .scelta, body:not(.remoto) .cc-scelta { transition: background-color .12s, border-color .12s, color .12s; }
+body:not(.remoto) .btn:hover:not(:disabled) { background: var(--hover); border-color: var(--frame); }
+body:not(.remoto) .btn.primario:hover:not(:disabled), body:not(.remoto) .btn.accento:hover:not(:disabled) { opacity: .88; background: var(--text); }
+body:not(.remoto) .btn.accento:hover:not(:disabled) { background: var(--offer); }
+body:not(.remoto) .btn.togli:hover:not(:disabled) { background: var(--badbg); border-color: var(--badt); }
+body:not(.remoto) .btn.neutro:hover:not(:disabled) { color: var(--text); }
+body:not(.remoto) .tab:hover:not(.on):not(:disabled), body:not(.remoto) .scelta:hover:not(.on):not(:disabled) { background: var(--hover); color: var(--text); }
+body:not(.remoto) .divisore:hover { background: var(--border2); }
+
+/* ==== 5. Moduli ==== */
+.modulo { border: 1px solid var(--border2); border-radius: var(--r-l); background: var(--well); padding: var(--sp-3); display: flex; flex-direction: column; gap: var(--sp-2); }
+.modulo .titolo { font-weight: 600; }
+.modulo label { display: flex; flex-direction: column; gap: var(--sp-1); font-size: var(--t-b); }
+.modulo input, .modulo select { min-height: var(--h-campo); box-sizing: border-box; border: 1px solid var(--border2); border-radius: var(--r); padding: 0 var(--sp-3); background: var(--surface); color: var(--text); font: inherit; }
+.modulo textarea { box-sizing: border-box; border: 1px solid var(--border2); border-radius: var(--r); padding: var(--sp-2) var(--sp-3); background: var(--surface); color: var(--text); font: inherit; resize: vertical; min-height: 48px; }
+.modulo .riga-btn { display: flex; gap: var(--sp-2); }
+.modulo .errore-modulo, .modulo .campo-err { color: var(--badt); font-size: var(--t-b); }
+.modulo .campo-err:empty { display: none; }
+/* una promessa o un'ipotesi scritta dall'editor è sempre ipotesi (giallo): contratto lo diventa solo con Ratify */
+.modulo.dich { background: var(--ipo); border-color: var(--ipob); }
+.modulo.dich input, .modulo.dich select, .modulo.dich textarea { background: var(--surface); }
+.modulo .ap-elenco { display: flex; flex-direction: column; gap: var(--sp-2); }
+.modulo .ap-voce { flex-direction: row; align-items: flex-start; gap: var(--sp-2); font-size: var(--t-b); cursor: pointer; }
+.modulo .ap-voce input { min-height: 0; width: auto; padding: 0; margin: 3px 0 0; flex: 0 0 auto; }
+/* l'elenco dei connettori della cartella nel modulo «+ Connettore pubblico» */
+.modulo .lista-csc { display: flex; flex-direction: column; gap: var(--sp-1); max-height: 9rem; overflow-y: auto; }
+.modulo .voce-csc { text-align: left; justify-content: flex-start; white-space: normal; }
+/* Il modulo del Banco sta sopra il disegno, non sposta niente: la tela non si schiaccia quando lo si apre */
+#modulo { position: absolute; top: var(--sp-3); left: var(--sp-3); z-index: 2; box-sizing: border-box; width: min(24rem, calc(100% - 1.5rem)); max-height: calc(100% - 1.5rem); overflow-y: auto;
+  background: var(--surface); box-shadow: 0 .5rem 1.5rem var(--shadow); }
+#modulo input, #modulo select { background: var(--well); }
+
+/* ==== 6. Il disegno del Banco: riquadro, testi, forme. Il tracciato si calcola in JavaScript sulla larghezza reale ==== */
+.banco .tela-scroll { flex: 1 1 0; min-height: 14rem; }
+.tela-scroll { position: relative; overflow: auto; min-width: 0; border-radius: var(--r-l); background: var(--well); border: 1px solid var(--wellb); }
+.tela { position: relative; }
+.tela svg { display: block; }
+.tela text { fill: var(--text); font: 600 11px var(--font); }
+.tela text.conn { font: 600 11px var(--font); }
+.tela text.nota { fill: var(--muted); font: 400 11px var(--font); }
+.tela text.scatola { fill: var(--boxt); font: 700 17px var(--font); }
+.tela text.scatola-s { fill: var(--boxmuted); font: 400 11px var(--font); }
+.tela text.scatola-e { fill: var(--boxmuted); font: 600 10px var(--font); letter-spacing: .06em; }
+.tela text.cartella-n { fill: var(--boxt); font: 700 13px var(--font); }
+.tela text.parte-n { font: 700 13px var(--font); }
+.tela text.parte-et { fill: var(--muted); font: 600 11px var(--font); letter-spacing: .06em; }
+.tela text.dentro-s { fill: var(--muted); font: 400 11px var(--font); }
+.tela text.filo-et { font: 600 11px var(--font); paint-order: stroke; stroke: var(--well); stroke-width: 4px; stroke-linejoin: round; }
+.tela .cliccabile { cursor: pointer; }
+.tela .sel-anello { fill: none; stroke: var(--offer); stroke-width: 3; }
+body:not(.remoto) .tela .cliccabile:hover .bordo { stroke: var(--offer); }
+body:not(.remoto) .tela .cliccabile:hover .zona { fill: var(--offer); fill-opacity: .2; }
+body:not(.remoto) .tela .cliccabile:hover .filo { stroke-width: 4; }
+body:not(.remoto) .tela text.cliccabile:hover { text-decoration: underline; }
+.legenda-tela { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); color: var(--muted); font-size: var(--t-s); }
+.leg-voce { display: inline-flex; align-items: center; gap: var(--sp-2); }
+
+/* ==== 7. La Scheda ==== */
+.scheda-nome { font-size: var(--t-xl); font-weight: 700; }
+.scheda .azioni .btn { min-height: var(--h-btn); }
+.scheda .vers { display: inline-block; margin-top: var(--sp-1); padding: 1px var(--sp-3); border-radius: var(--r-pill); background: var(--ipo); border: 1px solid var(--ipob); font-weight: 600; }
+.nota-scheda { padding: var(--sp-2) var(--sp-3); border-radius: var(--r); background: var(--well); border: 1px solid var(--border2); }
+.codice { font-family: var(--mono); font-size: var(--t-code); line-height: var(--lh-code); background: var(--code); border: 1px solid var(--wellb); border-radius: var(--r); padding: var(--sp-2) var(--sp-3); overflow-x: hidden; min-height: 32px; min-width: 0; }
+.codice div { white-space: pre-wrap; overflow-wrap: anywhere; padding: 0 var(--sp-3); }
+.codice div.vuoto { font-family: var(--font); font-size: var(--t-b); color: var(--muted); white-space: normal; }
+.codice .ipo { background: var(--ipo); }
+.codice .verde { background: var(--ok); color: var(--okt); }
+.codice .rosso { background: var(--badbg); color: var(--badt); }
+.codice div.riga-cl { cursor: pointer; }
+body:not(.remoto) .codice div.riga-cl:hover { outline: 1px solid var(--border2); }
+.codice div .et { float: right; margin-left: var(--sp-3); font-family: var(--font); font-size: var(--t-s); font-weight: 600; color: var(--okt); }
+.legenda { display: flex; gap: var(--sp-3); flex-wrap: wrap; }
+.quadrato { display: inline-block; width: 10px; height: 10px; vertical-align: middle; border: 1px solid var(--border2); }
+.q-ipo { background: var(--ipo); border-color: var(--ipob); }
+.q-ok { background: var(--ok); border-color: var(--okb); }
+.q-bad { background: var(--badbg); border-color: var(--badb); }
+
+/* ==== 8. Stato, esito, avviso ==== */
+.stato { gap: var(--sp-2); }
+.stato-riga { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.chip { font-size: var(--t-b); font-weight: 600; padding: var(--sp-1) var(--sp-3); border-radius: var(--r-pill); background: var(--chip); color: var(--chipt); }
+.chip.chiusa { background: var(--ok); color: var(--okt); }
+.chip.zoppa, .chip.sospesa { background: var(--badbg); color: var(--badt); }
+#stato-problemi div { color: var(--badt); padding-left: var(--sp-1); }
+.esito { border-radius: var(--r); padding: var(--sp-2) var(--sp-3); background: var(--ok); border: 1px solid var(--okb); color: var(--okt); white-space: pre-wrap; }
+.esito.no { background: var(--badbg); border-color: var(--badb); color: var(--badt); }
+.avviso { padding: var(--sp-2) var(--sp-3); border-radius: var(--r); background: var(--ipo); border: 1px solid var(--ipob); white-space: pre-wrap; }
+
+/* ==== 9. Completa (colori del modello: domanda blu, riga proposta arancio, fatto verde) ==== */
+.completa { border: 1px solid var(--border2); border-radius: var(--r-l); background: var(--well); padding: var(--sp-3); display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; overflow-wrap: anywhere; }
+.completa .riga-btn { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+.completa label { display: flex; flex-direction: column; gap: var(--sp-1); font-size: var(--t-b); }
+.completa input[type=text] { min-height: var(--h-campo); box-sizing: border-box; border: 1px solid var(--border2); border-radius: var(--r); padding: 0 var(--sp-3); background: var(--surface); color: var(--text); font: inherit; }
+.cc-testa { font-weight: 600; }
+.cc-msg { line-height: 1.45; }
+.cc-err { color: var(--badt); }
+.cc-nota { color: var(--muted); font-size: var(--t-b); }
+.cc-fatto { border-radius: var(--r); padding: var(--sp-3); background: var(--donebg); border: 1px solid var(--doneb); }
+.cc-elenco div { color: var(--badt); padding-left: var(--sp-1); }
+.cc-carta { border-radius: var(--r-l); padding: var(--sp-3); display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+.cc-carta.cc-q { border: 1px solid var(--qb); background: var(--qbg); }
+.cc-carta.cc-p { border: 1px solid var(--pb); background: var(--pbg); }
+.cc-carta.cc-salta { opacity: .6; }
+.cc-titolo { font-size: var(--t-s); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.cc-q .cc-titolo { color: var(--qt); }
+.cc-p .cc-titolo { color: var(--pt); }
+.cc-domanda { font-size: var(--t-l); line-height: 1.4; font-weight: 500; }
+.cc-testo { color: var(--muted); }
+.cc-eti { font-size: var(--t-s); color: var(--muted); }
+.cc-scelte { display: flex; flex-direction: column; gap: var(--sp-2); }
+.cc-scelta { min-height: var(--h-campo); text-align: left; padding: var(--sp-2) var(--sp-3); border-radius: var(--r); border: 1px solid var(--qbtn); background: var(--surface); color: var(--text); font-size: var(--t-b); cursor: pointer; }
+.cc-scelta.on { background: var(--text); color: var(--surface); }
+body:not(.remoto) .cc-scelta:hover:not(.on):not(:disabled) { background: var(--hover); }
+.cc-righe { font-family: var(--mono); font-size: var(--t-code); line-height: var(--lh-code); background: var(--new); border-radius: var(--r); padding: var(--sp-2) var(--sp-3); }
+.cc-righe div { white-space: pre-wrap; overflow-wrap: anywhere; }
+.cc-q .cc-righe { background: var(--surface); }
+
+/* ==== 10. Approva e la casella di testo ==== */
+.approva .ap-elenco { display: flex; flex-direction: column; gap: 6px; }
+.approva .ap-si div { color: var(--okt); padding-left: var(--sp-1); }
+.approva .ap-no div { color: var(--muted); padding-left: var(--sp-1); }
+.approva .ap-voce { flex-direction: row; align-items: flex-start; gap: var(--sp-2); font-size: var(--t-b); cursor: pointer; }
+.approva .ap-voce input { margin-top: 3px; flex: 0 0 auto; }
+.modulo textarea.casella { font-family: var(--mono); font-size: var(--t-code); line-height: var(--lh-code); white-space: pre-wrap; }
+
+/* ==== 11. L'albero delle entità ==== */
+.cerca { box-sizing: border-box; width: 100%; min-height: var(--h-campo); border: 1px solid var(--border2); border-radius: var(--r); padding: 0 var(--sp-3); background: var(--well); color: var(--text); font: inherit; }
+.albero { flex: 1 1 0; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 1px; }
+.nodo { display: flex; align-items: center; gap: 3px; flex: 0 0 auto; min-height: var(--h-riga); box-sizing: border-box; padding-right: var(--sp-2); border: 1px solid transparent; border-radius: var(--r); cursor: pointer; user-select: none; white-space: nowrap; }
+.nodo.on { background: var(--hover); border-color: var(--offer); }
+.nodo.bersaglio { background: var(--hover); border: 1px dashed var(--offer); outline: 2px solid var(--offer); outline-offset: -3px; }
+/* sovrapposta al campo di ricerca (in cima all'albero), non sposta il layout quando compare nel dragstart (WebKitGTK annulla il drag se il layout cambia) */
+.fascia-fuori { position: absolute; z-index: 5; left: var(--sp-4); right: var(--sp-4); box-sizing: border-box; padding: var(--sp-2) var(--sp-3); border: 1px dashed var(--border2); border-radius: var(--r); background: var(--surface); color: var(--muted); text-align: center; }
+.fascia-fuori.bersaglio { background: var(--hover); border-color: var(--offer); outline: 2px solid var(--offer); outline-offset: -3px; color: var(--text); }
+.nodo.gruppo { margin-top: var(--sp-2); color: var(--muted); font-weight: 600; }
+.nodo.mancante { color: var(--dis-t); flex-wrap: wrap; }
+.nodo .segno.a-capo { flex: 1 0 100%; box-sizing: border-box; padding-left: 27px; margin-top: -3px; padding-bottom: 2px; }
+.nodo .tri { flex: 0 0 16px; width: 16px; height: 16px; padding: 0; border: none; background: transparent; color: var(--muted); font-size: var(--t-s); line-height: 1; cursor: pointer; }
+.nodo .nome-nodo { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.nodo .segno { flex: 0 0 auto; color: var(--muted); font-size: var(--t-s); }
+.nodo mark { background: var(--ipo); color: inherit; border-radius: 2px; }
+.pallino { flex: 0 0 auto; width: 9px; height: 9px; box-sizing: border-box; border-radius: 50%; border: 1px solid var(--frame); background: transparent; }
+.pallino.chiusa { background: var(--okb); border-color: var(--okb); }
+.pallino.zoppa { background: var(--bad); border-color: var(--bad); }
+.pallino.sospesa { background: var(--ipob); border-color: var(--ipob); }
+.pallino.mancante { border-style: dashed; border-color: var(--dis-t); }
+.albero .vuoto { color: var(--muted); padding: var(--sp-2); white-space: normal; }
+.modulo .voce-csc.scelto { border-color: var(--offer); color: var(--text); background: var(--hover); }
+body:not(.remoto) .nodo:hover:not(.on) { background: var(--hover); }
+@media (max-width: 900px) { .albero { max-height: 12rem; flex: 0 0 auto; } }
+
+/* ==== 12. BCDD 1.0-beta: colori delle parole, linguette, riquadri del rapporto, marche delle righe ==== */
+/* I colori delle parole stanno sopra lo sfondo di stato della riga (giallo, verde, rosso) e sul fondo normale: contrasto almeno 4,5:1 sui quattro, misurato dalla suite */
+.hl-chiave { color: var(--hl-chiave); }
+.hl-stringa { color: var(--hl-stringa); }
+.hl-commento { color: var(--hl-commento); font-style: italic; }
+.hl-numero { color: var(--hl-numero); }
+.hl-segno { color: var(--hl-segno); }
+.hl-contesto { color: var(--hl-contesto); }
+.hl-estensione { color: var(--hl-estensione); font-weight: 600; }
+.hl-ritirata { color: var(--hl-ritirata); text-decoration: line-through; }
+.linguette { display: flex; }
+.linguette .gruppo { flex-wrap: wrap; }
+.codice .et.grado { color: var(--muted); font-weight: 500; }
+.codice .et.rip, .codice .et.cita { color: var(--muted); font-weight: 500; }
+.codice .et.cita.manca { color: var(--badt); }
+.codice div.ripetuto { border-left: 2px solid var(--offer); }
+.codice div.nonric { border-left: 2px dashed var(--badb); }
+.codice div .nonric-nota { font-family: var(--font); font-size: var(--t-s); color: var(--muted); padding: 0; }
+.codice div.evidenza { outline: 2px solid var(--offer); outline-offset: -1px; }
+.codice.anteprima { max-height: 12rem; overflow-y: auto; background: var(--code); }
+.rapporto { display: flex; flex-direction: column; gap: var(--sp-2); }
+.riq { border: 1px solid var(--border2); border-radius: var(--r); background: var(--well); padding: var(--sp-2) var(--sp-3); display: flex; flex-direction: column; gap: var(--sp-1); }
+.riq-titolo { font-size: var(--t-s); font-weight: 600; letter-spacing: 0.04em; color: var(--muted); }
+.riq-voce { color: var(--text); overflow-wrap: anywhere; }
+.riq-clic { cursor: pointer; }
+body:not(.remoto) .riq-clic:hover { text-decoration: underline; }
+.riq-nome { padding: 0 var(--sp-2); text-decoration: underline; color: var(--text); }
+.riq-ext { display: flex; flex-direction: column; gap: var(--sp-1); margin-top: var(--sp-2); }
+.riq-ext .codice { padding: var(--sp-1) var(--sp-3); min-height: 0; }

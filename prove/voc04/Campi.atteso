@@ -1,0 +1,33 @@
+bcdd check Campi.csc
+righe: 15 (riconosciute 5, commenti 1, vuote 1, non riconosciute 8)
+blocchi: 1
+  riga 3: CSC CampiEstensione VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 1
+  riga 10: GUARANTEE ? non riconosciuta
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 8
+  riga 5: EVENT IN KIND
+  riga 6: STATE LEVEL : Boolean INITIAL false
+  riga 7: DEFINE PARAMS := 3
+  riga 8: CAPABILITY Scrivi(FORM: String)
+  riga 9: STATE testo : MEANING INITIAL ""
+  riga 10: GUARANTEE REDUCES: VERBAL "un campo come id" VERIFY BY JUDGEMENT "l'operatore"
+  riga 12: SCENARIO TO EXPECT ADMITTED
+  riga 14: @0 arrivo(SOURCE: "x")
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore; righe non riconosciute: 8 (vedi sezione 5)

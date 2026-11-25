@@ -1,0 +1,6 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  STATE s : Boolean INITIAL false
+  SCENARIO s1 EXPECT ADMITTED
+    @0 s s = c
+END

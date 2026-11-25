@@ -1,0 +1,39 @@
+{
+  "formato": "bcdd-refine-4",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "ASSUME",
+      "id": "x1",
+      "dettaglia": "g1",
+      "testo": "Una frase",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "REQUIREMENT",
+      "id": "x2",
+      "dettaglia": "g1",
+      "testo": "Una frase",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "x3",
+      "dettaglia": "zzz",
+      "testo": "Una frase",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [
+    {
+      "id": "zzz",
+      "testo": "Nuova frase",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    }
+  ]
+}

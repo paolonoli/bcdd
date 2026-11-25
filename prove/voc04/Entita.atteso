@@ -1,0 +1,32 @@
+bcdd check Entita.csc
+righe: 10 (riconosciute 4, commenti 1, vuote 1, non riconosciute 4)
+blocchi: 1
+  riga 3: ENTITY Insieme VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 9: GUARANTEE e1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 9: GUARANTEE e1
+
+5. RIGHE NON RICONOSCIUTE: 4
+  riga 5: OFFERS WHEN
+  riga 6: USES ALL
+  riga 7: ON : Parte
+  riga 8: parte : MAX
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+esito: nessun errore; righe non riconosciute: 4 (vedi sezione 5)

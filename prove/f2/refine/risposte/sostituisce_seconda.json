@@ -1,0 +1,22 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1a",
+      "dettaglia": "g1",
+      "testo": "La luce si accende entro mezzo secondo dalla pressione",
+      "verifica": "INSPECTION",
+      "verifica_testo": "il registro delle pressioni e dell'accensione"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [
+    {
+      "id": "g2",
+      "testo": "La luce si spegne da sola fra 170 e 190 secondi dopo l'ultima pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    }
+  ], "interfaccia": []}

@@ -1,0 +1,34 @@
+bcdd check Controllore.csc
+righe: 23 (riconosciute 19, commenti 1, vuote 3, non riconosciute 0)
+blocchi: 1
+  riga 3: CSC Controllore VERSION 0.1, STATUS HYPOTHESIS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 4
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 10: GUARANTEE k-1 verbale
+  riga 14: GUARANTEE k-2 verbale
+  riga 19: GUARANTEE k-3 verbale
+  riga 21: GUARANTEE k-4 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 4
+  riga 10: GUARANTEE k-1
+  riga 14: GUARANTEE k-2
+  riga 19: GUARANTEE k-3
+  riga 21: GUARANTEE k-4
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 2
+  Struttura: riga 7
+  Rapporto: riga 8
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore

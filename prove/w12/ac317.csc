@@ -1,0 +1,4 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  DEFINE T1 := 1 ± 2
+END

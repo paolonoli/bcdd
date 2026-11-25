@@ -1,0 +1,14 @@
+CSC Luce VERSION 0.1
+  PURPOSE "Luce"
+  STATE accesa : Boolean INITIAL false
+  STATE modo : Boolean INITIAL false
+  GUARANTEE l1: ALWAYS accesa
+  GUARANTEE l2: ALWAYS modo
+  SCENARIO s1 EXPECT ADMITTED
+END
+BINDING Luce VERSION 0.1
+  BIND spenta: VERBAL "x"
+  BIND accesa DETAILS l1: VERBAL "y"
+  BIND accesa: VERBAL "z"
+        VERIFY BY JUDGEMENT "x"
+END

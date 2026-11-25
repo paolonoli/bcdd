@@ -1,0 +1,30 @@
+bcdd check 15_trappola_stringa.csc
+righe: 17 (riconosciute 13, commenti 2, vuote 2, non riconosciute 0)
+blocchi: 1
+  riga 4: CSC Trappola VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 3
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 9: GUARANTEE t1 verbale
+  riga 11: GUARANTEE t2 verbale
+  riga 14: GUARANTEE t3 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 3
+  riga 9: GUARANTEE t1
+  riga 11: GUARANTEE t2
+  riga 14: GUARANTEE t3
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore

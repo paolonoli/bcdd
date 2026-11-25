@@ -1,0 +1,58 @@
+PROFILE T VERSION 0.1
+  PURPOSE "p"
+  EXTENSION DUR2
+    KIND SCOPE
+    LEVEL CSC
+    PARAMS (c: Condition)
+    FORM "DUR2 c"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO WHILE c AND c
+  END
+  EXTENSION NR
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (x: Real) : Boolean
+    FORM "NR x"
+    MEANING "m"
+    VERIFY V1 C2
+    SOURCE "s"
+  END
+  EXTENSION NRR
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (x: Real) : Boolean
+    FORM "NRR x"
+    MEANING "m"
+    VERIFY V1 C4
+    SOURCE "s"
+    REDUCES TO x > 0.0 AND x < 1.0
+  END
+  EXTENSION SQ
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (x: Real) : Real
+    FORM "SQ x"
+    MEANING "m"
+    VERIFY V1 C3
+    SOURCE "s"
+  END
+END
+CSC C VERSION 0.1
+  IMPORT PROFILE T VERSION 0.1
+  PURPOSE "x"
+  STATUS RATIFIED BY D-1
+  STATE r : Real INITIAL 0.0
+  STATE s : Boolean INITIAL false
+  TYPE F := {a, b}
+  STATE x[F] : Real INITIAL 0.0
+  EVENT IN e
+  GUARANTEE g: ALWAYS s
+  GUARANTEE g2: ALWAYS MAX(SQ r, 1.0) > 0.0
+  DEFINE K := SQ r
+  GUARANTEE g3: ALWAYS K > 0.0
+  GUARANTEE g4: DUR2 (NR r): ALWAYS s
+  SCENARIO q EXPECT ADMITTED
+    @0 e
+END

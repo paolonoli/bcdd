@@ -1,0 +1,20 @@
+bcdd refine Luce.csc
+CSC Luce: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 1 domanda, 1 proposta (scartate dal controllo: 0)
+
+per rispondere: scrivi il numero di una scelta, oppure la tua risposta; un numero da solo vale come scelta (per dire 60 secondi scrivi 60 s)
+
+DOMANDA 1 di 1
+  Quale thread gestisce il temporizzatore della luce?
+  1) un thread dedicato
+  2) il thread principale
+risposta (da 1 a 2, oppure scrivi tu; invio vuoto per saltare): 
+
+PROPOSTA 1 di 1, dettaglia g2 (riga 12)
+  GUARANTEE g2a DETAILS g2 STATUS HYPOTHESIS: VERBAL "Un thread dedicato legge una coda di eventi e spegne la luce con un timer di sistema"
+                                              VERIFY BY INSPECTION "il codice sorgente"
+accetti? s = sì, n = no, f = fine (scarta le restanti): n
+
+riepilogo: accettate 0, scartate da te 1, scartate dal controllo 0
+niente da scrivere: Luce.csc non cambia

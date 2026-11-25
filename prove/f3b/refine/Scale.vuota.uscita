@@ -1,0 +1,6 @@
+bcdd refine Scale.csc
+ENTITY Scale: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 0 domande, 0 proposte (scartate dal controllo: 0)
+
+la ENTITY Scale è precisa abbastanza: nessuna domanda e nessuna proposta, Scale.csc non cambia

@@ -1,0 +1,41 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [],
+  "nuove_csc": [],
+  "sostituzioni": [],
+  "interfaccia": [
+    {
+      "riga": "STATE lampeggia : Frequenza INITIAL 0",
+      "motivo": "tipo non dichiarato"
+    },
+    {
+      "riga": "TYPE Frequenza := VERBAL \"quanti lampi al secondo\"",
+      "motivo": "serve la frequenza"
+    },
+    {
+      "riga": "STATE ritmo : Frequenza INITIAL 0",
+      "motivo": "il tipo è dichiarato qui sopra"
+    },
+    {
+      "riga": "EVENT IN pressione",
+      "motivo": "nome già usato nella CSC"
+    },
+    {
+      "riga": "GUARANTEE g9: VERBAL \"x\"",
+      "motivo": "non è interfaccia"
+    },
+    {
+      "riga": "EVENT OUT spenta",
+      "motivo": "la luce si spegne"
+    },
+    {
+      "riga": "EVENT OUT spenta(x: Boolean)",
+      "motivo": "stesso nome della riga 6"
+    },
+    {
+      "riga": "CAPABILITY Spegni\nEVENT OUT altra",
+      "motivo": "su due righe"
+    }
+  ]
+}

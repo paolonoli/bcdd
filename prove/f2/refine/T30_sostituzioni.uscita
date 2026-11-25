@@ -1,0 +1,75 @@
+bcdd refine Sostituzioni.csc
+CSC Sostituzioni: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 0 domande, 0 proposte, 10 sostituzioni (scartate dal controllo: 8)
+
+SOSTITUZIONE 1 di 10: SCARTATA dal controllo
+  ragione: sostituisce g1, che è contratto (riga 10): una riga ratificata non si sostituisce
+  id: g1
+  testo: Una pressione accende la luce entro un secondo
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+SOSTITUZIONE 2 di 10: SCARTATA dal controllo
+  ragione: sostituisce g1b, che è contratto (riga 16): una riga ratificata non si sostituisce
+  id: g1b
+  testo: Una pressione a luce accesa non la spegne e non cambia il tempo
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+SOSTITUZIONE 3 di 10: SCARTATA dal controllo
+  ragione: sostituisce una riga che non è una GUARANTEE né una ASSUME della CSC Sostituzioni: g9
+  id: g9
+  testo: Una riga che non c'è
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+SOSTITUZIONE 4 di 10: SCARTATA dal controllo
+  ragione: sostituisce g2b, che non è una riga verbale (riga 22): si sostituiscono solo righe verbali
+  id: g2b
+  testo: La luce è accesa
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+SOSTITUZIONE 5 di 10: SCARTATA dal controllo
+  ragione: id non valido: g-
+  id: g-
+  testo: Un id non valido
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+SOSTITUZIONE 6 di 10, al posto di g1a (riga 12)
+  adesso:
+    GUARANTEE g1a DETAILS g1 STATUS HYPOTHESIS: VERBAL "La luce si accende subito"
+                                                VERIFY BY JUDGEMENT "l'operatore, con un orologio"
+  diventa:
+    GUARANTEE g1a DETAILS g1 STATUS HYPOTHESIS: VERBAL "La luce si accende entro un secondo dalla pressione"
+                                                VERIFY BY JUDGEMENT "l'operatore, con un cronometro"
+  restano i dettagli di g1a, da rileggere: g1a1
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+SOSTITUZIONE 7 di 10: SCARTATA dal controllo
+  ragione: id già sostituito dalla sostituzione 6: g1a
+  id: g1a
+  testo: La luce si accende entro mezzo secondo dalla pressione
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+SOSTITUZIONE 8 di 10: SCARTATA dal controllo
+  ragione: la riga nuova è uguale a quella di adesso
+  id: g2a
+  testo: La luce si spegne dopo un minuto
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un orologio
+
+SOSTITUZIONE 9 di 10: SCARTATA dal controllo
+  ragione: testo con virgolette doppie: una stringa BCDD non le può contenere
+  id: g2a
+  testo: La luce si spegne dopo "un minuto"
+  verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
+
+SOSTITUZIONE 10 di 10, al posto di g2a (riga 20)
+  adesso:
+    GUARANTEE g2a DETAILS g2: VERBAL "La luce si spegne dopo un minuto"
+                              VERIFY BY JUDGEMENT "l'operatore, con un orologio"
+  diventa:
+    GUARANTEE g2a DETAILS g2: VERBAL "La luce si spegne fra 55 e 65 secondi dopo l'ultima pressione"
+                              VERIFY BY INSPECTION "il registro delle accensioni"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+riepilogo: accettate 2 (sostituzioni: 2), scartate da te 0, scartate dal controllo 8
+scrivo 2 sostituzioni in Sostituzioni.csc? s = sì, n = no: s
+scritto Sostituzioni.csc: 2 sostituzioni

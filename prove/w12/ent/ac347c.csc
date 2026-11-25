@@ -1,0 +1,5 @@
+ENTITY LuceScale VERSION 0.1
+  PURPOSE "l"
+  OFFERS Pressione
+  OFFERS Luce
+END

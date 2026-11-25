@@ -1,0 +1,29 @@
+bcdd check 12_nessuna_csc.csc
+righe: 6 (riconosciute 1, commenti 1, vuote 1, non riconosciute 3)
+blocchi: 1
+  riga 3: REFINEMENT VIEW SoloVista
+
+1. ERRORI: 2
+  file: [E11] il file non contiene nessuna CSC
+  riga 3: [E15] REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 3
+  riga 3: REFINEMENT VIEW SoloVista
+  riga 4: COMPOSED OF
+  riga 5: a : Qualcosa
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 2 errori; righe non riconosciute: 3 (vedi sezione 5)

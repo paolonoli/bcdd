@@ -1,0 +1,7 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  TYPE Ch := {L, R}
+  EVENT OUT frame(ch: Ch)
+  GUARANTEE g1: ALWAYS TIME SINCE frame WITH ch = L > 5 s
+  GUARANTEE g2: ALWAYS TIME SINCE (frame WITH ch = L) > 5 s
+END

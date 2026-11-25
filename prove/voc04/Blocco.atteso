@@ -1,0 +1,26 @@
+bcdd check Blocco.csc
+righe: 5 (riconosciute 2, commenti 1, vuote 1, non riconosciute 1)
+blocchi: 1
+  riga 3: CSC (intestazione non valida), senza STATUS
+
+1. ERRORI: 1
+  riga 3: [E09] intestazione non valida: attesa CSC Nome VERSION numero
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 1
+  riga 3: CSC REQUIRES VERSION 0.1
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 1 errore; righe non riconosciute: 1 (vedi sezione 5)

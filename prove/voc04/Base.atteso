@@ -1,0 +1,51 @@
+bcdd check Base.csc
+righe: 33 (riconosciute 5, commenti 2, vuote 1, non riconosciute 25)
+blocchi: 1
+  riga 4: CSC ParoleBase VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 32: GUARANTEE g1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 32: GUARANTEE g1
+
+5. RIGHE NON RICONOSCIUTE: 25
+  riga 6: CAPABILITY AFTER
+  riga 7: CAPABILITY BEFORE
+  riga 8: CAPABILITY BETWEEN
+  riga 9: CAPABILITY UNTIL
+  riga 10: CAPABILITY PRECEDES
+  riga 11: CAPABILITY FOR
+  riga 12: CAPABILITY LEAST
+  riga 13: CAPABILITY ACCEPTS
+  riga 14: CAPABILITY ONLY
+  riga 15: CAPABILITY REQUIRES
+  riga 16: CAPABILITY ENSURES
+  riga 17: CAPABILITY RESOLVES
+  riga 18: CAPABILITY CHANGED
+  riga 19: CAPABILITY TRANSITION
+  riga 20: CAPABILITY ON
+  riga 21: CAPABILITY WHEN
+  riga 22: CAPABILITY FOLLOWS
+  riga 23: CAPABILITY ALL
+  riga 24: CAPABILITY ABS
+  riga 25: CAPABILITY MIN
+  riga 26: CAPABILITY MAX
+  riga 27: CAPABILITY LOG10
+  riga 28: CAPABILITY ROUND
+  riga 29: CAPABILITY FLOOR
+  riga 30: CAPABILITY CEIL
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore; righe non riconosciute: 25 (vedi sezione 5)

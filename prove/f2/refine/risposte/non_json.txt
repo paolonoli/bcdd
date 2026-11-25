@@ -1,0 +1,2 @@
+Ecco le mie proposte per la CSC Luce:
+- g2a: la luce si spegne dopo tre minuti

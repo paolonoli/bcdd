@@ -1,0 +1,13 @@
+PROFILE T VERSION 0.1
+  PURPOSE "p"
+  EXTENSION A
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (x: Real) : Boolean
+    FORM "A x"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO x > 0.0 AND x < 1.0
+  END
+END

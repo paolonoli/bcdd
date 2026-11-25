@@ -1,0 +1,57 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1c",
+      "dettaglia": "g1",
+      "testo": "",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1d",
+      "dettaglia": "g1",
+      "testo": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1e",
+      "dettaglia": "g1",
+      "testo": "La luce si accende",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": ""
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1f",
+      "dettaglia": "g1",
+      "testo": "La luce si accende",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "il \"tecnico\""
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1g",
+      "dettaglia": "g1",
+      "testo": "La luce si accende",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "uno\ndue"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1h",
+      "dettaglia": "g1",
+      "testo": "La luce si accende",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [],
+  "interfaccia": []
+}

@@ -1,0 +1,24 @@
+CSC P VERSION 0.1
+  PURPOSE "sonda"
+  STATUS HYPOTHESIS
+  TYPE Fase := {a, b}
+  EVENT IN e(v: Integer)
+  EVENT OUT u
+  CAPABILITY Cap(f: String)
+  STATE s : Boolean INITIAL false
+  STATE n : Integer [0 .. 10] INITIAL 0
+  STATE r : Real INITIAL 0.0
+  STATE f : Fase INITIAL a
+  STATE x[Fase] : Integer INITIAL 0
+  DEFINE D := 5 s
+  SCENARIO s1 EXPECT ADMITTED
+    @0 e(v: 1) VERBAL "a parole"
+  SCENARIO s2 DETAILS s1 EXPECT ADMITTED
+    @0 e(v: 2)
+  SCENARIO s3 EXPECT ADMITTED
+    @0 e(v: 3)
+  SCENARIO s4 DETAILS s3 EXPECT ADMITTED
+    @0 e(v: 4)
+  DEFINE D2 DETAILS D := 3 s
+  GUARANTEE g: ALWAYS s
+END

@@ -1,0 +1,42 @@
+bcdd check --strict SistemaFacoltativo.csc
+righe: 7 (riconosciute 7, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY SistemaFacoltativo VERSION 0.1, senza STATUS
+    riga 3: OFFERS Uscita in Uscita.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 5: modulo : Modulo in Modulo.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 6: alim : Alimentatore in Alimentatore.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 1
+  riga 6: [E17] la parte alim offre il connettore Rete: nessun'altra parte di SistemaFacoltativo lo usa, né SistemaFacoltativo lo offre da fuori (in: modulo.tipo = batteria, con alim)
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 2
+  riga 5: modulo usa Rete: la offre alim (riga 6) (in: modulo.tipo = alimentato, con alim)
+  riga 5: modulo usa Rete: nessuno la offre (in: modulo.tipo = alimentato, senza alim)
+
+9. COMPOSIZIONI: 4
+  riga 1: ENTITY SistemaFacoltativo: 4
+    modulo.tipo = batteria, con alim
+    modulo.tipo = batteria, senza alim
+    modulo.tipo = alimentato, con alim
+    modulo.tipo = alimentato, senza alim
+
+10. ASSENZE DICHIARATE: 1
+  riga 5: senza alim: la parte modulo usa il connettore Rete: nessun'altra parte di SistemaFacoltativo lo offre, né SistemaFacoltativo lo usa da fuori (in: modulo.tipo = alimentato)
+
+esito: 1 errore

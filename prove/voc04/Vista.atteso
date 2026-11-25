@@ -1,0 +1,34 @@
+bcdd check Vista.csc
+righe: 10 (riconosciute 3, commenti 2, vuote 1, non riconosciute 4)
+blocchi: 3
+  riga 3: CSC Doppio VERSION 0.1, senza STATUS
+  riga 5: REFINEMENT VIEW Doppio
+  riga 9: REFINEMENT VIEW Aperta
+
+1. ERRORI: 4
+  riga 3: [E07] blocco non chiuso: manca END di CSC Doppio
+  riga 5: [E15] REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY
+  riga 9: [E07] blocco non chiuso: manca END di REFINEMENT VIEW Aperta
+  riga 9: [E15] REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 4
+  riga 5: REFINEMENT VIEW Doppio
+  riga 6: COMPOSED OF
+  riga 7: parte : Doppio
+  riga 9: REFINEMENT VIEW Aperta
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 4 errori; righe non riconosciute: 4 (vedi sezione 5)

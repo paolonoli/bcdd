@@ -1,0 +1,27 @@
+bcdd check minuscolo.csc
+righe: 6 (riconosciute 3, commenti 1, vuote 0, non riconosciute 2)
+blocchi: 1
+  riga 2: CSC Uno VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 6: [E08] END senza un blocco aperto
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 2
+  riga 5: binding Uno VERSION 0.1
+  riga 6: END
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 1 errore; righe non riconosciute: 2 (vedi sezione 5)

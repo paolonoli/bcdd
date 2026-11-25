@@ -1,0 +1,5 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  DEFINE A := B + 1
+  DEFINE B := A - 1
+END

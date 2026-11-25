@@ -1,0 +1,37 @@
+bcdd refine Luce.csc
+CSC Luce: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 1 domanda, 2 proposte (scartate dal controllo: 0)
+
+per rispondere: scrivi il numero di una scelta, oppure la tua risposta; un numero da solo vale come scelta (per dire 60 secondi scrivi 60 s)
+
+DOMANDA 1 di 1
+  Dopo quanto tempo senza pressioni la luce si deve spegnere?
+  1) dopo un minuto
+  2) dopo tre minuti
+  3) dopo cinque minuti
+risposta (da 1 a 3, oppure scrivi tu; invio vuoto per saltare): 60
+nessuna scelta 60: scrivi un numero da 1 a 3, oppure la tua risposta (per dire 60 secondi scrivi 60 s)
+risposta (da 1 a 3, oppure scrivi tu; invio vuoto per saltare): 02
+nessuna scelta 02: scrivi un numero da 1 a 3, oppure la tua risposta (per dire 60 secondi scrivi 60 s)
+risposta (da 1 a 3, oppure scrivi tu; invio vuoto per saltare): 2
+  scelta 2: dopo tre minuti
+
+hai risposto a 1 domanda: chiedo a ULlmFinto.sh proposte che ne tengano conto
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 2 proposte (scartate dal controllo: 0)
+
+PROPOSTA 1 di 2, dettaglia g2 (riga 12)
+  GUARANTEE g2a DETAILS g2 STATUS HYPOTHESIS: VERBAL "La luce si spegne fra 170 e 190 secondi dopo l'ultima pressione"
+                                              VERIFY BY JUDGEMENT "l'operatore, con un cronometro"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+PROPOSTA 2 di 2, dettaglia g2 (riga 12)
+  GUARANTEE g2b DETAILS g2 STATUS HYPOTHESIS: VERBAL "Una pressione a luce accesa fa ripartire da capo i tre minuti"
+                                              VERIFY BY JUDGEMENT "l'operatore, con un cronometro"
+accetti? s = sì, n = no, f = fine (scarta le restanti): n
+
+riepilogo: accettate 1, scartate da te 1, scartate dal controllo 0
+scrivo 1 proposta (2 righe) in Luce.csc e 1 risposta in Luce.csc.dialogo? s = sì, n = no: s
+scritto Luce.csc: 1 proposta (2 righe)
+scritto Luce.csc.dialogo: 1 risposta

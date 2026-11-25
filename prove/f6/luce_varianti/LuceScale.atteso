@@ -1,0 +1,46 @@
+bcdd check --strict LuceScale.csc
+righe: 18 (riconosciute 18, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY LuceScale VERSION 0.3, senza STATUS
+    riga 3: OFFERS Luce in Luce.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 6: lampada : Plafoniera in Plafoniera.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 9: lampada : Applique in Applique.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 11: OFFERS Pressione in Pressione.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 13: pulsante : Pulsante in Pulsante.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 15: OFFERS Presenza in Presenza.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+    riga 17: presenza : SensorePresenza in SensorePresenza.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 4
+  riga 6: lampada usa Comando: la offre pulsante (riga 13) (in: lampada = soffitto, comando = pulsante)
+  riga 6: lampada usa Comando: la offre presenza (riga 17) (in: lampada = soffitto, comando = presenza)
+  riga 9: lampada usa Comando: la offre pulsante (riga 13) (in: lampada = parete, comando = pulsante)
+  riga 9: lampada usa Comando: la offre presenza (riga 17) (in: lampada = parete, comando = presenza)
+
+9. COMPOSIZIONI: 4
+  riga 1: ENTITY LuceScale: 4
+    lampada = soffitto, comando = pulsante
+    lampada = soffitto, comando = presenza
+    lampada = parete, comando = pulsante
+    lampada = parete, comando = presenza
+
+10. ASSENZE DICHIARATE: 0
+
+esito: nessun errore

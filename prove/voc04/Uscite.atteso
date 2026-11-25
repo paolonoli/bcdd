@@ -1,0 +1,29 @@
+bcdd check Uscite.csc
+righe: 10 (riconosciute 3, commenti 1, vuote 1, non riconosciute 5)
+blocchi: 1
+  riga 3: CSC ParoleUscite VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 5
+  riga 5: CAPABILITY FACE
+  riga 6: EVENT IN LINK
+  riga 7: STATE MAP : Boolean INITIAL false
+  riga 8: EVENT OUT VIEW
+  riga 9: CAPABILITY Vista(REFINEMENT: String)
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore; righe non riconosciute: 5 (vedi sezione 5)

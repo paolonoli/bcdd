@@ -1,0 +1,119 @@
+bcdd check --strict limite.csc
+righe: 39 (riconosciute 39, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Limite VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 12
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 4: GUARANTEE g1si verbale
+  riga 7: GUARANTEE g1no verbale
+  riga 10: GUARANTEE g2si verbale
+  riga 13: GUARANTEE g2no verbale
+  riga 16: GUARANTEE g3si verbale
+  riga 19: GUARANTEE g3no verbale
+  riga 22: GUARANTEE g4si verbale
+  riga 25: GUARANTEE g4no verbale
+  riga 28: GUARANTEE g5si verbale
+  riga 31: GUARANTEE g5no verbale
+  riga 34: GUARANTEE g6si verbale
+  riga 37: GUARANTEE g6no verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 12
+  riga 4: GUARANTEE g1si
+  riga 7: GUARANTEE g1no
+  riga 10: GUARANTEE g2si
+  riga 13: GUARANTEE g2no
+  riga 16: GUARANTEE g3si
+  riga 19: GUARANTEE g3no
+  riga 22: GUARANTEE g4si
+  riga 25: GUARANTEE g4no
+  riga 28: GUARANTEE g5si
+  riga 31: GUARANTEE g5no
+  riga 34: GUARANTEE g6si
+  riga 37: GUARANTEE g6no
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+9. COMPOSIZIONI: 64
+  riga 1: ENTITY Limite: 64
+    d1 = si, d2 = si, d3 = si, d4 = si, d5 = si, d6 = si
+    d1 = si, d2 = si, d3 = si, d4 = si, d5 = si, d6 = no
+    d1 = si, d2 = si, d3 = si, d4 = si, d5 = no, d6 = si
+    d1 = si, d2 = si, d3 = si, d4 = si, d5 = no, d6 = no
+    d1 = si, d2 = si, d3 = si, d4 = no, d5 = si, d6 = si
+    d1 = si, d2 = si, d3 = si, d4 = no, d5 = si, d6 = no
+    d1 = si, d2 = si, d3 = si, d4 = no, d5 = no, d6 = si
+    d1 = si, d2 = si, d3 = si, d4 = no, d5 = no, d6 = no
+    d1 = si, d2 = si, d3 = no, d4 = si, d5 = si, d6 = si
+    d1 = si, d2 = si, d3 = no, d4 = si, d5 = si, d6 = no
+    d1 = si, d2 = si, d3 = no, d4 = si, d5 = no, d6 = si
+    d1 = si, d2 = si, d3 = no, d4 = si, d5 = no, d6 = no
+    d1 = si, d2 = si, d3 = no, d4 = no, d5 = si, d6 = si
+    d1 = si, d2 = si, d3 = no, d4 = no, d5 = si, d6 = no
+    d1 = si, d2 = si, d3 = no, d4 = no, d5 = no, d6 = si
+    d1 = si, d2 = si, d3 = no, d4 = no, d5 = no, d6 = no
+    d1 = si, d2 = no, d3 = si, d4 = si, d5 = si, d6 = si
+    d1 = si, d2 = no, d3 = si, d4 = si, d5 = si, d6 = no
+    d1 = si, d2 = no, d3 = si, d4 = si, d5 = no, d6 = si
+    d1 = si, d2 = no, d3 = si, d4 = si, d5 = no, d6 = no
+    d1 = si, d2 = no, d3 = si, d4 = no, d5 = si, d6 = si
+    d1 = si, d2 = no, d3 = si, d4 = no, d5 = si, d6 = no
+    d1 = si, d2 = no, d3 = si, d4 = no, d5 = no, d6 = si
+    d1 = si, d2 = no, d3 = si, d4 = no, d5 = no, d6 = no
+    d1 = si, d2 = no, d3 = no, d4 = si, d5 = si, d6 = si
+    d1 = si, d2 = no, d3 = no, d4 = si, d5 = si, d6 = no
+    d1 = si, d2 = no, d3 = no, d4 = si, d5 = no, d6 = si
+    d1 = si, d2 = no, d3 = no, d4 = si, d5 = no, d6 = no
+    d1 = si, d2 = no, d3 = no, d4 = no, d5 = si, d6 = si
+    d1 = si, d2 = no, d3 = no, d4 = no, d5 = si, d6 = no
+    d1 = si, d2 = no, d3 = no, d4 = no, d5 = no, d6 = si
+    d1 = si, d2 = no, d3 = no, d4 = no, d5 = no, d6 = no
+    d1 = no, d2 = si, d3 = si, d4 = si, d5 = si, d6 = si
+    d1 = no, d2 = si, d3 = si, d4 = si, d5 = si, d6 = no
+    d1 = no, d2 = si, d3 = si, d4 = si, d5 = no, d6 = si
+    d1 = no, d2 = si, d3 = si, d4 = si, d5 = no, d6 = no
+    d1 = no, d2 = si, d3 = si, d4 = no, d5 = si, d6 = si
+    d1 = no, d2 = si, d3 = si, d4 = no, d5 = si, d6 = no
+    d1 = no, d2 = si, d3 = si, d4 = no, d5 = no, d6 = si
+    d1 = no, d2 = si, d3 = si, d4 = no, d5 = no, d6 = no
+    d1 = no, d2 = si, d3 = no, d4 = si, d5 = si, d6 = si
+    d1 = no, d2 = si, d3 = no, d4 = si, d5 = si, d6 = no
+    d1 = no, d2 = si, d3 = no, d4 = si, d5 = no, d6 = si
+    d1 = no, d2 = si, d3 = no, d4 = si, d5 = no, d6 = no
+    d1 = no, d2 = si, d3 = no, d4 = no, d5 = si, d6 = si
+    d1 = no, d2 = si, d3 = no, d4 = no, d5 = si, d6 = no
+    d1 = no, d2 = si, d3 = no, d4 = no, d5 = no, d6 = si
+    d1 = no, d2 = si, d3 = no, d4 = no, d5 = no, d6 = no
+    d1 = no, d2 = no, d3 = si, d4 = si, d5 = si, d6 = si
+    d1 = no, d2 = no, d3 = si, d4 = si, d5 = si, d6 = no
+    d1 = no, d2 = no, d3 = si, d4 = si, d5 = no, d6 = si
+    d1 = no, d2 = no, d3 = si, d4 = si, d5 = no, d6 = no
+    d1 = no, d2 = no, d3 = si, d4 = no, d5 = si, d6 = si
+    d1 = no, d2 = no, d3 = si, d4 = no, d5 = si, d6 = no
+    d1 = no, d2 = no, d3 = si, d4 = no, d5 = no, d6 = si
+    d1 = no, d2 = no, d3 = si, d4 = no, d5 = no, d6 = no
+    d1 = no, d2 = no, d3 = no, d4 = si, d5 = si, d6 = si
+    d1 = no, d2 = no, d3 = no, d4 = si, d5 = si, d6 = no
+    d1 = no, d2 = no, d3 = no, d4 = si, d5 = no, d6 = si
+    d1 = no, d2 = no, d3 = no, d4 = si, d5 = no, d6 = no
+    d1 = no, d2 = no, d3 = no, d4 = no, d5 = si, d6 = si
+    d1 = no, d2 = no, d3 = no, d4 = no, d5 = si, d6 = no
+    d1 = no, d2 = no, d3 = no, d4 = no, d5 = no, d6 = si
+    d1 = no, d2 = no, d3 = no, d4 = no, d5 = no, d6 = no
+
+10. ASSENZE DICHIARATE: 0
+
+esito: nessun errore

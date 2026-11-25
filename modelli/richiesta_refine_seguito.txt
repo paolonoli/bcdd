@@ -1,0 +1,10 @@
+
+RISPOSTE DELLA PERSONA IN QUESTO GIRO
+Alla persona sono state fatte le domande qui sotto, e queste sono le sue risposte. Le risposte valgono
+più di ciò che avresti supposto: rifai le proposte tenendone conto, e non proporre nulla che le
+contraddica. Se una risposta rende superata una riga che è ancora un'ipotesi, proponi di sostituirla
+(vedi SOSTITUZIONI) e non aggiungere una riga nuova accanto a lei.
+{{RISPOSTE}}
+
+QUESTA VOLTA NIENTE DOMANDE
+Rispondi con lo stesso formato descritto sopra, ma con "domande" uguale alla lista vuota [].

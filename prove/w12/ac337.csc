@@ -1,0 +1,4 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  GUARANTEE g1: ALWAYS nondichiarato
+END

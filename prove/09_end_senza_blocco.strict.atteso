@@ -1,0 +1,26 @@
+bcdd check --strict 09_end_senza_blocco.csc
+righe: 6 (riconosciute 3, commenti 1, vuote 1, non riconosciute 1)
+blocchi: 1
+  riga 3: CSC Chiusa VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 6: [E08] END senza un blocco aperto
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 1
+  riga 6: END
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 1 errore; righe non riconosciute: 1 (--strict)

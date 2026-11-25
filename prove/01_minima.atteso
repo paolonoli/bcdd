@@ -1,0 +1,28 @@
+bcdd check 01_minima.csc
+righe: 16 (riconosciute 11, commenti 2, vuote 3, non riconosciute 0)
+blocchi: 1
+  riga 4: CSC LuceScale VERSION 1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 2
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 12: GUARANTEE g1 verbale
+  riga 14: GUARANTEE g2 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 12: GUARANTEE g1
+  riga 14: GUARANTEE g2
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: nessun errore

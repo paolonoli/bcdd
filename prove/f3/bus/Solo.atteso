@@ -1,0 +1,30 @@
+bcdd check Solo.csc
+righe: 5 (riconosciute 5, commenti 0, vuote 0, non riconosciute 0)
+blocchi: 1
+  riga 1: ENTITY Solo VERSION 0.1, senza STATUS
+    riga 4: a : Nodo in Nodo.csc alla riga 1: VERSION 0.1, senza STATUS, nessun errore
+
+1. ERRORI: 2
+  riga 4: [E14] la parte a usa il connettore Bus: nessun'altra parte di Solo lo offre, né Solo lo usa da fuori
+  riga 4: [E17] la parte a offre il connettore Bus: nessun'altra parte di Solo lo usa, né Solo lo offre da fuori
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 1
+  riga 4: a usa Bus: nessuno la offre
+
+esito: 2 errori

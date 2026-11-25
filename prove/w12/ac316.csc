@@ -1,0 +1,7 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  STATE a : Integer INITIAL 0
+  DEFINE E := - 3
+  DEFINE F := 5-3
+  DEFINE G := a -3
+END

@@ -1,0 +1,81 @@
+bcdd check forme.csc
+righe: 54 (riconosciute 39, commenti 1, vuote 5, non riconosciute 9)
+blocchi: 8
+  riga 2: ENTITY Forme VERSION 0.1, senza STATUS
+  riga 31: ENTITY (intestazione non valida), senza STATUS
+  riga 36: ENTITY SenzaScopo VERSION 0.1, senza STATUS
+  riga 39: CSC Doppio VERSION 0.1, senza STATUS
+  riga 42: ENTITY Doppio VERSION 0.1, senza STATUS
+  riga 46: CSC Mista VERSION 0.1, senza STATUS
+  riga 49: ENTITY Dentro VERSION 0.1, senza STATUS
+  riga 53: ENTITY Aperta VERSION 0.1, senza STATUS
+
+1. ERRORI: 14
+  riga 9: [E01] nome già usato alla riga 8: Gamma
+  riga 15: [E13] VERBAL senza VERIFY: serve VERIFY BY JUDGEMENT o INSPECTION e una stringa
+  riga 16: [E18] ASSUME non può stare in un'entità: scrivilo nella CSC di uno dei suoi connettori
+  riga 18: [E02] DETAILS nomina un id che non è una GUARANTEE di questa ENTITY: a1
+  riga 20: [E18] CAPABILITY non può stare in un'entità: scrivilo nella CSC di uno dei suoi connettori
+  riga 21: [E18] STATE non può stare in un'entità: scrivilo nella CSC di uno dei suoi connettori
+  riga 22: [E18] DEFINE non può stare in un'entità: scrivilo nella CSC di uno dei suoi connettori
+  riga 23: [E18] EVENT non può stare in un'entità: scrivilo nella CSC di uno dei suoi connettori
+  riga 26: [E01] nome già usato alla riga 10: g1
+  riga 31: [E09] intestazione non valida: attesa ENTITY Nome VERSION numero
+  riga 36: [E10] PURPOSE mancante nella ENTITY SenzaScopo
+  riga 42: [E01] nome già usato alla riga 39: Doppio
+  riga 46: [E07] blocco non chiuso: manca END di CSC Mista
+  riga 53: [E07] blocco non chiuso: manca END di ENTITY Aperta
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 4
+  formale: 1
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 10: GUARANTEE g1 verbale
+  riga 12: GUARANTEE g1a verbale
+  riga 14: GUARANTEE g2 formale
+  riga 15: GUARANTEE g3 verbale
+  riga 18: GUARANTEE g4 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 5
+  riga 10: GUARANTEE g1
+  riga 12: GUARANTEE g1a
+  riga 14: GUARANTEE g2
+  riga 15: GUARANTEE g3
+  riga 18: GUARANTEE g4
+
+5. RIGHE NON RICONOSCIUTE: 9
+  riga 16: ASSUME a1: VERBAL "Una assunzione"
+  riga 17: VERIFY BY JUDGEMENT "chi guarda"
+  riga 20: CAPABILITY Accendi
+  riga 21: STATE acceso : Boolean INITIAL false
+  riga 22: DEFINE N := 1
+  riga 23: EVENT IN USES
+  riga 27: COMPOSED OF
+  riga 31: ENTITY Rotta
+  riga 48: OFFERS Epsilon
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 8
+  riga 4: Alfa
+  riga 5: Alfa
+  riga 6: Beta
+  riga 7: Beta
+  riga 8: Gamma
+  riga 25: Alfa
+  riga 28: Gamma
+  riga 33: Delta
+
+8. USI DENTRO LE ENTITÀ: 0
+
+14. DA GIUDICARE: 2
+  riga 12: GUARANTEE g1a DETAILS g1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+  riga 18: GUARANTEE g4 DETAILS a1: coerenza fra la riga e la riga che dettaglia, una delle due a parole
+
+15. CONTROLLI NON ESEGUITI: 1
+  coerenza di presupposti e promesse: riga 14
+
+esito: 14 errori; righe non riconosciute: 9 (vedi sezione 5)

@@ -1,0 +1,107 @@
+bcdd check BcddTool.csc
+righe: 279 (riconosciute 222, commenti 37, vuote 20, non riconosciute 0)
+blocchi: 7
+  riga 26: CSC BcddTool VERSION 0.7, STATUS RATIFIED BY D-162
+  riga 183: ENTITY StrumentoBcdd VERSION 0.1, STATUS HYPOTHESIS
+    riga 187: OFFERS BcddTool in questo file alla riga 26
+    riga 188: OFFERS FileCsc in FileCsc.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 189: OFFERS BcddProgrammi in BcddProgrammi.csc alla riga 11: VERSION 0.2, STATUS RATIFIED BY D-260, nessun errore
+    riga 190: USES ModelloLinguistico in ModelloLinguistico.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 192: analisi : Analisi in questo file alla riga 210
+    riga 193: controllo : Controllo in questo file alla riga 216
+    riga 194: affinamento : Affinamento in questo file alla riga 229
+    riga 195: scrittura : Scrittura in questo file alla riga 222
+    riga 196: comando : RigaDiComando in questo file alla riga 199
+  riga 199: ENTITY RigaDiComando VERSION 0.1, STATUS HYPOTHESIS
+    riga 203: OFFERS BcddTool in questo file alla riga 26
+    riga 204: OFFERS BcddProgrammi in BcddProgrammi.csc alla riga 11: VERSION 0.2, STATUS RATIFIED BY D-260, nessun errore
+    riga 205: USES Analizzatore in Analizzatore.csc alla riga 3: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 206: USES Controllore in Controllore.csc alla riga 3: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 207: USES Archivio in Archivio.csc alla riga 7: VERSION 0.4, STATUS HYPOTHESIS, nessun errore
+  riga 210: ENTITY Analisi VERSION 0.1, STATUS HYPOTHESIS
+    riga 213: OFFERS Analizzatore in Analizzatore.csc alla riga 3: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+  riga 216: ENTITY Controllo VERSION 0.1, STATUS HYPOTHESIS
+    riga 219: OFFERS Controllore in Controllore.csc alla riga 3: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+  riga 222: ENTITY Scrittura VERSION 0.1, STATUS HYPOTHESIS
+    riga 225: OFFERS Archivio in Archivio.csc alla riga 7: VERSION 0.4, STATUS HYPOTHESIS, nessun errore
+    riga 226: OFFERS FileCsc in FileCsc.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+  riga 229: ENTITY Affinamento VERSION 0.1, STATUS HYPOTHESIS
+    riga 233: USES Analizzatore in Analizzatore.csc alla riga 3: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 234: USES Controllore in Controllore.csc alla riga 3: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+    riga 235: USES Archivio in Archivio.csc alla riga 7: VERSION 0.4, STATUS HYPOTHESIS, nessun errore
+    riga 236: USES ModelloLinguistico in ModelloLinguistico.csc alla riga 4: VERSION 0.1, STATUS HYPOTHESIS, nessun errore
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 36
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 53: GUARANTEE g-n1 verbale
+  riga 56: GUARANTEE g-n2 verbale
+  riga 60: GUARANTEE g-c1 verbale
+  riga 63: GUARANTEE g-c2 verbale
+  riga 66: GUARANTEE g-c3 verbale
+  riga 70: GUARANTEE g-c4 verbale
+  riga 73: GUARANTEE g-c5 verbale
+  riga 77: GUARANTEE g-c6 verbale
+  riga 82: GUARANTEE g-c7 verbale
+  riga 85: GUARANTEE g-c8 verbale
+  riga 90: GUARANTEE g-r1 verbale
+  riga 93: GUARANTEE g-r2 verbale
+  riga 96: GUARANTEE g-r3 verbale
+  riga 99: GUARANTEE g-r4 verbale
+  riga 102: GUARANTEE g-r5 verbale
+  riga 106: GUARANTEE g-r6 verbale
+  riga 111: GUARANTEE g-r7 verbale
+  riga 116: GUARANTEE g-r8 verbale
+  riga 120: GUARANTEE g-r9 verbale
+  riga 123: GUARANTEE g-r10 verbale
+  riga 129: GUARANTEE g-r11 verbale
+  riga 135: GUARANTEE g-t1 verbale
+  riga 139: GUARANTEE g-t2 verbale
+  riga 144: GUARANTEE g-t3 verbale
+  riga 150: GUARANTEE g-t4 verbale
+  riga 155: GUARANTEE g-x1 verbale
+  riga 238: GUARANTEE f-1 verbale
+  riga 245: GUARANTEE f-2 verbale
+  riga 248: GUARANTEE f-3 verbale
+  riga 252: GUARANTEE f-4 verbale
+  riga 255: GUARANTEE f-5 verbale
+  riga 259: GUARANTEE f-6 verbale
+  riga 263: GUARANTEE f-7 verbale
+  riga 266: GUARANTEE f-8 verbale
+  riga 269: GUARANTEE f-9 verbale
+  riga 276: GUARANTEE f-10 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 10
+  riga 238: GUARANTEE f-1
+  riga 245: GUARANTEE f-2
+  riga 248: GUARANTEE f-3
+  riga 252: GUARANTEE f-4
+  riga 255: GUARANTEE f-5
+  riga 259: GUARANTEE f-6
+  riga 263: GUARANTEE f-7
+  riga 266: GUARANTEE f-8
+  riga 269: GUARANTEE f-9
+  riga 276: GUARANTEE f-10
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 7
+  riga 194: affinamento usa Analizzatore VERSION 0.1: la offre analisi (riga 192)
+  riga 194: affinamento usa Controllore VERSION 0.1: la offre controllo (riga 193)
+  riga 194: affinamento usa Archivio VERSION 0.4: la offre scrittura (riga 195)
+  riga 194: affinamento usa ModelloLinguistico VERSION 0.1: la usa StrumentoBcdd da fuori (riga 190)
+  riga 196: comando usa Analizzatore VERSION 0.1: la offre analisi (riga 192)
+  riga 196: comando usa Controllore VERSION 0.1: la offre controllo (riga 193)
+  riga 196: comando usa Archivio VERSION 0.4: la offre scrittura (riga 195)
+
+esito: nessun errore

@@ -1,0 +1,41 @@
+bcdd check 24_dichiarazioni_parziali.csc
+righe: 19 (riconosciute 11, commenti 3, vuote 2, non riconosciute 3)
+blocchi: 1
+  riga 5: CSC Parziali VERSION 0.1, senza STATUS
+
+1. ERRORI: 6
+  riga 8: [E24] nome non dichiarato: accesa
+  riga 9: [E01] nome già usato alla riga 8: g1
+  riga 10: [E24] nome non dichiarato: DURATA
+  riga 11: [E01] nome già usato alla riga 10: LIMITE
+  riga 16: [E03] nome non dichiarato come CAPABILITY: Accendi
+  riga 17: [E03] nome non dichiarato come STATE: accesa
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 1
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 8: GUARANTEE g1 formale
+  riga 9: GUARANTEE g1 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 8: GUARANTEE g1
+  riga 9: GUARANTEE g1
+
+5. RIGHE NON RICONOSCIUTE: 3
+  riga 12: CAPABILITY Accendi(quando: )
+  riga 14: STATE      accesa Boolean INITIAL false
+  riga 15: SCENARIO   s1 EXPECT FORSE
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+15. CONTROLLI NON ESEGUITI: 2
+  storie: riga 17
+  coerenza di presupposti e promesse: riga 8
+
+esito: 6 errori; righe non riconosciute: 3 (vedi sezione 5)

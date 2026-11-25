@@ -1,0 +1,38 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1",
+      "dettaglia": "",
+      "testo": "La spia è accesa quando l'apparecchio è acceso",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, guardando la spia"
+    },
+    {
+      "tipo": "ASSUME",
+      "id": "a1",
+      "dettaglia": "",
+      "testo": "L'apparecchio è alimentato",
+      "verifica": "INSPECTION",
+      "verifica_testo": "la presa di corrente"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [],
+  "interfaccia": [
+    {
+      "riga": "STATE accesa : Boolean INITIAL false",
+      "motivo": "la spia è accesa o spenta"
+    },
+    {
+      "riga": "TYPE Colore := VERBAL \"verde oppure rosso\"",
+      "motivo": "il colore che la spia può avere"
+    },
+    {
+      "riga": "EVENT OUT cambio(colore: Colore)",
+      "motivo": "la spia cambia colore"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+bcdd check 05_ratified_senza_decisione.csc
+righe: 13 (riconosciute 9, commenti 2, vuote 2, non riconosciute 0)
+blocchi: 1
+  riga 4: CSC Ratifiche VERSION 0.1, STATUS non valido
+
+1. ERRORI: 3
+  riga 5: [E04] STATUS RATIFIED senza decisione: serve BY D-numero
+  riga 9: [E04] STATUS RATIFIED senza decisione: serve BY D-numero
+  riga 10: [E04] STATUS RATIFIED senza decisione: serve BY D-numero
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 4
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 8: GUARANTEE g1 verbale
+  riga 9: GUARANTEE g2 verbale
+  riga 10: GUARANTEE g3 verbale
+  riga 12: GUARANTEE g4 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 3
+  riga 8: GUARANTEE g1
+  riga 9: GUARANTEE g2
+  riga 10: GUARANTEE g3
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 3 errori

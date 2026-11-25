@@ -1,0 +1,17 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g3",
+      "dettaglia": "",
+      "testo": "La luce non si accende senza pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, di giorno"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [],
+  "interfaccia": []
+}

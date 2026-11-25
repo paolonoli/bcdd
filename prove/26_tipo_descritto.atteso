@@ -1,0 +1,28 @@
+bcdd check 26_tipo_descritto.csc
+righe: 15 (riconosciute 9, commenti 2, vuote 2, non riconosciute 2)
+blocchi: 1
+  riga 4: CSC Tipi VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 12: [E01] nome già usato alla riga 8: Testo
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 2
+  riga 11: TYPE Boolean  := VERBAL "un tipo di base non si descrive di nuovo"
+  riga 14: VERIFY BY JUDGEMENT "un tipo non è una proprietà: niente VERIFY"
+
+6. TIPI NON DICHIARATI: 1
+  Struttura: riga 7
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 1 errore; righe non riconosciute: 2 (vedi sezione 5)

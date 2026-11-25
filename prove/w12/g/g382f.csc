@@ -1,0 +1,13 @@
+PROFILE T VERSION 0.1
+  PURPOSE "p"
+  EXTENSION A
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (c: Condition) : Boolean
+    FORM "A c"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO NOT c
+  END
+END

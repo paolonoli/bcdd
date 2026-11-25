@@ -1,0 +1,12 @@
+{
+  "formato": "bcdd-refine-4",
+  "domande": [
+    {
+      "testo": "Entro quanto tempo dalla pressione la luce è piena?",
+      "scelte": ["entro 0,5 s", "entro 1 s"]
+    }
+  ],
+  "proposte": [],
+  "nuove_csc": [],
+  "sostituzioni": []
+}

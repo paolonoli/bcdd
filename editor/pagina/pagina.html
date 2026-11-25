@@ -1,0 +1,86 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: BSD-3-Clause -->
+<!-- Copyright (c) 2026, Noli Paolo -->
+<html lang="/*LINGUA*/">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>bcdd-editor</title>
+<style>
+/*STILE*/
+</style>
+</head>
+<body class="tema-notte">
+<div id="app">
+  <header>
+    <div class="testa-sx">
+      <div class="nome-app" data-t="app_nome" data-t-title="app_nome_aiuto"></div>
+      <div id="percorso" class="mono muto"></div>
+    </div>
+    <div class="testa-dx">
+      <div class="gruppo" role="group" data-t-aria="vista_gruppo">
+        <button id="t-fuori" class="tab" data-t="vista_fuori"></button>
+        <button id="t-dentro" class="tab" data-t="vista_dentro"></button>
+      </div>
+      <div class="gruppo" id="g-lingua" role="group" data-t-aria="lingua_gruppo">
+        <button id="l-en" class="tab" type="button" aria-pressed="false">English</button>
+        <button id="l-it" class="tab" type="button" aria-pressed="false">Italiano</button>
+      </div>
+      <button id="b-tema" class="btn tema" data-t-aria="tema_cambia" aria-pressed="false" data-t-title="tema_cambia">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <span class="interruttore"><span class="pomello"></span></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </div>
+  </header>
+  <div id="avviso" class="avviso" hidden></div>
+  <div class="colonne">
+    <section id="entita-pannello" class="pannello alberello" data-t-aria="sez_entita">
+      <div class="sez-testa"><div class="sez-titolo" data-t="sez_entita"></div><div id="albero-conto" class="muto piccolo"></div><button id="b-profilo" class="btn neutro mini" data-t="b_profilo" data-t-title="b_profilo_aiuto"></button></div>
+      <input id="albero-cerca" class="cerca" type="text" maxlength="64" data-t-ph="cerca_albero" data-t-aria="cerca_albero" spellcheck="false" autocomplete="off">
+      <div id="fascia-fuori" class="fascia-fuori" hidden data-t="fuori_da_tutte"></div>
+      <div id="albero" class="albero" role="tree" data-t-aria="albero_aria"></div>
+    </section>
+    <div id="divisore-e" class="divisore" role="separator" aria-orientation="vertical" data-t-aria="divisore_e"></div>
+    <section id="banco" class="pannello banco">
+      <div class="sez-testa"><div class="sez-titolo" data-t="sez_banco"></div><div id="banco-hint" class="muto piccolo"></div><button id="b-albero" class="btn neutro mini" aria-expanded="true" aria-controls="entita-pannello"></button></div>
+      <div id="azioni" class="azioni"></div>
+      <div id="tela-scroll" class="tela-scroll"><div id="modulo" class="modulo" hidden></div><div id="tela" class="tela"></div></div>
+      <div id="legenda-tela" class="legenda-tela" hidden></div>
+    </section>
+    <div id="divisore" class="divisore" role="separator" aria-orientation="vertical" data-t-aria="divisore_bs"></div>
+    <section id="scheda" class="pannello scheda">
+      <div class="sez-testa"><div class="sez-titolo" data-t="sez_scheda"></div><div id="scheda-tipo" class="muto piccolo"></div></div>
+      <div>
+        <div id="scheda-nome" class="scheda-nome"></div>
+        <div id="scheda-lati" class="muto piccolo"></div>
+        <div id="scheda-vers" class="vers piccolo" hidden></div>
+      </div>
+      <div id="scheda-linguette" class="linguette" hidden></div>
+      <div id="scheda-azioni" class="azioni"></div>
+      <div id="scheda-completa" class="completa" hidden></div>
+      <div id="scheda-approva" class="completa approva" hidden></div>
+      <div id="scheda-modulo" class="modulo" hidden></div>
+      <div id="scheda-nota" class="nota-scheda" hidden></div>
+      <div id="scheda-righe" class="codice"></div>
+      <div id="scheda-rapporto" class="rapporto" hidden></div>
+      <div class="legenda piccolo muto">
+        <span><span class="quadrato q-ipo"></span> <span data-t="leg_da_approvare"></span></span>
+        <span><span class="quadrato q-ok"></span> <span data-t="leg_approvata"></span></span>
+        <span><span class="quadrato q-bad"></span> <span data-t="leg_errore"></span></span>
+      </div>
+    </section>
+  </div>
+  <footer id="stato" class="pannello stato">
+    <div class="stato-riga">
+      <div class="sez-titolo" data-t="sez_stato"></div>
+      <div id="stato-chip" class="chip"></div>
+      <div id="stato-msg"></div>
+    </div>
+    <div id="stato-problemi"></div>
+    <div id="esito" class="esito" hidden></div>
+    <div class="muto piccolo"><span id="letto"></span> <span id="controllato"></span></div>
+  </footer>
+</div>
+</body>
+</html>

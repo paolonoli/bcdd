@@ -1,0 +1,29 @@
+bcdd check i3_estensione_dentro.csc
+righe: 15 (riconosciute 6, commenti 0, vuote 0, non riconosciute 0, non lette 9)
+blocchi: 1
+  riga 1: CSC Prova VERSION 0.1, senza STATUS
+
+1. ERRORI: 0
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 1
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 4: GUARANTEE g4 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 1
+  riga 4: GUARANTEE g4
+
+5. RIGHE NON RICONOSCIUTE: 0
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+11. BLOCCHI NON LETTI: 1
+  righe 6-14: EXTENSION FADE
+
+esito: nessun errore

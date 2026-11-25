@@ -1,0 +1,18 @@
+bcdd refine Luce.csc
+CSC Luce: nessun errore, righe non riconosciute: 0
+chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
+risposta letta: 0 domande, 1 proposta (scartate dal controllo: 0)
+
+PROPOSTA 1 di 1, dettaglia g2 (riga 12)
+  GUARANTEE g2a DETAILS g2 STATUS HYPOTHESIS: VERBAL "La luce si spegne fra 170 e 190 secondi dopo l'ultima pressione"
+                                              VERIFY BY JUDGEMENT "l'operatore, con un cronometro"
+accetti? s = sì, n = no, f = fine (scarta le restanti): s
+
+CSC A PARTE 1 di 1: Pulsante
+  motivo: il pulsante ha una spia con stati e tempi suoi, che non sono quelli della luce
+  se vuoi scriverla: bcdd new Pulsante
+
+riepilogo: accettate 1, scartate da te 0, scartate dal controllo 0
+scrivo 1 proposta (2 righe) in Luce.csc e 1 CSC a parte in Luce.csc.dialogo? s = sì, n = no: s
+scritto Luce.csc: 1 proposta (2 righe)
+scritto Luce.csc.dialogo: 1 CSC a parte

@@ -1,0 +1,66 @@
+{
+ "formato": "bcdd-refine-5",
+ "domande": [],
+ "nuove_csc": [],
+ "sostituzioni": [],
+ "proposte": [
+  {
+   "id": "ritmo",
+   "tipo": "GUARANTEE",
+   "dettaglia": "",
+   "testo": "Il ritmo vale zero",
+   "verifica": "JUDGEMENT",
+   "verifica_testo": "l'operatore"
+  },
+  {
+   "id": "g4",
+   "tipo": "GUARANTEE",
+   "dettaglia": "",
+   "testo": "Back\\slash",
+   "verifica": "JUDGEMENT",
+   "verifica_testo": "l'operatore"
+  },
+  {
+   "id": "g7",
+   "tipo": "GUARANTEE",
+   "dettaglia": "",
+   "testo": "--x",
+   "verifica": "JUDGEMENT",
+   "verifica_testo": "y z"
+  }
+ ],
+ "interfaccia": [
+  {
+   "riga": "STATE ritmo : Boolean INITIAL false",
+   "motivo": "m"
+  },
+  {
+   "riga": "",
+   "motivo": "vuota"
+  },
+  {
+   "riga": "   ",
+   "motivo": "vuota"
+  },
+  {
+   "riga": "STATE",
+   "motivo": "m"
+  },
+  {
+   "riga": "STATE x y z",
+   "motivo": "m"
+  },
+  {
+   "riga": "EVENT IN",
+   "motivo": "m"
+  },
+  {
+   "riga": "CAPABILITY 1x",
+   "motivo": "m"
+  },
+  {
+   "riga": "STATE a : Boolean INITIAL",
+   "motivo": "m"
+  }
+ ]
+}

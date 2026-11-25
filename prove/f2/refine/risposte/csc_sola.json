@@ -1,0 +1,11 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [],
+  "nuove_csc": [
+    {
+      "nome": "Pulsante",
+      "motivo": "il pulsante ha una spia con stati e tempi suoi, che non sono quelli della luce"
+    }
+  ],
+  "sostituzioni": [], "interfaccia": []}

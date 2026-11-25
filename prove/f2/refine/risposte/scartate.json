@@ -1,0 +1,79 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g9a",
+      "dettaglia": "g9",
+      "testo": "Dettaglio di una riga che non c'è",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1",
+      "dettaglia": "g2",
+      "testo": "Id già usato",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2b",
+      "dettaglia": "g2",
+      "testo": "La luce \"lampeggia\" prima di spegnersi",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "REQUIREMENT",
+      "id": "g2c",
+      "dettaglia": "g2",
+      "testo": "Tipo che non esiste",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g-",
+      "dettaglia": "g2",
+      "testo": "Id scritto male",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2d",
+      "dettaglia": "g2",
+      "testo": "Prima riga\nseconda riga",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2e",
+      "dettaglia": "g2",
+      "testo": "Verifica che non esiste",
+      "verifica": "MAGIC",
+      "verifica_testo": "nessuno"
+    },
+    {
+      "tipo": "ASSUME",
+      "id": "a1",
+      "dettaglia": "g1",
+      "testo": "Il pulsante non resta premuto per più di un minuto",
+      "verifica": "INSPECTION",
+      "verifica_testo": "il registro delle pressioni"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "a1",
+      "dettaglia": "g2",
+      "testo": "Stesso id della proposta precedente",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [], "interfaccia": []}

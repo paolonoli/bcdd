@@ -1,0 +1,31 @@
+bcdd check 07_stringa_non_chiusa.csc
+righe: 9 (riconosciute 1, commenti 3, vuote 1, non riconosciute 4)
+blocchi: 1
+  riga 5: CSC Stringhe VERSION 0.1, senza STATUS
+
+1. ERRORI: 3
+  riga 5: [E07] blocco non chiuso: manca END di CSC Stringhe
+  riga 5: [E10] PURPOSE mancante nella CSC Stringhe
+  riga 6: [E06] stringa non chiusa: il file finisce dentro la stringa aperta qui
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 0
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 0
+
+5. RIGHE NON RICONOSCIUTE: 4
+  riga 6: PURPOSE "la stringa si apre qui e non si chiude
+  riga 7:
+  riga 8: EVENT IN arrivo
+  riga 9: END
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+esito: 3 errori; righe non riconosciute: 4 (vedi sezione 5)

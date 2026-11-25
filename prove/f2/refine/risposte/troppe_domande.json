@@ -1,0 +1,31 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [
+    {
+      "testo": "Dopo quanto tempo senza pressioni la luce si deve spegnere?",
+      "scelte": ["dopo un minuto", "dopo tre minuti"]
+    },
+    {
+      "testo": "Una pressione a luce accesa fa ripartire il tempo da capo?",
+      "scelte": ["riparte da capo", "non cambia nulla"]
+    },
+    {
+      "testo": "Entro quanto tempo dalla pressione la luce si deve accendere?",
+      "scelte": ["entro mezzo secondo", "entro un secondo"]
+    },
+    {
+      "testo": "Dopo un'interruzione della corrente la luce riparte spenta?",
+      "scelte": ["riparte spenta", "riparte com'era"]
+    },
+    {
+      "testo": "Una pressione lunga conta come una pressione sola?",
+      "scelte": ["conta come una sola", "conta finché dura"]
+    },
+    {
+      "testo": "Quanti pulsanti ci sono?",
+      "scelte": ["uno", "uno per piano"]
+    }
+  ],
+  "proposte": [],
+  "nuove_csc": [],
+  "sostituzioni": [], "interfaccia": []}

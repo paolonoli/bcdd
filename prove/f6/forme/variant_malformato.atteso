@@ -1,0 +1,32 @@
+bcdd check --strict variant_malformato.csc
+righe: 9 (riconosciute 8, commenti 0, vuote 0, non riconosciute 1)
+blocchi: 1
+  riga 1: ENTITY Malformato VERSION 0.1, senza STATUS
+
+1. ERRORI: 1
+  riga 3: [E21] VARIANT scritto male: serve VARIANT dimensione = scelta
+
+2. GRADO DELLE RIGHE CONTRATTUALI
+  verbale: 2
+  formale: 0
+  estensione dichiarata: 0
+  non riconosciuta: 0
+  riga 4: GUARANTEE v1 verbale
+  riga 7: GUARANTEE v2 verbale
+
+3. UNDECIDED: 0
+
+4. IPOTESI, NON CONTRATTO: 2
+  riga 4: GUARANTEE v1
+  riga 7: GUARANTEE v2
+
+5. RIGHE NON RICONOSCIUTE: 1
+  riga 3: VARIANT sensore
+
+6. TIPI NON DICHIARATI: 0
+
+7. CSC NOMINATE E NON CONTROLLATE: 0
+
+8. USI DENTRO LE ENTITÀ: 0
+
+esito: 1 errore; righe non riconosciute: 1 (--strict)

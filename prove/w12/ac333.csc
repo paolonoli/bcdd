@@ -1,0 +1,5 @@
+CSC T VERSION 0.1
+  PURPOSE "p"
+  STATE accesa : Boolean INITIAL false
+  GUARANTEE g1: EVENTUALLY accesa WITHIN 60
+END

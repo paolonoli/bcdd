@@ -1,0 +1,3 @@
+CSC SoloCsc VERSION 0.1
+  PURPOSE "Solo una CSC"
+END

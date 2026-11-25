@@ -1,0 +1,13 @@
+PROFILE T VERSION 0.1
+  PURPOSE "p"
+  EXTENSION A
+    KIND PATTERN
+    LEVEL CSC
+    PARAMS (p: Condition, d: Duration)
+    FORM "A p d"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO p FOR AT LEAST d
+  END
+END

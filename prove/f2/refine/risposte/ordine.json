@@ -1,0 +1,39 @@
+{
+  "formato": "bcdd-refine-5",
+  "domande": [],
+  "proposte": [
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1c",
+      "dettaglia": "g1",
+      "testo": "Ogni pulsante accende la luce allo stesso modo",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, premendo ogni pulsante"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1d",
+      "dettaglia": "g1a",
+      "testo": "Il secondo si conta dalla pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g1e",
+      "dettaglia": "g1",
+      "testo": "Una pressione a luce accesa non la spegne",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, premendo a luce accesa"
+    },
+    {
+      "tipo": "GUARANTEE",
+      "id": "g2a",
+      "dettaglia": "g2",
+      "testo": "La luce si spegne fra 170 e 190 secondi dopo l'ultima pressione",
+      "verifica": "JUDGEMENT",
+      "verifica_testo": "l'operatore, con un cronometro"
+    }
+  ],
+  "nuove_csc": [],
+  "sostituzioni": [], "interfaccia": []}

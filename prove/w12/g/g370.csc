@@ -1,0 +1,8 @@
+CSC P VERSION 0.1
+  PURPOSE "sonda"
+  STATUS HYPOTHESIS
+  EVENT IN e
+  TYPE R := Record {L: Real, R: Real}
+  STATE c : Optional R INITIAL ABSENT
+  GUARANTEE g: ALWAYS c.L > 0
+END

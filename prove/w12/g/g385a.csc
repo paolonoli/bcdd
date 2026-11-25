@@ -1,0 +1,53 @@
+PROFILE T VERSION 0.1
+  PURPOSE "p"
+  EXTENSION U1
+    KIND PATTERN
+    LEVEL CSC
+    PARAMS (p: Condition)
+    FORM "U1 p"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO EVENTUALLY p WITHIN 1 s
+  END
+  EXTENSION U2
+    KIND PATTERN
+    LEVEL CSC
+    PARAMS (p: Condition)
+    FORM "U2 p"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO EVENTUALLY p WITHIN 250 ms
+  END
+  EXTENSION U3
+    KIND PATTERN
+    LEVEL CSC
+    PARAMS (p: Condition)
+    FORM "U3 p"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO EVENTUALLY p WITHIN 1s
+  END
+  EXTENSION U4
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (p: Event) : Integer
+    FORM "U4 p"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO COUNT(p) IN LAST 2 s
+  END
+  EXTENSION U5
+    KIND FUNCTION
+    LEVEL CSC
+    PARAMS (d: Duration) : Duration
+    FORM "U5 d"
+    MEANING "m"
+    VERIFY V1 C1
+    SOURCE "s"
+    REDUCES TO d + 1 s
+  END
+END
