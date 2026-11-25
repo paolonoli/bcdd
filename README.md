@@ -1,16 +1,25 @@
-# BCDD
+<p align="center">
+  <a href="https://bcdd.nolisoft.it/"><picture><source srcset="docs/logos/logo-bcdd-scuro.png" media="(prefers-color-scheme: dark)"><img src="docs/logos/logo-bcdd.png" height="150" alt="BCDD logo"></picture></a>
+  &nbsp;&nbsp;
+  <a href="https://bcdd.nolisoft.it/"><picture><source srcset="docs/logos/logo-csc-scuro.png" media="(prefers-color-scheme: dark)"><img src="docs/logos/logo-csc.png" height="150" alt="CSC logo"></picture></a>
+</p>
+
+# BCDD — Behavioural Contract-Driven Design
+
+**Site, manual and grammar (English and Italian): <https://bcdd.nolisoft.it/>**
 
 BCDD (Behavioural Contract-Driven Design) is a language for writing the behaviour of a system as contracts, one *capability
 state contract* (CSC) per file. This repository holds the source of the two programs that read and help write those files.
 This is version **1.0-beta**: the language and the programs work, but they have not had the field use of a final release.
 
-Manual and grammar, in English and in Italian: <https://bcdd.nolisoft.it/>
+Ready-to-run packages for Linux x86_64 and Windows x86_64 are on the site and in the
+[Releases](https://github.com/paolonoli/bcdd/releases) of this repository.
 
 ## The programs
 
 - `bcdd`, the command-line tool: `new`, `check`, `refine`, `ratify`. Written in Nim, source in `src/`.
-- `bcdd-editor`, a window around `bcdd` for editing CSC files: GTK 3 and WebKit2GTK on Linux, WebView2 on Windows
-  (work in progress). Source in `editor/`.
+- `bcdd-editor`, a window around `bcdd` for editing CSC files: GTK 3 and WebKit2GTK on Linux, WebView2 on Windows.
+  Source in `editor/`.
 
 ## Build
 
@@ -44,7 +53,8 @@ The folders `prove/`, `esempi/` and `tests/` hold the test material: small CSC f
 
 Source code: BSD 3-Clause, see [`LICENSE`](LICENSE). The documentation published on the site has its own licence, stated
 in each document. Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
-own licences.
+own licences. The BCDD and CSC logos in `docs/logos/` are Copyright 2026 Noli Paolo, all rights reserved: they are not
+covered by the BSD licence.
 
 ## Contact
 
