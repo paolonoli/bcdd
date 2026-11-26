@@ -4,13 +4,13 @@ chiedo all'LLM: ULlmFinto.sh, limite 30 s (da BCDD_ATTESA_LLM)
 risposta letta: 0 domande, 0 proposte, 10 sostituzioni (scartate dal controllo: 8)
 
 SOSTITUZIONE 1 di 10: SCARTATA dal controllo
-  ragione: sostituisce g1, che è contratto (riga 10): una riga ratificata non si sostituisce
+  ragione: sostituisce g1, che è contratto (riga 10): una riga approvata non si sostituisce
   id: g1
   testo: Una pressione accende la luce entro un secondo
   verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro
 
 SOSTITUZIONE 2 di 10: SCARTATA dal controllo
-  ragione: sostituisce g1b, che è contratto (riga 16): una riga ratificata non si sostituisce
+  ragione: sostituisce g1b, che è contratto (riga 16): una riga approvata non si sostituisce
   id: g1b
   testo: Una pressione a luce accesa non la spegne e non cambia il tempo
   verifica: JUDGEMENT, verifica_testo: l'operatore, con un cronometro

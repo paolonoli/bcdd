@@ -51,14 +51,14 @@ catalogo:
 
   # 095:8:1 bcdd new
   voce kScheletro,
-    "-- CSC creata da bcdd new. Si compila a mano; bcdd check controlla la forma.\n" &
-      "-- Senza STATUS RATIFIED nessuna riga è contratto: è un'ipotesi finché l'operatore non ratifica.\n" &
+    "-- CSC creata da bcdd new. Si scrive a mano; bcdd check controlla la forma.\n" &
+      "-- Senza STATUS RATIFIED nessuna riga è contratto: è da approvare finché l'operatore non la approva.\n" &
       "\n" &
       "CSC $1 VERSION 0.1\n" &
       "  STATUS HYPOTHESIS\n" &
-      "  PURPOSE \"da compilare: in una frase, di che cosa è responsabile $1\"\n" &
+      "  PURPOSE \"da scrivere: in una frase, di che cosa è responsabile $1\"\n" &
       "\n" &
-      "  -- Ingressi e uscite (togliere il commento e compilare):\n" &
+      "  -- Ingressi e uscite (togliere il commento e scrivere):\n" &
       "  -- CAPABILITY Nome(parametro: Tipo)        che cosa si può chiedere\n" &
       "  -- EVENT IN   nome(parametro: Tipo)        che cosa arriva da fuori\n" &
       "  -- EVENT OUT  nome(parametro: Tipo)        che cosa esce\n" &
@@ -69,7 +69,7 @@ catalogo:
       "  --               VERIFY BY JUDGEMENT \"chi giudica, e su che cosa\"\n" &
       "END\n",
     "-- CSC created by bcdd new. It is filled in by hand; bcdd check checks the form.\n" &
-      "-- Without STATUS RATIFIED no line is part of the contract: it is a hypothesis until the operator approves it.\n" &
+      "-- Without STATUS RATIFIED no line is part of the contract: it is pending approval until the operator approves it.\n" &
       "\n" &
       "CSC $1 VERSION 0.1\n" &
       "  STATUS HYPOTHESIS\n" &
@@ -106,10 +106,10 @@ catalogo:
 
   # 095:8:1 check: errori e messaggi di analisi (bcddcheck)
   voce kNomeGiaUsatoAllaRiga, "nome già usato alla riga $1: $2", "name already used at line $1: $2"
-  voce kUnPezzoVARIANTScrittoMale, "un pezzo VARIANT scritto male", "a badly written VARIANT segment"
+  voce kUnPezzoVARIANTScrittoMale, "un segmento VARIANT scritto male", "a badly written VARIANT segment"
   voce kValoreNonDelTipo, "valore non del tipo $1: $2", "value not of type $1: $2"
-  voce kInGiro, "$1 in giro: $2 -> $3", "circular $1: $2 -> $3"
-  voce kREDUCESTOInGiro, "REDUCES TO in giro: $1 -> $2", "circular REDUCES TO: $1 -> $2"
+  voce kInGiro, "$1 in modo circolare: $2 -> $3", "circular $1: $2 -> $3"
+  voce kREDUCESTOInGiro, "REDUCES TO in modo circolare: $1 -> $2", "circular REDUCES TO: $1 -> $2"
   voce kNomeNonDichiaratoComeValore, "nome non dichiarato come valore di TYPE: $1",
     "name not declared as a value of TYPE: $1"
   voce kIlTipoDellIndiceDi, "il tipo dell'indice di $1 non è finito: $2",
@@ -130,22 +130,22 @@ catalogo:
     "unclosed block: END of $1 $2 is missing"
   voce kLaSceltaEGiaScritta, "la scelta $1 = $2 è già scritta alla riga $3",
     "the choice $1 = $2 is already written at line $3"
-  voce kIlPezzoVARIANTEVuoto, "il pezzo VARIANT $1 = $2 è vuoto: una scelta senza righe si scrive con una parte [0 .. 1]",
+  voce kIlPezzoVARIANTEVuoto, "il segmento VARIANT $1 = $2 è vuoto: una scelta senza righe si scrive con una parte [0 .. 1]",
     "the VARIANT segment $1 = $2 is empty: a choice without lines is written with a part [0 .. 1]"
-  voce kLaDimensioneHaUnaSola, "la dimensione $1 ha una sola scelta ($2): ne servono almeno due; una parte che può mancare si scrive con [0 .. 1]",
-    "dimension $1 has a single choice ($2): at least two are needed; a part that may be missing is written with [0 .. 1]"
+  voce kLaDimensioneHaUnaSola, "il gruppo di scelte $1 ha una sola scelta ($2): ne servono almeno due; una parte che può mancare si scrive con [0 .. 1]",
+    "choice group $1 has a single choice ($2): at least two are needed; a part that may be missing is written with [0 .. 1]"
   voce kDETAILSNominaUnIdChe, "DETAILS nomina un id che non è una GUARANTEE di questa ENTITY: ",
     "DETAILS names an id that is not a GUARANTEE of this ENTITY: "
   voce kDETAILSNominaUnIdChe2, "DETAILS nomina un id che non è una GUARANTEE né una ASSUME di questa CSC: ",
     "DETAILS names an id that is neither a GUARANTEE nor an ASSUME of this CSC: "
   voce kDETAILSNominaUnaGUARANTEEChe, "DETAILS nomina una GUARANTEE che non vale in tutte le composizioni di questa riga: $1 (sta in $2)",
     "DETAILS names a GUARANTEE that does not hold in all the compositions of this line: $1 (it is in $2)"
-  voce kDETAILSInGiro, "DETAILS in giro: $1", "circular DETAILS: $1"
+  voce kDETAILSInGiro, "DETAILS in modo circolare: $1", "circular DETAILS: $1"
   voce kDETAILSNominaUnNomeChe, "DETAILS nomina un nome che non è una DEFINE di questa CSC: $1",
     "DETAILS names a name that is not a DEFINE of this CSC: $1"
   voce kDETAILSNominaUnIdChe3, "DETAILS nomina un id che non è uno SCENARIO di questo blocco: $1",
     "DETAILS names an id that is not a SCENARIO of this block: $1"
-  voce kDETAILSInGiro2, "DETAILS in giro: $1 -> $2", "circular DETAILS: $1 -> $2"
+  voce kDETAILSInGiro2, "DETAILS in modo circolare: $1 -> $2", "circular DETAILS: $1 -> $2"
   voce kREPEATSenzaPassiIPassi, "REPEAT senza passi: i passi ripetuti si scrivono dopo la riga REPEAT",
     "REPEAT without steps: the repeated steps are written after the REPEAT line"
   voce kInUnaCSCINomi, "$1: in una CSC i nomi non si scrivono con il connettore davanti. L'ordine fra due connettori va in uno SCENARIO dell'entità",
@@ -155,8 +155,8 @@ catalogo:
   voce kNomeNonDichiaratoComeParametro, "nome non dichiarato come parametro di $1: $2",
     "name not declared as a parameter of $1: $2"
   voce kIntestazioneNonValidaAttesa, "intestazione non valida: attesa $1", "invalid header: $1 expected"
-  voce kREFINEMENTVIEWEUscitaDal, "REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY",
-    "REFINEMENT VIEW has left the language: a decomposition is written with ENTITY"
+  voce kREFINEMENTVIEWEUscitaDal, "REFINEMENT VIEW è stata ritirata: una scomposizione si scrive con ENTITY",
+    "REFINEMENT VIEW has been withdrawn: a decomposition is written with ENTITY"
   voce kSecondoBINDINGSenzaNomePer, "secondo BINDING senza nome per la CSC $1 VERSION $2: il primo è alla riga $3. Con due o più BINDING ognuno ha un nome, AS nome",
     "second BINDING without a name for CSC $1 VERSION $2: the first is at line $3. With two or more BINDINGs, each has a name: AS name"
   voce kNomeDiBINDINGGiaUsato, "nome di BINDING già usato alla riga $1: $2",
@@ -183,10 +183,10 @@ catalogo:
     "the step @$1 is not shorter than the period of REPEAT: every repeated step has a time smaller than EVERY $2"
   voce kIlTempoDelPassoDiminuisce, "il tempo del passo diminuisce: @$1 dopo @$2",
     "the time of the step decreases: @$1 after @$2"
-  voce kPURPOSENonPuoStareIn, "PURPOSE non può stare in un pezzo VARIANT: scrivilo prima del primo VARIANT",
+  voce kPURPOSENonPuoStareIn, "PURPOSE non può stare in un segmento VARIANT: scrivilo prima del primo VARIANT",
     "PURPOSE cannot appear in a VARIANT segment: write it before the first VARIANT"
-  voce kVARIANTScrittoMaleServeVARIANT, "VARIANT scritto male: serve VARIANT dimensione = scelta",
-    "VARIANT badly written: VARIANT dimension = choice is needed"
+  voce kVARIANTScrittoMaleServeVARIANT, "VARIANT scritto male: serve VARIANT gruppo = scelta",
+    "VARIANT badly written: VARIANT group = choice is needed"
   voce kNonPuoStareInUn, "$1 non può stare in un'entità: scrivilo nella CSC di uno dei suoi connettori",
     "$1 cannot appear in an entity: write it in the CSC of one of its connectors"
   voce kLaParteHaUnNumero, "la parte $1 ha un numero di copie non valido: [$2 .. $3]. Scrivi [minimo .. massimo] con due numeri interi: il minimo 0 o più, il massimo almeno 1 e non più piccolo del minimo",
@@ -315,7 +315,7 @@ catalogo:
   voce kGradoEstensione, "estensione dichiarata", "declared extension"
   voce kGradoNonRiconosciuta, "non riconosciuta", "unrecognised"
   voce kRapUndecided, "3. UNDECIDED: $1", "3. UNDECIDED: $1"
-  voce kRapIpotesi, "4. IPOTESI, NON CONTRATTO: $1", "4. HYPOTHESIS, NOT CONTRACT: $1"
+  voce kRapIpotesi, "4. DA APPROVARE, NON CONTRATTO: $1", "4. PENDING APPROVAL, NOT CONTRACT: $1"
   voce kRapNonRiconosciute, "5. RIGHE NON RICONOSCIUTE: $1", "5. UNRECOGNISED LINES: $1"
   voce kRapTipiNonDichiarati, "6. TIPI NON DICHIARATI: $1", "6. UNDECLARED TYPES: $1"
   voce kElencoRiga, "riga $1", "line $1"
@@ -413,13 +413,13 @@ catalogo:
     "$1 was modified after the last save: I am writing nothing"
   voce kEStatoModificatoDaUn2, "$1 è stato modificato da un altro programma dopo che l'hai letto: non scrivo niente; ricarica",
     "$1 was modified by another program after you read it: I am writing nothing; reload"
-  voce kLaRigaDiDiventerebbeContratto, "la riga $1 $2 di $3 diventerebbe contratto senza una ratifica. È una riga da approvare: scrivila con STATUS HYPOTHESIS, oppure approvala con bcdd ratify",
+  voce kLaRigaDiDiventerebbeContratto, "la riga $1 $2 di $3 diventerebbe contratto senza un'approvazione. È una riga da approvare: scrivila con STATUS HYPOTHESIS, oppure approvala con bcdd ratify",
     "the line $1 $2 of $3 would become part of the contract without approval. It is a line pending approval: write it with STATUS HYPOTHESIS, or approve it with bcdd ratify"
   voce kLaRigaDiEContratto, "la riga $1 $2 di $3 è contratto: non si cambia (serve una VERSION nuova)",
     "the line $1 $2 of $3 is part of the contract: it cannot be changed (a new VERSION is needed)"
-  voce kLaRigaEContrattoNon, "la riga $1, $2 $3, è contratto ($4): non può cambiare pezzo VARIANT; per cambiarla serve una VERSION nuova",
+  voce kLaRigaEContrattoNon, "la riga $1, $2 $3, è contratto ($4): non può cambiare segmento VARIANT; per cambiarla serve una VERSION nuova",
     "the line $1, $2 $3, is part of the contract ($4): it cannot change its VARIANT segment; to change it a new VERSION is needed"
-  voce kDiventerebbeContrattoSenzaUnaRatifica, "$1 diventerebbe contratto senza una ratifica. È una riga da approvare: approvala con bcdd ratify",
+  voce kDiventerebbeContrattoSenzaUnaRatifica, "$1 diventerebbe contratto senza un'approvazione. È una riga da approvare: approvala con bcdd ratify",
     "$1 would become part of the contract without approval. It is a line pending approval: approve it with bcdd ratify"
   voce kEApprovataIlNumeroDella, "$1 è approvata: il numero della versione non si cambia; per una versione nuova rimetti l'intestazione da approvare",
     "$1 is approved: the version number cannot be changed; for a new version put the header back to pending approval"
@@ -427,7 +427,7 @@ catalogo:
     "$1 is approved: the header cannot be changed; for a new version put the header back to pending approval"
   voce kIlProfiloEApprovatoLe, "il profilo $1 è approvato: le sue righe non si cambiano (serve una VERSION nuova)",
     "the profile $1 is approved: its lines cannot be changed (a new VERSION is needed)"
-  voce kERatificataLeDichiarazioniDopo, "$1 è ratificata: le dichiarazioni dopo l'intestazione non si cambiano, si possono solo aggiungere righe da approvare",
+  voce kERatificataLeDichiarazioniDopo, "$1 è approvata: le dichiarazioni dopo l'intestazione non si cambiano, si possono solo aggiungere righe da approvare",
     "$1 is approved: the declarations after the header cannot be changed, only lines pending approval can be added"
   voce kNonRiescoACreare, "non riesco a creare $1: $2", "I cannot create $1: $2"
 
@@ -449,23 +449,23 @@ catalogo:
   # 095:8:1 ratify (bcddratify)
   voce kUsoBcddRatifyFILECsc, "uso: bcdd ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero",
     "usage: bcdd ratify FILE [--csc NAME] [--dir FOLDER]... [ID | --all] D-number"
-  voce kNessunBloccoDaRatificareCon, "$1: nessun blocco da ratificare con il nome $2 nel file",
+  voce kNessunBloccoDaRatificareCon, "$1: nessun blocco da approvare con il nome $2 nel file",
     "$1: no block to approve with the name $2 in the file"
   voce kIlFileContieneCSCIndica, "$1: il file contiene $2 CSC: indica quale con --csc NOME",
     "$1: the file contains $2 CSCs: say which with --csc NAME"
   voce kIlFileContieneENTITYIndica, "$1: il file contiene $2 ENTITY: indica quale con --csc NOME",
     "$1: the file contains $2 ENTITYs: say which with --csc NAME"
-  voce kIlFileContieneBlocchiDa, "$1: il file contiene $2 blocchi da ratificare: indica quale con --csc NOME",
+  voce kIlFileContieneBlocchiDa, "$1: il file contiene $2 blocchi da approvare: indica quale con --csc NOME",
     "$1: the file contains $2 blocks to approve: say which with --csc NAME"
-  voce kIlFileNonContieneNessun, "$1: il file non contiene nessun blocco da ratificare: una VERIFICATION non si ratifica",
+  voce kIlFileNonContieneNessun, "$1: il file non contiene nessun blocco da approvare: una VERIFICATION non si approva",
     "$1: the file contains no block to approve: a VERIFICATION is not approved"
-  voce kIlFileNonContieneNessuna2, "$1: il file non contiene nessuna CSC né ENTITY da ratificare",
+  voce kIlFileNonContieneNessuna2, "$1: il file non contiene nessuna CSC né ENTITY da approvare",
     "$1: the file contains no CSC or ENTITY to approve"
   voce kNessunaCSCNeENTITYNel, "$1: nessuna CSC né ENTITY $2 nel file",
     "$1: no CSC or ENTITY $2 in the file"
   voce kNessunaCSCNeENTITYNel2, "$1: nessuna CSC né ENTITY nel file", "$1: no CSC or ENTITY in the file"
   voce kENTITYRiga, "$1: ENTITY $2, riga $3: $4", "$1: ENTITY $2, line $3: $4"
-  voce kNonRatificoLeSueGaranzie, ": non ratifico le sue garanzie", ": I am not approving its guarantees"
+  voce kNonRatificoLeSueGaranzie, ": non approvo le sue promesse", ": I am not approving its guarantees"
   voce kNonTrovata, "$1 non trovata$2$3", "$1 not found$2$3"
   voce kTrovataConVERSION, "$1 trovata $2 con VERSION $3$4", "$1 found $2 with VERSION $3$4"
   voce kErroreInternoIlTestoModificato, "$1: errore interno: il testo modificato non passa check; file non toccato",
@@ -473,51 +473,51 @@ catalogo:
   voce kRiga2, "  riga $1: $2 $3", "  line $1: $2 $3"
   voce kRiga3, "  riga $1: $2\n", "  line $1: $2\n"
   voce kContratto, "contratto: $1\n", "contract: $1\n"
-  voce kIpotesiCheRestano, "ipotesi che restano: $1\n", "lines still pending approval: $1\n"
-  voce kIlVERSIONEGiaRatificato, "$1: il $2 $3 VERSION $4 è già ratificato ($5): non cambio nulla",
+  voce kIpotesiCheRestano, "righe ancora da approvare: $1\n", "lines still pending approval: $1\n"
+  voce kIlVERSIONEGiaRatificato, "$1: il $2 $3 VERSION $4 è già approvato ($5): non cambio nulla",
     "$1: the $2 $3 VERSION $4 is already approved ($5): I am changing nothing"
-  voce kRatificatoIlPROFILEVERSIONRiga, "ratificato il PROFILE $1 VERSION $2 (riga $3) con $4\n",
+  voce kRatificatoIlPROFILEVERSIONRiga, "approvato il PROFILE $1 VERSION $2 (riga $3) con $4\n",
     "approved PROFILE $1 VERSION $2 (line $3) with $4\n"
   voce kEstensioni, "estensioni: $1\n", "extensions: $1\n"
   voce kRigaBIND, "  riga $1: BIND $2", "  line $1: BIND $2"
-  voce kRatificatoIlRigaCon, "ratificato il $1 (riga $2) con $3\n", "approved $1 (line $2) with $3\n"
+  voce kRatificatoIlRigaCon, "approvato il $1 (riga $2) con $3\n", "approved $1 (line $2) with $3\n"
   voce kDecisioneNonValidaServeD, "$1: decisione non valida: $2 (serve D-numero)",
     "$1: invalid decision: $2 (D-number is needed)"
   voce kIdNonValido, "$1: id non valido: $2", "$1: invalid id: $2"
   voce kNomeNonValido, "$1: nome non valido: $2", "$1: invalid name: $2"
-  voce kIlFileNonPassaBcdd, "$1: il file non passa bcdd check --strict (errori: $2, righe non riconosciute: $3): non ratifico",
+  voce kIlFileNonPassaBcdd, "$1: il file non passa bcdd check --strict (errori: $2, righe non riconosciute: $3): non approvo",
     "$1: the file does not pass bcdd check --strict (errors: $2, unrecognised lines: $3): I am not approving"
-  voce kLIntestazioneDellaNonSi, "$1: l'intestazione della $2 non si ratifica: indica una GUARANTEE oppure --all",
+  voce kLIntestazioneDellaNonSi, "$1: l'intestazione della $2 non si approva: indica una GUARANTEE oppure --all",
     "$1: the header of the $2 is not approved: say a GUARANTEE or --all"
-  voce kLaNonHaGaranzieAncora, "$1: la $2 non ha garanzie ancora ipotesi: non cambio nulla",
+  voce kLaNonHaGaranzieAncora, "$1: la $2 non ha promesse ancora da approvare: non cambio nulla",
     "$1: the $2 has no guarantees still pending approval: I am changing nothing"
   voce kNessunaGUARANTEEConIdNella, "$1: nessuna GUARANTEE con id $2 nella $3",
     "$1: no GUARANTEE with id $2 in the $3"
-  voce kNonEUnaGUARANTEEIn, "$1: $2 non è una GUARANTEE: in una ENTITY si ratificano solo garanzie",
+  voce kNonEUnaGUARANTEEIn, "$1: $2 non è una GUARANTEE: in una ENTITY si approvano solo promesse",
     "$1: $2 is not a GUARANTEE: in an ENTITY only guarantees are approved"
   voce kEGiaContrattoRigaNon, "$1: $2 è già contratto (riga $3): non cambio nulla",
     "$1: $2 is already part of the contract (line $3): I am changing nothing"
-  voce kLaCSCEGiaRatificata, "$1: la CSC $2 è già ratificata ($3): non cambio nulla",
+  voce kLaCSCEGiaRatificata, "$1: la CSC $2 è già approvata ($3): non cambio nulla",
     "$1: the CSC $2 is already approved ($3): I am changing nothing"
   voce kNessunaGUARANTEENeASSUMECon, "$1: nessuna GUARANTEE né ASSUME con id $2 nella CSC $3",
     "$1: no GUARANTEE or ASSUME with id $2 in the CSC $3"
-  voce kNonEUnaGUARANTEENe, "$1: $2 non è una GUARANTEE né una ASSUME: si ratificano solo righe contrattuali e dettagli",
+  voce kNonEUnaGUARANTEENe, "$1: $2 non è una GUARANTEE né una ASSUME: si approvano solo righe contrattuali e dettagli",
     "$1: $2 is neither a GUARANTEE nor an ASSUME: only contractual lines and details are approved"
-  voce kRatificataLaCSCRigaCon, "ratificata la CSC $1 (riga $2) con $3\n",
+  voce kRatificataLaCSCRigaCon, "approvata la CSC $1 (riga $2) con $3\n",
     "approved CSC $1 (line $2) with $3\n"
-  voce kRatificataLaRigaCon, "ratificata la riga $1: $2 $3 con $4\n", "approved line $1: $2 $3 with $4\n"
+  voce kRatificataLaRigaCon, "approvata la riga $1: $2 $3 con $4\n", "approved line $1: $2 $3 with $4\n"
 
   # 095:8:1 ratify: composizioni a mano (bcddratify)
   voce kRatInQuestoFile, "in questo file", "in this file"
   voce kRatDoveRiga, "$1 alla riga $2", "$1 at line $2"
   voce kRatTrovataCheHa, "$1 trovata $2, che ha $3$4", "$1 found $2, which has $3$4"
-  voce kRatEntitySenzaIpotesi, "$1: la ENTITY $2 non ha garanzie ancora ipotesi: non cambio nulla",
+  voce kRatEntitySenzaIpotesi, "$1: la ENTITY $2 non ha promesse ancora da approvare: non cambio nulla",
     "$1: ENTITY $2 has no guarantees still pending approval: I am changing nothing"
   voce kRatCscTuttaContratto, "$1: la CSC $2 è già tutta contratto: non cambio nulla",
     "$1: CSC $2 is already entirely part of the contract: I am changing nothing"
-  voce kRatApprovateEntity, "ratificate con $1 nella ENTITY $2: $3", "approved with $1 in ENTITY $2: $3"
-  voce kRatApprovateCsc, "ratificate con $1 nella CSC $2: $3", "approved with $1 in CSC $2: $3"
-  voce kRatApprovateNel, "ratificate con $1 nel $2: $3", "approved with $1 in $2: $3"
+  voce kRatApprovateEntity, "approvate con $1 nella ENTITY $2: $3", "approved with $1 in ENTITY $2: $3"
+  voce kRatApprovateCsc, "approvate con $1 nella CSC $2: $3", "approved with $1 in CSC $2: $3"
+  voce kRatApprovateNel, "approvate con $1 nel $2: $3", "approved with $1 in $2: $3"
   voce kNRiga, "$1 riga", "$1 line"
   voce kNRighe, "$1 righe", "$1 lines"
 
@@ -744,7 +744,7 @@ catalogo:
     "replaces a line that is not a GUARANTEE of ENTITY $1: $2"
   voce kRgSostituisceNonGaranziaCsc, "sostituisce una riga che non è una GUARANTEE né una ASSUME della CSC $1: $2",
     "replaces a line that is neither a GUARANTEE nor an ASSUME of CSC $1: $2"
-  voce kRgSostituisceContratto, "sostituisce $1, che è contratto (riga $2): una riga ratificata non si sostituisce",
+  voce kRgSostituisceContratto, "sostituisce $1, che è contratto (riga $2): una riga approvata non si sostituisce",
     "replaces $1, which is part of the contract (line $2): an approved line is not replaced"
   voce kRgSostituisceNonVerbale, "sostituisce $1, che non è una riga verbale (riga $2): si sostituiscono solo righe verbali",
     "replaces $1, which is not a verbal line (line $2): only verbal lines are replaced"
@@ -825,9 +825,9 @@ catalogo:
   voce kPurposeMancanteNella, "PURPOSE mancante nella $1 $2", "PURPOSE missing in $1 $2"
   voce kExtRipeteExt, "l'EXTENSION $1 ripete l'EXTENSION $2", "EXTENSION $1 repeats EXTENSION $2"
   voce kUsoTesto, "$1 usa $2: $3", "$1 uses $2: $3"
-  voce kRatBindingNonRiga, "nel BINDING si ratificano l'intestazione o --all, non una riga",
+  voce kRatBindingNonRiga, "nel BINDING si approvano l'intestazione o --all, non una riga",
     "in a BINDING the header or --all is approved, not a line"
-  voce kRatProfileNonRiga, "nel PROFILE si ratifica il profilo intero, non una riga",
+  voce kRatProfileNonRiga, "nel PROFILE si approva il profilo intero, non una riga",
     "in a PROFILE the whole profile is approved, not a line"
   # 095:9:9 fine del catalogo
 

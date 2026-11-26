@@ -3350,11 +3350,11 @@ proc esitoUnrec*(rep: Report, strict: bool): string =
 
 proc purposeDaCompilare*(l: string): bool =
   ## 022:1:11 Il riconoscitore unico dello scopo ancora da compilare: dopo PURPOSE, tolti gli
-  ## spazi, la stringa comincia con `"da compilare` o con `"to be filled in`, in qualunque lingua sia scritto lo scheletro.
+  ## spazi, la stringa comincia con `"da scrivere`, `"da compilare` (file di versioni precedenti) o `"to be filled in`, in qualunque lingua sia scritto lo scheletro.
   let at = l.find("PURPOSE")
   if at < 0: return false
   let r = l[at + 7 .. ^1].strip()
-  r.startsWith("\"da compilare") or r.startsWith("\"to be filled in")
+  r.startsWith("\"da scrivere") or r.startsWith("\"da compilare") or r.startsWith("\"to be filled in")
 
 proc esitoErrori*(n: int): string =
   ## 022:1:5 «nessun errore», «1 errore», «N errori», nella lingua corrente.

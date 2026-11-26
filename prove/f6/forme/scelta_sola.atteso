@@ -4,7 +4,7 @@ blocchi: 1
   riga 1: ENTITY Sola VERSION 0.1, senza STATUS
 
 1. ERRORI: 1
-  riga 3: [E22] la dimensione modo ha una sola scelta (uno): ne servono almeno due; una parte che può mancare si scrive con [0 .. 1]
+  riga 3: [E22] il gruppo di scelte modo ha una sola scelta (uno): ne servono almeno due; una parte che può mancare si scrive con [0 .. 1]
 
 2. GRADO DELLE RIGHE CONTRATTUALI
   verbale: 1
@@ -15,7 +15,7 @@ blocchi: 1
 
 3. UNDECIDED: 0
 
-4. IPOTESI, NON CONTRATTO: 1
+4. DA APPROVARE, NON CONTRATTO: 1
   riga 4: GUARANTEE s1
 
 5. RIGHE NON RICONOSCIUTE: 0

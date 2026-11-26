@@ -13,7 +13,7 @@ SOSTITUZIONE 1 di 2, al posto di g1a (riga 7)
 accetti? s = sì, n = no, f = fine (scarta le restanti): s
 
 SOSTITUZIONE 2 di 2: SCARTATA dal controllo
-  ragione: sostituisce g2, che è contratto (riga 9): una riga ratificata non si sostituisce
+  ragione: sostituisce g2, che è contratto (riga 9): una riga approvata non si sostituisce
   id: g2
   testo: Senza pressioni la luce resta spenta
   verifica: JUDGEMENT, verifica_testo: l'operatore, per un'ora

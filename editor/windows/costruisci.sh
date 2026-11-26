@@ -29,4 +29,5 @@ nim c -d:release --app:gui --dynlibOverrideAll --hints:off --verbosity:0 --path:
   --passL:"editor/windows/edicona.res" --out:bcdd-editor.exe editor/bcddeditor.nim
 [ "$1" = "--solo-rilascio" ] || nim c -d:release -d:bcddEditorProva --app:gui --dynlibOverrideAll --hints:off --verbosity:0 --path:"$CHK" \
   --nimcache:nimcache/editorwinprova --passL:"editor/windows/edicona.res" --out:tests/bcdd-editor_prova.exe editor/bcddeditor.nim
-ls -l bcdd-editor.exe tests/bcdd-editor_prova.exe 2>/dev/null
+# elenca solo i file che la modalità ha prodotto (set -e: un passo fallito esce prima con codice diverso da 0)
+if [ "$1" = "--solo-rilascio" ]; then ls -l bcdd-editor.exe; else ls -l bcdd-editor.exe tests/bcdd-editor_prova.exe; fi

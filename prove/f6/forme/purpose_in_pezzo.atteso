@@ -4,7 +4,7 @@ blocchi: 1
   riga 1: ENTITY Scopo VERSION 0.1, senza STATUS
 
 1. ERRORI: 1
-  riga 4: [E21] PURPOSE non può stare in un pezzo VARIANT: scrivilo prima del primo VARIANT
+  riga 4: [E21] PURPOSE non può stare in un segmento VARIANT: scrivilo prima del primo VARIANT
 
 2. GRADO DELLE RIGHE CONTRATTUALI
   verbale: 2
@@ -16,7 +16,7 @@ blocchi: 1
 
 3. UNDECIDED: 0
 
-4. IPOTESI, NON CONTRATTO: 2
+4. DA APPROVARE, NON CONTRATTO: 2
   riga 5: GUARANTEE p1
   riga 8: GUARANTEE p2
 

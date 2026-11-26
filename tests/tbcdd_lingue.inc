@@ -308,7 +308,7 @@ block:
     let w = newWd()
     let n = runL(@["--lang", lgNew, "new", "Sk"], "", w)
     let body = readFile(w / "Sk.csc")
-    let prefix = if lgNew == "it": "\"da compilare" else: "\"to be filled in"
+    let prefix = if lgNew == "it": "\"da scrivere" else: "\"to be filled in"
     rec("L-B7", "lo scheletro creato con " & lgNew & " ha lo scopo " & prefix, n.code == 0 and prefix in body, body)
     for lgRead in ["it", "en"]:
       let c = runL(@["--lang", lgRead, "check", "Sk.csc"], "", w)
@@ -328,6 +328,23 @@ block:
   try: dc2 = parseJson(j.output)["blocchi"][0]["scopo"]["da_compilare"].getBool
   except CatchableError: dc2 = true
   rec("L-B7", "\"To be filled in\" con la maiuscola non è riconosciuta", not dc2, j.output)
+
+# 067:6:2 L-B7: i tre prefissi dello scopo da scrivere sono riconosciuti, refine risponde senza chiamare l'LLM
+block:
+  let rf = f2Dir / "refine"
+  var nOk = 0
+  var why: seq[string]
+  for pre in ["da scrivere: x", "da compilare: x", "to be filled in: x"]:
+    let w = newWd()
+    writeFile(w / "Cap.csc", "CSC Cap VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"" & pre & "\"\nEND\n")
+    let j = runL(@["check", "--json", "Cap.csc"], "it", w)
+    var dc = false
+    try: dc = parseJson(j.output)["blocchi"][0]["scopo"]["da_compilare"].getBool
+    except CatchableError: dc = false
+    let rr = runX(bcddProva, @["--lang", "it", "refine", "--json", "Cap.csc"], w, refEnv(w, @[("BCDD_FINTO_RISPOSTA", rf / "risposte" / "buona.json")]))
+    let ok = dc and "\"errore\": \"scopo_da_scrivere\"" in rr.output and rr.code == 1
+    if ok: inc nOk else: why.add pre & ": " & j.output & rr.output & rr.errout
+  rec("L-B7", "D-407: «da scrivere», «da compilare» e «to be filled in» sono scopo da scrivere: da_compilare vero, refine senza giro", nOk == 3, why.join("\n"))
 
 # 067:7:1 L-B8, L-B9, L-B10, L-B14: refine in due lingue (solo l'LLM finto)
 block:
@@ -614,7 +631,7 @@ block:
       for w in wordsOf(v):
         if w in spiaWords: hit = true
       # eccezioni esplicite: il prefisso riconosciuto dello scopo da compilare (C-2, due lingue) e le parole «con» e «senza» delle composizioni
-      if v in ["\"da compilare", "\"to be filled in"]: continue
+      if v in ["\"da scrivere", "\"da compilare", "\"to be filled in"]: continue
       # ... e i segni tipografici «↵» (a capo) e «…» (testo accorciato), che non sono parole di una lingua
       if v in ["\xE2\x86\xB5", "\xE2\x80\xA6"]: continue
       if hit: leaks.add nm & ":" & $ln & " " & v

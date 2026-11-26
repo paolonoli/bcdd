@@ -5,7 +5,7 @@ blocchi: 2
   riga 9: REFINEMENT VIEW Parti
 
 1. ERRORI: 1
-  riga 9: [E15] REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY
+  riga 9: [E15] REFINEMENT VIEW è stata ritirata: una scomposizione si scrive con ENTITY
 
 2. GRADO DELLE RIGHE CONTRATTUALI
   verbale: 0
@@ -15,7 +15,7 @@ blocchi: 2
 
 3. UNDECIDED: 0
 
-4. IPOTESI, NON CONTRATTO: 0
+4. DA APPROVARE, NON CONTRATTO: 0
 
 5. RIGHE NON RICONOSCIUTE: 5
   riga 9: REFINEMENT VIEW Parti

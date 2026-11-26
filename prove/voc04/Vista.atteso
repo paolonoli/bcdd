@@ -7,9 +7,9 @@ blocchi: 3
 
 1. ERRORI: 4
   riga 3: [E07] blocco non chiuso: manca END di CSC Doppio
-  riga 5: [E15] REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY
+  riga 5: [E15] REFINEMENT VIEW è stata ritirata: una scomposizione si scrive con ENTITY
   riga 9: [E07] blocco non chiuso: manca END di REFINEMENT VIEW Aperta
-  riga 9: [E15] REFINEMENT VIEW è uscita dal linguaggio: una scomposizione si scrive con ENTITY
+  riga 9: [E15] REFINEMENT VIEW è stata ritirata: una scomposizione si scrive con ENTITY
 
 2. GRADO DELLE RIGHE CONTRATTUALI
   verbale: 0
@@ -19,7 +19,7 @@ blocchi: 3
 
 3. UNDECIDED: 0
 
-4. IPOTESI, NON CONTRATTO: 0
+4. DA APPROVARE, NON CONTRATTO: 0
 
 5. RIGHE NON RICONOSCIUTE: 4
   riga 5: REFINEMENT VIEW Doppio

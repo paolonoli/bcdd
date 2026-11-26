@@ -2092,7 +2092,7 @@ block:
   # AC-237: Completa da zero dallo scopo: righe d'interfaccia, promesse nuove, scopo da compilare
   proc cartellaSpia(scopo: string): string =
     result = newWd0()
-    writeFile(result / "Spia.csc", readFile(rfD / "Spia_nuova.csc").replace("da compilare: in una frase, di che cosa è responsabile Spia", scopo))
+    writeFile(result / "Spia.csc", readFile(rfD / "Spia_nuova.csc").replace("da scrivere: in una frase, di che cosa è responsabile Spia", scopo))
     writeFile(result / "Lampada.csc", "ENTITY Lampada VERSION 0.1\n  PURPOSE \"La lampada\"\n  OFFERS Spia\nEND\n")
   block:
     let d = cartellaSpia("La spia di un apparecchio")
@@ -2140,7 +2140,7 @@ block:
     s.finisci()
   block:
     # scopo ancora «da compilare»: il primo clic apre Cambia lo scopo con la frase, nessun refine
-    let d = cartellaSpia("da compilare: in una frase, di che cosa è responsabile Spia")
+    let d = cartellaSpia("da scrivere: in una frase, di che cosa è responsabile Spia")
     let prima = fotografia(d)
     var s = nuovaSessione()
     s.avviaEditor(@["--dir", d, "Lampada"], root, ambD(s) & @[("BCDD_EDITOR_PROVA_CLIC", "#c-Spia|@b-completa|?scheda-modulo|?f-scopo-prima|?scheda-completa")])
@@ -2338,7 +2338,7 @@ block:
   var dentro, fence = false
   for l in gram:
     if l.startsWith("Le **parole chiave** sono in inglese"): dentro = true
-    if dentro and l.startsWith("In tutto le parole chiave"): break
+    if dentro and l.startsWith("In totale le parole chiave"): break
     if dentro:
       if l.startsWith("```"): fence = not fence
       elif fence: dalGrammatica.add l.splitWhitespace

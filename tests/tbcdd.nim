@@ -384,41 +384,41 @@ block:
     rec(ac, prova & " " & args.join(" ") & ": file dopo", fileEq(w / src, rd / dopo), "contenuto diverso da " & dopo,
       "ratify/" & prova)
     rec("AC-37", prova & ": nessun file in più", listDir(w) == @[src], $listDir(w))
-  const lucD = "ratificata la CSC Luce (riga 3) con D-130\ncontratto: 2\nipotesi che restano: 0\n"
+  const lucD = "approvata la CSC Luce (riga 3) con D-130\ncontratto: 2\nrighe ancora da approvare: 0\n"
   ratCase("AC-28", "R01", "R01_Luce.csc", @["R01_Luce.csc", "D-130"], lucD, "R01_Luce.dopo.csc")
   ratCase("AC-29", "R02", "R02_senza_status.csc", @["R02_senza_status.csc", "D-130"], lucD, "R02_senza_status.dopo.csc")
   ratCase("AC-30", "R03", "R03_righe.csc", @["R03_righe.csc", "g1", "D-130"],
-    "ratificata la riga 7: GUARANTEE g1 con D-130\n", "R03_righe.g1.dopo.csc")
+    "approvata la riga 7: GUARANTEE g1 con D-130\n", "R03_righe.g1.dopo.csc")
   ratCase("AC-30", "R03", "R03_righe.csc", @["R03_righe.csc", "g1a", "D-130"],
-    "ratificata la riga 8: GUARANTEE g1a con D-130\n", "R03_righe.g1a.dopo.csc")
+    "approvata la riga 8: GUARANTEE g1a con D-130\n", "R03_righe.g1a.dopo.csc")
   ratCase("AC-30", "R03", "R03_righe.csc", @["R03_righe.csc", "g3", "D-130"],
-    "ratificata la riga 10: GUARANTEE g3 con D-130\n", "R03_righe.g3.dopo.csc")
+    "approvata la riga 10: GUARANTEE g3 con D-130\n", "R03_righe.g3.dopo.csc")
   ratCase("AC-30", "R03", "R03_righe.csc", @["R03_righe.csc", "a1", "D-130"],
-    "ratificata la riga 11: ASSUME a1 con D-130\n", "R03_righe.a1.dopo.csc")
+    "approvata la riga 11: ASSUME a1 con D-130\n", "R03_righe.a1.dopo.csc")
   ratCase("AC-31", "R03", "R03_righe.csc", @["R03_righe.csc", "D-130"],
-    "ratificata la CSC Righe (riga 3) con D-130\ncontratto: 2\nipotesi che restano: 2\n  riga 8: GUARANTEE g1a\n  riga 11: ASSUME a1\n",
+    "approvata la CSC Righe (riga 3) con D-130\ncontratto: 2\nrighe ancora da approvare: 2\n  riga 8: GUARANTEE g1a\n  riga 11: ASSUME a1\n",
     "R03_righe.tutta.dopo.csc")
   ratCase("AC-33", "R05", "R05_due_csc.csc", @["R05_due_csc.csc", "--csc", "Seconda", "g1", "D-130"],
-    "ratificata la riga 12: GUARANTEE g1 con D-130\n", "R05_due_csc.Seconda.g1.dopo.csc")
+    "approvata la riga 12: GUARANTEE g1 con D-130\n", "R05_due_csc.Seconda.g1.dopo.csc")
   ratCase("AC-34", "R06", "R06_crlf.csc", @["R06_crlf.csc", "D-130"],
-    "ratificata la CSC Finestre (riga 2) con D-130\ncontratto: 1\nipotesi che restano: 0\n", "R06_crlf.tutta.dopo.csc")
+    "approvata la CSC Finestre (riga 2) con D-130\ncontratto: 1\nrighe ancora da approvare: 0\n", "R06_crlf.tutta.dopo.csc")
   ratCase("AC-34", "R06", "R06_crlf.csc", @["R06_crlf.csc", "g1", "D-130"],
-    "ratificata la riga 4: GUARANTEE g1 con D-130\n", "R06_crlf.g1.dopo.csc")
+    "approvata la riga 4: GUARANTEE g1 con D-130\n", "R06_crlf.g1.dopo.csc")
   # AC-75..AC-80: ratify --all (dalla 1.3)
   ratCase("AC-75", "R03all", "R03_righe.csc", @["R03_righe.csc", "--all", "D-130"],
-    "ratificate con D-130 nella CSC Righe: 3 righe\n  riga 4: CSC Righe\n  riga 8: GUARANTEE g1a\n  riga 11: ASSUME a1\ncontratto: 4\n",
+    "approvate con D-130 nella CSC Righe: 3 righe\n  riga 4: CSC Righe\n  riga 8: GUARANTEE g1a\n  riga 11: ASSUME a1\ncontratto: 4\n",
     "R03_righe.all.dopo.csc")
   block:
     let w = newWd()
     discard cpTo(rd / "R03_righe.csc", w)
     discard run(@["ratify", "R03_righe.csc", "--all", "D-130"], w)
     let c = run(@["check", "R03_righe.csc"], w)
-    let at = c.output.find("4. IPOTESI")
-    rec("AC-75", "check dopo --all: sezione 4 vuota", c.code == 0 and at >= 0 and "IPOTESI, NON CONTRATTO: 0" in c.output, c.output)
+    let at = c.output.find("4. DA APPROVARE")
+    rec("AC-75", "check dopo --all: sezione 4 vuota", c.code == 0 and at >= 0 and "DA APPROVARE, NON CONTRATTO: 0" in c.output, c.output)
   ratCase("AC-76", "R02all", "R02_senza_status.csc", @["R02_senza_status.csc", "--all", "D-130"],
-    "ratificate con D-130 nella CSC Luce: 1 riga\n  riga 4: CSC Luce\ncontratto: 2\n", "R02_senza_status.dopo.csc")
+    "approvate con D-130 nella CSC Luce: 1 riga\n  riga 4: CSC Luce\ncontratto: 2\n", "R02_senza_status.dopo.csc")
   ratCase("AC-77", "R04all", "R04_gia_contratto.csc", @["R04_gia_contratto.csc", "--all", "D-130"],
-    "ratificate con D-130 nella CSC Firmata: 1 riga\n  riga 10: GUARANTEE g2a\ncontratto: 3\n", "R04_gia_contratto.g2a.dopo.csc")
+    "approvate con D-130 nella CSC Firmata: 1 riga\n  riga 10: GUARANTEE g2a\ncontratto: 3\n", "R04_gia_contratto.g2a.dopo.csc")
   block:
     let w = newWd()
     discard cpTo(rd / "R04_gia_contratto.g2a.dopo.csc", w)
@@ -427,9 +427,9 @@ block:
     rec("AC-78", "file invariato", fileEq(w / "R04_gia_contratto.g2a.dopo.csc", rd / "R04_gia_contratto.g2a.dopo.csc") and
       listDir(w) == @["R04_gia_contratto.g2a.dopo.csc"], $listDir(w))
   ratCase("AC-79", "R05all", "R05_due_csc.csc", @["--all", "R05_due_csc.csc", "--csc", "Seconda", "D-130"],
-    "ratificate con D-130 nella CSC Seconda: 1 riga\n  riga 10: CSC Seconda\ncontratto: 1\n", "R05_due_csc.Seconda.all.dopo.csc")
+    "approvate con D-130 nella CSC Seconda: 1 riga\n  riga 10: CSC Seconda\ncontratto: 1\n", "R05_due_csc.Seconda.all.dopo.csc")
   ratCase("AC-79", "R06all", "R06_crlf.csc", @["R06_crlf.csc", "D-130", "--all"],
-    "ratificate con D-130 nella CSC Finestre: 1 riga\n  riga 3: CSC Finestre\ncontratto: 1\n", "R06_crlf.tutta.dopo.csc")
+    "approvate con D-130 nella CSC Finestre: 1 riga\n  riga 3: CSC Finestre\ncontratto: 1\n", "R06_crlf.tutta.dopo.csc")
   block:
     let w = newWd()
     discard cpTo(rd / "R03_righe.csc", w)
@@ -454,10 +454,10 @@ block:
   block:
     let src = rd / "R04_gia_contratto.csc"
     let cases = [
-      (@["D-130"], "bcdd ratify: la CSC Firmata è già ratificata (D-1): non cambio nulla\n"),
+      (@["D-130"], "bcdd ratify: la CSC Firmata è già approvata (D-1): non cambio nulla\n"),
       (@["g1", "D-130"], "bcdd ratify: g1 è già contratto (riga 8): non cambio nulla\n"),
       (@["g2", "D-130"], "bcdd ratify: g2 è già contratto (riga 9): non cambio nulla\n"),
-      (@["pressione", "D-130"], "bcdd ratify: pressione non è una GUARANTEE né una ASSUME: si ratificano solo righe contrattuali e dettagli\n"),   # 053:3:1 C-34 (1.0-beta, S-20): messaggio cambiato
+      (@["pressione", "D-130"], "bcdd ratify: pressione non è una GUARANTEE né una ASSUME: si approvano solo righe contrattuali e dettagli\n"),   # 053:3:1 C-34 (1.0-beta, S-20): messaggio cambiato
       (@["g9", "D-130"], "bcdd ratify: nessuna GUARANTEE né ASSUME con id g9 nella CSC Firmata\n")]
     for (a, want) in cases:
       let w = newWd()
@@ -468,7 +468,7 @@ block:
     let w = newWd()
     discard cpTo(src, w)
     expectOut("AC-32", "g2a", "ratify/R04", run(@["ratify", "R04_gia_contratto.csc", "g2a", "D-130"], w),
-      "ratificata la riga 10: GUARANTEE g2a con D-130\n", 0)
+      "approvata la riga 10: GUARANTEE g2a con D-130\n", 0)
     rec("AC-32", "g2a: file dopo", fileEq(w / "R04_gia_contratto.csc", rd / "R04_gia_contratto.g2a.dopo.csc"),
       "contenuto diverso", "ratify/R04")
   # AC-33: più CSC
@@ -479,11 +479,11 @@ block:
       "bcdd ratify: il file contiene 2 CSC: indica quale con --csc NOME\n", 2)
     expectErr("AC-33", "--csc Terza", "ratify/R05",
       run(@["ratify", "R05_due_csc.csc", "--csc", "Terza", "g1", "D-130"], w),
-      "bcdd ratify: nessun blocco da ratificare con il nome Terza nel file\n", 1)
+      "bcdd ratify: nessun blocco da approvare con il nome Terza nel file\n", 1)
     rec("AC-33", "file invariato", fileEq(w / "R05_due_csc.csc", rd / "R05_due_csc.csc"), "il file è cambiato", "ratify/R05")
   # AC-35: precondizione check --strict
-  for (src, want) in [("02_id_ripetuto.csc", "bcdd ratify: il file non passa bcdd check --strict (errori: 4, righe non riconosciute: 0): non ratifico\n"),
-      ("14_non_riconosciute.csc", "bcdd ratify: il file non passa bcdd check --strict (errori: 0, righe non riconosciute: 12): non ratifico\n")]:
+  for (src, want) in [("02_id_ripetuto.csc", "bcdd ratify: il file non passa bcdd check --strict (errori: 4, righe non riconosciute: 0): non approvo\n"),
+      ("14_non_riconosciute.csc", "bcdd ratify: il file non passa bcdd check --strict (errori: 0, righe non riconosciute: 12): non approvo\n")]:
     let w = newWd()
     discard cpTo(proveDir / src, w)
     expectErr("AC-35", src, "", run(@["ratify", src, "g1", "D-130"], w), want, 1)
@@ -610,18 +610,18 @@ block:
     let r = refine(w, buona, readFile(rf / "T01_buona.ingresso"), @[("BCDD_FINTO_RICHIESTA", aux / "richiesta"),
       ("BCDD_FINTO_RICHIESTA_2", aux / "richiesta2"), sec])
     expectOut("AC-41", "T01 uscita", "refine/T01", r, readFile(rf / "T01_buona.uscita"), 0)
-    rec("AC-40", "richiesta uguale a T01_buona.richiesta (12081 byte)", fileEq(aux / "richiesta", rf / "T01_buona.richiesta") and
-      getFileSize(aux / "richiesta") == 12081,
+    rec("AC-40", "richiesta uguale a T01_buona.richiesta (12086 byte)", fileEq(aux / "richiesta", rf / "T01_buona.richiesta") and
+      getFileSize(aux / "richiesta") == 12086,
       "la richiesta è diversa", "refine/T01")
-    rec("AC-59", "richiesta2 uguale a T01_buona.richiesta2 (12710 byte)", fileEq(aux / "richiesta2", rf / "T01_buona.richiesta2") and
-      getFileSize(aux / "richiesta2") == 12710, "la seconda richiesta è diversa", "refine/T01")
+    rec("AC-59", "richiesta2 uguale a T01_buona.richiesta2 (12715 byte)", fileEq(aux / "richiesta2", rf / "T01_buona.richiesta2") and
+      getFileSize(aux / "richiesta2") == 12715, "la seconda richiesta è diversa", "refine/T01")
     rec("AC-59", "conta contiene 2", contaOf(w) == "2", contaOf(w), "refine/T01")
     rec("AC-41", "Luce.csc uguale a T01_buona.dopo.csc", fileEq(w / "Luce.csc", rf / "T01_buona.dopo.csc"), "contenuto diverso", "refine/T01")
     rec("AC-41", "g2b mostrata, g1a no", "g2b" in r.output and "g1a" notin r.output, "proposte della prima chiamata mostrate", "refine/T01")
     rec("AC-41", "Luce.csc.dialogo uguale a T01_buona.dialogo", fileEq(w / "Luce.csc.dialogo", rf / "T01_buona.dialogo"),
       "contenuto diverso", "refine/T01")
     let c = run(@["check", "--strict", "Luce.csc"], w)
-    let sec4 = c.output.find("4. IPOTESI")
+    let sec4 = c.output.find("4. DA APPROVARE")
     rec("AC-41", "check --strict del file nuovo: codice 0 e g2a fra le ipotesi", c.code == 0 and sec4 >= 0 and
       "riga 14: GUARANTEE g2a" in c.output[sec4 .. ^1], "codice " & $c.code)
     rec("AC-41", "nessun temporaneo", listDir(w) == @["Luce.csc", "Luce.csc.dialogo", "chiamate.tsv"], $listDir(w))
@@ -630,11 +630,11 @@ block:
       reg[0] == "data\tfornitore\tlimite_s\tdurata_ms\tesito\tbyte_richiesta\tbyte_risposta\tfile", $reg)
     let f1 = reg[1].split('\t')
     rec("AC-52", "campi della prima riga", f1.len == 8 and f1[0] == luceOra and f1[1] == "ULlmFinto.sh" and f1[2] == "30" and
-      f1[3].allCharsInSet({'0' .. '9'}) and f1[3].len > 0 and f1[4] == "risposta" and f1[5] == "12081" and f1[6] == "813" and
+      f1[3].allCharsInSet({'0' .. '9'}) and f1[3].len > 0 and f1[4] == "risposta" and f1[5] == "12086" and f1[6] == "813" and
       f1[7] == "Luce.csc", $f1)
     let f = registryLast(w)
     rec("AC-52", "campi della seconda riga", f.len == 8 and f[0] == luceOra and f[1] == "ULlmFinto.sh" and f[2] == "30" and
-      f[3].allCharsInSet({'0' .. '9'}) and f[3].len > 0 and f[4] == "risposta" and f[5] == "12710" and f[6] == "635" and
+      f[3].allCharsInSet({'0' .. '9'}) and f[3].len > 0 and f[4] == "risposta" and f[5] == "12715" and f[6] == "635" and
       f[7] == "Luce.csc", $f)
   # T02: AC-42
   block:
@@ -1080,8 +1080,8 @@ block:
     expectOut("AC-70", "T22 uscita", "refine/T22", r, readFile(rf / "T22_scelta.uscita"), 0)
     rec("AC-70", "Luce.csc come T01, dialogo con il testo della scelta", fileEq(w / "Luce.csc", rf / "T01_buona.dopo.csc") and
       fileEq(w / "Luce.csc.dialogo", rf / "T22_scelta.dialogo"), "contenuto diverso", "refine/T22")
-    rec("AC-70", "richiesta2 uguale a T22_scelta.richiesta2 (12705 byte), conta 2", fileEq(aux / "richiesta2", rf / "T22_scelta.richiesta2") and
-      getFileSize(aux / "richiesta2") == 12705 and contaOf(w) == "2", contaOf(w), "refine/T22")
+    rec("AC-70", "richiesta2 uguale a T22_scelta.richiesta2 (12710 byte), conta 2", fileEq(aux / "richiesta2", rf / "T22_scelta.richiesta2") and
+      getFileSize(aux / "richiesta2") == 12710 and contaOf(w) == "2", contaOf(w), "refine/T22")
   # AC-71, T23: un testo che comincia con una cifra resta testo
   for (txt, ris) in [("60 +-1", "60 +-1"), ("1 secondo", "1 secondo")]:
     let w = newRef(luce)
@@ -1260,7 +1260,7 @@ block:
     let c = run(@["check", "--strict", "Luce.csc"], w)
     rec("AC-90", "check --strict del file nuovo: codice 0", c.code == 0, "codice " & $c.code & " " & c.output)
     let f = registryLast(w)
-    rec("AC-90", "seconda riga del registro: byte_risposta 583", f.len == 8 and f[5] == "12710" and f[6] == "601", $f)
+    rec("AC-90", "seconda riga del registro: byte_risposta 583", f.len == 8 and f[5] == "12715" and f[6] == "601", $f)
   # AC-92: f e n su una sostituzione
   block:
     let w = newRef(luce)
@@ -1597,7 +1597,7 @@ block:
     let w = newWd()
     discard cpTo(rd3 / "MistoE14.csc", w)
     expectErr("AC-112", "MistoE14 --all", "", run(@["ratify", "MistoE14.csc", "--all", "D-1"], w),
-      "bcdd ratify: il file non passa bcdd check --strict (errori: 2, righe non riconosciute: 0): non ratifico\n", 1)
+      "bcdd ratify: il file non passa bcdd check --strict (errori: 2, righe non riconosciute: 0): non approvo\n", 1)
     rec("AC-112", "MistoE14 invariato", fileEq(w / "MistoE14.csc", rd3 / "MistoE14.csc") and listDir(w) == @["MistoE14.csc"], $listDir(w))
   # AC-112 casi 3 e 4: sostituiti da AC-136
   block:
@@ -1661,7 +1661,7 @@ block:
   block:
     let w = wdR()
     expectOut("AC-134", "ratify Scale.csc g1 D-200", "f3b/Scale.g1", rat(w, @["Scale.csc", "g1", "D-200"]),
-      "ratificata la riga 5: GUARANTEE g1 con D-200\n", 0)
+      "approvata la riga 5: GUARANTEE g1 con D-200\n", 0)
     rec("AC-134", "file uguale a Scale.g1.dopo.csc", fileEq(w / "Scale.csc", rdb / "Scale.g1.dopo.csc"), "contenuto diverso")
   # AC-135 (B.2.4, B.2.5): --all sull'entità, e una seconda volta
   block:
@@ -1670,27 +1670,27 @@ block:
       readFile(rdb / "Scale.all.uscita"), 0)
     rec("AC-135", "file uguale a Scale.all.dopo.csc", fileEq(w / "Scale.csc", rdb / "Scale.all.dopo.csc"), "contenuto diverso")
     let c = run(@["check", "--strict", "Scale.csc"], w)
-    rec("AC-135", "dopo --all: check --strict codice 0 e ipotesi a zero", c.code == 0 and "4. IPOTESI, NON CONTRATTO: 0" in c.output,
+    rec("AC-135", "dopo --all: check --strict codice 0 e ipotesi a zero", c.code == 0 and "4. DA APPROVARE, NON CONTRATTO: 0" in c.output,
       "codice " & $c.code & " " & c.output)
     let after1 = readFile(w / "Scale.csc")
     expectErr("AC-135", "--all D-201 una seconda volta", "", rat(w, @["Scale.csc", "--all", "D-201"]),
-      "bcdd ratify: la ENTITY Scale non ha garanzie ancora ipotesi: non cambio nulla\n", 1)
+      "bcdd ratify: la ENTITY Scale non ha promesse ancora da approvare: non cambio nulla\n", 1)
     rec("AC-135", "file invariato dalla seconda volta", readFile(w / "Scale.csc") == after1, "il file è cambiato")
-  # AC-136 (g-t4): l'intestazione di un'entità non si ratifica mai
+  # AC-136 (g-t4): l'intestazione di un'entità non si approva mai
   block:
     let w = wdR()
     expectErr("AC-136", "Scale D-200", "", rat(w, @["Scale.csc", "D-200"]),
-      "bcdd ratify: l'intestazione della ENTITY Scale non si ratifica: indica una GUARANTEE oppure --all\n", 1)
+      "bcdd ratify: l'intestazione della ENTITY Scale non si approva: indica una GUARANTEE oppure --all\n", 1)
     rec("AC-136", "Scale invariato", same(w, "Scale.csc"), $listDir(w))
     let w2 = newWd()
     discard cpTo(f3Dir / "luce" / "Pulsante.csc", w2)
     expectErr("AC-136", "Pulsante D-1", "", rat(w2, @["Pulsante.csc", "D-1"]),
-      "bcdd ratify: l'intestazione della ENTITY Pulsante non si ratifica: indica una GUARANTEE oppure --all\n", 1)
+      "bcdd ratify: l'intestazione della ENTITY Pulsante non si approva: indica una GUARANTEE oppure --all\n", 1)
     rec("AC-136", "Pulsante invariato", fileEq(w2 / "Pulsante.csc", f3Dir / "luce" / "Pulsante.csc") and listDir(w2) == @["Pulsante.csc"], $listDir(w2))
     let w3 = newWd()
     discard cpTo(f3Dir / "ratify" / "Misto.csc", w3)
     expectErr("AC-136", "Misto --csc LuceMista D-1", "", rat(w3, @["Misto.csc", "--csc", "LuceMista", "D-1"]),
-      "bcdd ratify: l'intestazione della ENTITY LuceMista non si ratifica: indica una GUARANTEE oppure --all\n", 1)
+      "bcdd ratify: l'intestazione della ENTITY LuceMista non si approva: indica una GUARANTEE oppure --all\n", 1)
     rec("AC-136", "Misto invariato", fileEq(w3 / "Misto.csc", f3Dir / "ratify" / "Misto.csc") and listDir(w3) == @["Misto.csc"], $listDir(w3))
   # AC-137 (B.2.4): gli altri rifiuti sul bersaglio; il bersaglio viene prima dei confini
   block:
@@ -1702,28 +1702,28 @@ block:
     expectErr("AC-137", "x9 su Manca (il bersaglio prima dei confini)", "", rat(w, @["Manca.csc", "x9", "D-1"]),
       "bcdd ratify: nessuna GUARANTEE con id x9 nella ENTITY Manca\n", 1)
     expectErr("AC-137", "p è una parte", "", rat(w, @["Due.csc", "--csc", "Altra", "p", "D-1"]),
-      "bcdd ratify: p non è una GUARANTEE: in una ENTITY si ratificano solo garanzie\n", 1)
+      "bcdd ratify: p non è una GUARANTEE: in una ENTITY si approvano solo promesse\n", 1)
     rec("AC-137", "file invariati", listDir(w) == ratList and ratInputs.allIt(fileEq(w / it & ".csc", rdb / it & ".csc")), $listDir(w))
   # AC-138 (g-t3): i confini letti, un messaggio per motivo
   block:
     let w = wdR()
     for (args, want) in [
-      (@["Manca.csc", "m1", "D-1"], "bcdd ratify: ENTITY Manca, riga 4: USES Assente non trovata: non ratifico le sue garanzie\n"),
-      (@["Versione.csc", "--all", "D-1"], "bcdd ratify: ENTITY Versione, riga 4: OFFERS Luce VERSION 0.2 trovata in Luce.csc alla riga 1 con VERSION 0.1: non ratifico le sue garanzie\n"),
-      (@["Sporca.csc", "s1", "D-1"], "bcdd ratify: ENTITY Sporca, riga 3: USES Sporco trovata in Sporco.csc alla riga 1, che ha 1 errore: non ratifico le sue garanzie\n"),
-      (@["Lontana.csc", "n1", "D-1"], "bcdd ratify: ENTITY Lontana, riga 3: OFFERS Comando non trovata: non ratifico le sue garanzie\n"),
-      (@["Stesso.csc", "--csc", "Nodo", "n1", "D-1"], "bcdd ratify: ENTITY Nodo, riga 8: OFFERS Canale VERSION 0.2 trovata in questo file alla riga 1 con VERSION 0.3: non ratifico le sue garanzie\n")]:
+      (@["Manca.csc", "m1", "D-1"], "bcdd ratify: ENTITY Manca, riga 4: USES Assente non trovata: non approvo le sue promesse\n"),
+      (@["Versione.csc", "--all", "D-1"], "bcdd ratify: ENTITY Versione, riga 4: OFFERS Luce VERSION 0.2 trovata in Luce.csc alla riga 1 con VERSION 0.1: non approvo le sue promesse\n"),
+      (@["Sporca.csc", "s1", "D-1"], "bcdd ratify: ENTITY Sporca, riga 3: USES Sporco trovata in Sporco.csc alla riga 1, che ha 1 errore: non approvo le sue promesse\n"),
+      (@["Lontana.csc", "n1", "D-1"], "bcdd ratify: ENTITY Lontana, riga 3: OFFERS Comando non trovata: non approvo le sue promesse\n"),
+      (@["Stesso.csc", "--csc", "Nodo", "n1", "D-1"], "bcdd ratify: ENTITY Nodo, riga 8: OFFERS Canale VERSION 0.2 trovata in questo file alla riga 1 con VERSION 0.3: non approvo le sue promesse\n")]:
       expectErr("AC-138", args.join(" "), "", rat(w, args), want, 1)
     rec("AC-138", "file invariati", listDir(w) == ratList and ratInputs.allIt(fileEq(w / it & ".csc", rdb / it & ".csc")), $listDir(w))
   # AC-139: --dir, in qualunque posizione
   block:
     let w = wdR()
     expectOut("AC-139", "--dir prima del file", "f3b/Lontana", rat(w, @["--dir", luceAbs, "Lontana.csc", "n1", "D-1"]),
-      "ratificata la riga 4: GUARANTEE n1 con D-1\n", 0)
+      "approvata la riga 4: GUARANTEE n1 con D-1\n", 0)
     rec("AC-139", "file uguale a Lontana.n1.dopo.csc", fileEq(w / "Lontana.csc", rdb / "Lontana.n1.dopo.csc"), "contenuto diverso")
     let w2 = wdR()
     expectOut("AC-139", "--dir dopo l'id", "", rat(w2, @["Lontana.csc", "n1", "--dir", luceAbs, "D-1"]),
-      "ratificata la riga 4: GUARANTEE n1 con D-1\n", 0)
+      "approvata la riga 4: GUARANTEE n1 con D-1\n", 0)
     rec("AC-139", "file uguale a Lontana.n1.dopo.csc (seconda)", fileEq(w2 / "Lontana.csc", rdb / "Lontana.n1.dopo.csc"), "contenuto diverso")
     let w3 = wdR()
     expectErr("AC-139", "--dir nessuna", "", rat(w3, @["--dir", "nessuna", "Scale.csc", "g1", "D-1"]),
@@ -1740,11 +1740,11 @@ block:
     expectErr("AC-140", "Due senza --csc", "", rat(w, @["Due.csc", "u1", "D-1"]),
       "bcdd ratify: il file contiene 2 ENTITY: indica quale con --csc NOME\n", 2)
     expectOut("AC-140", "Due --csc Altra a1", "f3b/Due.a1", rat(w, @["Due.csc", "--csc", "Altra", "a1", "D-1"]),
-      "ratificata la riga 11: GUARANTEE a1 con D-1\n", 0)
+      "approvata la riga 11: GUARANTEE a1 con D-1\n", 0)
     rec("AC-140", "Due uguale a Due.a1.dopo.csc", fileEq(w / "Due.csc", rdb / "Due.a1.dopo.csc"), "contenuto diverso")
     let w2 = wdR()
     expectErr("AC-140", "Due --csc Terza", "", rat(w2, @["Due.csc", "--csc", "Terza", "u1", "D-1"]),
-      "bcdd ratify: nessun blocco da ratificare con il nome Terza nel file\n", 1)
+      "bcdd ratify: nessun blocco da approvare con il nome Terza nel file\n", 1)
     rec("AC-140", "Due invariato", same(w2, "Due.csc"), $listDir(w2))
     expectOut("AC-140", "Stesso --all (la CSC, con un'entità dal confine di altra versione)", "f3b/Stesso.all",
       rat(w2, @["Stesso.csc", "--all", "D-1"]), readFile(rdb / "Stesso.all.uscita"), 0)
@@ -1753,7 +1753,7 @@ block:
   block:
     let w = wdR()
     expectErr("AC-141", "Ignota i1", "", rat(w, @["Ignota.csc", "i1", "D-1"]),
-      "bcdd ratify: il file non passa bcdd check --strict (errori: 0, righe non riconosciute: 1): non ratifico\n", 1)
+      "bcdd ratify: il file non passa bcdd check --strict (errori: 0, righe non riconosciute: 1): non approvo\n", 1)
     rec("AC-141", "Ignota invariato", same(w, "Ignota.csc"), $listDir(w))
   # AC-147 (testi d'uso)
   block:
@@ -1797,8 +1797,8 @@ block:
     let aux = auxOf(w)
     let r = refF(w, @["Scale.csc"], vuota, "", @[("BCDD_FINTO_RICHIESTA", aux / "richiesta")])
     expectOut("AC-142", "Scale con vuota", "f3b/Scale.vuota", r, readFile(fdb / "Scale.vuota.uscita"), 0)
-    rec("AC-142", "una chiamata, richiesta uguale a Scale.richiesta (11614 byte)", contaOf(w) == "1" and
-      fileEq(aux / "richiesta", fdb / "Scale.richiesta") and getFileSize(aux / "richiesta") == 11614, contaOf(w))
+    rec("AC-142", "una chiamata, richiesta uguale a Scale.richiesta (11619 byte)", contaOf(w) == "1" and
+      fileEq(aux / "richiesta", fdb / "Scale.richiesta") and getFileSize(aux / "richiesta") == 11619, contaOf(w))
     rec("AC-142", "Scale.csc invariato, nessun .dialogo", fileEq(w / "Scale.csc", fdb / "Scale.csc") and not fileExists(w / "Scale.csc.dialogo"), $listDir(w))
   # AC-143 (B.3.3, B.3.4): proposte e sostituzioni su un'entità, filtro e righe a schermo
   block:
@@ -1816,8 +1816,8 @@ block:
     let aux = auxOf(w)
     let r = refF(w, @["Misto.csc", "--csc", "LuceMista"], vuota, "", @[("BCDD_FINTO_RICHIESTA", aux / "richiesta")])
     expectOut("AC-144", "Misto --csc LuceMista", "f3b/Misto.LuceMista", r, readFile(fdb / "Misto.LuceMista.uscita"), 0)
-    rec("AC-144", "una chiamata, richiesta uguale a Misto.LuceMista.richiesta (10317 byte)", contaOf(w) == "1" and
-      fileEq(aux / "richiesta", fdb / "Misto.LuceMista.richiesta") and getFileSize(aux / "richiesta") == 10317, contaOf(w))
+    rec("AC-144", "una chiamata, richiesta uguale a Misto.LuceMista.richiesta (10322 byte)", contaOf(w) == "1" and
+      fileEq(aux / "richiesta", fdb / "Misto.LuceMista.richiesta") and getFileSize(aux / "richiesta") == 10322, contaOf(w))
     rec("AC-144", "Misto.csc invariato", fileEq(w / "Misto.csc", fdb / "Misto.csc") and not fileExists(w / "Misto.csc.dialogo"), $listDir(w))
     let w2 = newWd()
     discard cpTo(f3Dir / "luce" / "Pulsante.csc", w2)
@@ -2038,7 +2038,7 @@ block:
     let wd = newRef(proveDir / "23_parti_ripetute.csc", "V.csc")
     let h0 = readFile(wd / "V.csc")
     expectErr("AC-161", "ratify", "", run(@["ratify", "V.csc", "--all", "D-1"], wd),
-      "bcdd ratify: il file non passa bcdd check --strict (errori: 1, righe non riconosciute: 5): non ratifico\n", 1)
+      "bcdd ratify: il file non passa bcdd check --strict (errori: 1, righe non riconosciute: 5): non approvo\n", 1)
     discard auxOf(wd)
     expectErr("AC-161", "refine", "", runX(bcddProva, @["refine", "V.csc"], wd, refEnv(wd), ""),
       "bcdd refine: il file non passa bcdd check (errori: 1): correggilo prima di affinare\n", 1)
@@ -2130,7 +2130,7 @@ proc rifaRapporto(j: JsonNode): string =
   ln "3. UNDECIDED: " & $r["undecided"].len
   for u in r["undecided"]: ln "  riga " & $u.jint("riga") & ": " & u.jstr("nome")
   ln ""
-  ln "4. IPOTESI, NON CONTRATTO: " & $r["ipotesi"].len
+  ln "4. DA APPROVARE, NON CONTRATTO: " & $r["ipotesi"].len
   for h in r["ipotesi"]: ln "  riga " & $h.jint("riga") & ": " & h.jstr("tipo") & " " & h.jstr("id")
   ln ""
   ln "5. RIGHE NON RICONOSCIUTE: " & $r["non_riconosciute"].len
@@ -2563,7 +2563,7 @@ block:
       let prima = sha256Of(copia)
       let r = run(@["ratify", nome] & args, w)
       expectErr("AC-178", nome & " " & args.join(" "), "", r,
-        "bcdd ratify: il file non passa bcdd check --strict (errori: 1, righe non riconosciute: " & $n & "): non ratifico\n", 1)
+        "bcdd ratify: il file non passa bcdd check --strict (errori: 1, righe non riconosciute: " & $n & "): non approvo\n", 1)
       rec("AC-178", nome & " " & args.join(" ") & ": impronta uguale, nessun .dialogo", sha256Of(copia) == prima and not fileExists(copia & ".dialogo"),
         $listDir(w))
   # AC-179: la regola, ricalcolata su ogni file di prova (d204 compresa)
@@ -2620,7 +2620,7 @@ block:
     expectOut("AC-180", "csc/BcddTool.csc = prove/F0_BcddTool.atteso", "", fz, readFile(proveDir / "F0_BcddTool.atteso"), 0)
     # 072:0:1 sha aggiornata alla riga 11 / VERSION 0.2 / di BcddProgrammi.csc; prima 0939e703...
     rec("AC-180", "F0_BcddTool.atteso: SHA-256 invariato",
-      sha256Of(proveDir / "F0_BcddTool.atteso") == "sha256:ad0e9c857ba6c1b355425e1b1fe706be9c6480b40b21a8612db08ba9e0b3744d", "")
+      sha256Of(proveDir / "F0_BcddTool.atteso") == "sha256:4d8d40176e543f2b23cf31b38488efe5273d33e9a27760e7bc1ea3a39dba1d41", "")
 
 # 072:1:1 AC-181..AC-183 (F4b, passo 0): `check --json` dà i campi strutturati degli usi e il percorso
 # aperto di ogni citazione trovata in un altro file. La versione 5 e il rapporto per persone non cambia.
@@ -3249,7 +3249,7 @@ block:
       "PROPOSTA 1 di 2, promessa nuova\n" in r.output and "scritto Spia.csc: 3 righe d'interfaccia e 2 proposte (4 righe)\n" in r.output,
       r.output & r.errout & $listDir(w))
     let c = run(@["check", "--strict", "Spia.csc"], w)
-    rec("X", "D-247 il file scritto passa check, due ipotesi nuove", c.code == 0 and "4. IPOTESI, NON CONTRATTO: 2" in c.output, c.output & c.errout)
+    rec("X", "D-247 il file scritto passa check, due ipotesi nuove", c.code == 0 and "4. DA APPROVARE, NON CONTRATTO: 2" in c.output, c.output & c.errout)
   # tre tempi: stesse righe, id i1.. nel campo accettate, stesso file
   block:
     let w = newRef(rf / "Spia.csc", "Spia.csc")
@@ -3617,11 +3617,11 @@ block:
     "    modulo.tipo = batteria, con alim\n    modulo.tipo = batteria, senza alim\n    modulo.tipo = alimentato, con alim\n    modulo.tipo = alimentato, senza alim\n"])
   v6("AC-276", "salita", "Modulo.csc", noExtra, 0, 0, "0", @["9. COMPOSIZIONI: 2\n  riga 1: ENTITY Modulo: 2\n    tipo = batteria\n    tipo = alimentato\n"])
   v6("AC-277", "forme", "variant_in_csc.csc", noExtra, 1, 1, "1", @["  riga 4: [E21] VARIANT non può stare in una CSC: le varianti si scrivono in un'entità\n"])
-  v6("AC-278", "forme", "variant_malformato.csc", noExtra, 1, 1, "1", @["  riga 3: [E21] VARIANT scritto male: serve VARIANT dimensione = scelta\n"], @["E22", "9. COMPOSIZIONI"])
-  v6("AC-279", "forme", "purpose_in_pezzo.csc", noExtra, 1, 1, "1", @["  riga 4: [E21] PURPOSE non può stare in un pezzo VARIANT: scrivilo prima del primo VARIANT\n"], @["E10"])
-  v6("AC-280", "forme", "scelta_sola.csc", noExtra, 1, 1, "0", @["  riga 3: [E22] la dimensione modo ha una sola scelta (uno): ne servono almeno due; una parte che può mancare si scrive con [0 .. 1]\n"])
+  v6("AC-278", "forme", "variant_malformato.csc", noExtra, 1, 1, "1", @["  riga 3: [E21] VARIANT scritto male: serve VARIANT gruppo = scelta\n"], @["E22", "9. COMPOSIZIONI"])
+  v6("AC-279", "forme", "purpose_in_pezzo.csc", noExtra, 1, 1, "1", @["  riga 4: [E21] PURPOSE non può stare in un segmento VARIANT: scrivilo prima del primo VARIANT\n"], @["E10"])
+  v6("AC-280", "forme", "scelta_sola.csc", noExtra, 1, 1, "0", @["  riga 3: [E22] il gruppo di scelte modo ha una sola scelta (uno): ne servono almeno due; una parte che può mancare si scrive con [0 .. 1]\n"])
   v6("AC-281", "forme", "scelta_ripetuta.csc", noExtra, 1, 1, "0", @["  riga 9: [E22] la scelta modo = uno è già scritta alla riga 3\n", "9. COMPOSIZIONI: 2\n"])
-  v6("AC-282", "forme", "pezzo_vuoto.csc", noExtra, 1, 1, "0", @["  riga 3: [E22] il pezzo VARIANT modo = uno è vuoto: una scelta senza righe si scrive con una parte [0 .. 1]\n"])
+  v6("AC-282", "forme", "pezzo_vuoto.csc", noExtra, 1, 1, "0", @["  riga 3: [E22] il segmento VARIANT modo = uno è vuoto: una scelta senza righe si scrive con una parte [0 .. 1]\n"])
   v6("AC-283", "forme", "nomi.csc", noExtra, 1, 3, "0", @[
     "  riga 6: [E01] nome già usato alla riga 3: Comune\n", "  riga 15: [E01] nome già usato alla riga 9: g1\n", "  riga 19: [E01] nome già usato alla riga 8: p\n"])
   v6("AC-284", "forme", "dettagli.csc", noExtra, 1, 1, "0", @[
@@ -3732,12 +3732,12 @@ block:
     var spost = ls[0 .. i1 - 1] & ls[i1 + 2 .. iMic] & ls[i1 .. i1 + 1] & ls[iMic + 1 .. ^1]
     let r1 = runX(bcdd, @["save", "Kit1b.csc", "--expect", fp], w, nil, spost.join("\n"))
     rec("AC-295", "k1 (contratto) spostata nel pezzo microfono: rifiutato, codice 1, file invariato", r1.code == 1 and readFile(w / "Kit1b.csc") == orig and
-      "bcdd save: la riga " in r1.errout and ", GUARANTEE k1, è contratto (D-338): non può cambiare pezzo VARIANT; per cambiarla serve una VERSION nuova" in r1.errout and
+      "bcdd save: la riga " in r1.errout and ", GUARANTEE k1, è contratto (D-338): non può cambiare segmento VARIANT; per cambiarla serve una VERSION nuova" in r1.errout and
       r1.output.len == 0, r1.errout & r1.output)
     # il nome della scelta del pezzo di k3 cambia: k3 cambia pezzo
     let r2 = runX(bcdd, @["save", "Kit1b.csc", "--expect", fp], w, nil, orig.replace("  VARIANT sensore = di\n", "  VARIANT sensore = diretto\n"))
     rec("AC-295", "il nome della scelta del pezzo di k3 cambia: rifiutato", r2.code == 1 and readFile(w / "Kit1b.csc") == orig and
-      ", GUARANTEE k3, è contratto (D-338): non può cambiare pezzo VARIANT" in r2.errout, r2.errout)
+      ", GUARANTEE k3, è contratto (D-338): non può cambiare segmento VARIANT" in r2.errout, r2.errout)
     # km2 sposta di riga dentro lo stesso pezzo, testo uguale: ammesso
     var i2 = -1
     for i, l in ls:
@@ -3853,7 +3853,7 @@ block:
     ac 321, "bcdd new Record: codice 2 nome non valido", n.code == 2 and n.errout == "bcdd new: nome non valido: Record\n", n.errout
     # AC-322: la lista di src/bcddwords.nim ha le 136 parole di GRAMMATICA_F1 2.3 (la lista di editor/edazioni.nim si aggiorna a parte)
     let g = readFile(root / "GRAMMATICA_F1.md")
-    let sec = g[g.find("### 2.3 ") .. g.find("In tutto le parole chiave")]
+    let sec = g[g.find("### 2.3 ") .. g.find("In totale le parole chiave")]
     var gram: HashSet[string]
     var inB = false
     for l in sec.splitLines():
@@ -3907,7 +3907,7 @@ block:
   # AC-329..AC-332 (C-08, C-09)
   block:
     let r = c12(@["ac329.csc"])
-    ac 329, "DEFINE in giro: E28", has(r, "[E28] DEFINE in giro: A -> B -> A"), r.output
+    ac 329, "DEFINE in modo circolare: E28", has(r, "[E28] DEFINE in modo circolare: A -> B -> A"), r.output
     let r2 = c12(@["ac330.csc"])
     ac 330, "chiamata di DEFINE con parametri: riconosciuta, E24 per argomento mancante e parametro sbagliato",
       has(r2, "riga 7: [E24] manca l'argomento b nella chiamata di vicino", "riga 8: [E24] nome non dichiarato come parametro di vicino: c") and
@@ -4001,7 +4001,7 @@ block:
     let r = c12(@["Segnale03.csc"])
     ac 355, "profilo FADE completo: codice 0, sezione 14 con due voci", r.code == 0 and has(r, "14. DA GIUDICARE: 2\n",
       "  riga 4: EXTENSION FADE: il MEANING non descrive la realizzazione né dà autorità o precedenza fra parti\n",
-      "  riga 4: EXTENSION FADE: non ripete una forma che il linguaggio ha già\n", "4. IPOTESI, NON CONTRATTO: 1\n  riga 4: EXTENSION FADE\n"), r.output
+      "  riga 4: EXTENSION FADE: non ripete una forma che il linguaggio ha già\n", "4. DA APPROVARE, NON CONTRATTO: 1\n  riga 4: EXTENSION FADE\n"), r.output
     let b = w12 / "blk"
     let r2 = c12(@["ac356.csc"], b)
     ac 356, "profilo e estensioni sbagliati: E10 e otto E33", r2.output.count("[E10]") == 1 and r2.output.count("[E33]") == 8 and
@@ -4027,34 +4027,34 @@ block:
     discard cpTo(w12 / "ac323.csc", w, "Uso.csc")
     let rt = run(@["ratify", "Uso.csc", "--all", "D-1"], w)
     let ck = run(@["check", "Uso.csc"], w)
-    ac 360, "CSC approvata con profilo da approvare: g10 resta in sezione 4 (punto 0a)", rt.code == 0 and has(ck, "4. IPOTESI, NON CONTRATTO: 1\n  riga 7: GUARANTEE g10\n"), rt.output & ck.output
+    ac 360, "CSC approvata con profilo da approvare: g10 resta in sezione 4 (punto 0a)", rt.code == 0 and has(ck, "4. DA APPROVARE, NON CONTRATTO: 1\n  riga 7: GUARANTEE g10\n"), rt.output & ck.output
     let rp = run(@["ratify", "Segnale.csc", "D-2"], w)
     let ck2 = run(@["check", "Uso.csc"], w)
-    ac 360, "approvato il profilo, g10 è approvata", rp.code == 0 and rp.output == "ratificato il PROFILE Segnale VERSION 0.3 (riga 1) con D-2\nestensioni: 1\n" and
-      has(ck2, "4. IPOTESI, NON CONTRATTO: 0\n"), rp.output & ck2.output
+    ac 360, "approvato il profilo, g10 è approvata", rp.code == 0 and rp.output == "approvato il PROFILE Segnale VERSION 0.3 (riga 1) con D-2\nestensioni: 1\n" and
+      has(ck2, "4. DA APPROVARE, NON CONTRATTO: 0\n"), rp.output & ck2.output
   block:
     let b = w12 / "blk"
     let w = newWd()
     for f in ["ac361b.csc", "ac361c.csc", "ac361d.csc", "Luce.csc"]: discard cpTo(b / f, w)
     discard cpTo(w12 / "Segnale03.csc", w, "Segnale.csc")
     let r1 = run(@["ratify", "ac361b.csc", "--all", "D-200"], w)
-    ac 361, "BINDING --all", r1.code == 0 and r1.output == "ratificate con D-200 nel BINDING Luce VERSION 0.1: 2 righe\n  riga 2: BINDING Luce VERSION 0.1\n  riga 4: BIND modo\ncontratto: 2\n" and
+    ac 361, "BINDING --all", r1.code == 0 and r1.output == "approvate con D-200 nel BINDING Luce VERSION 0.1: 2 righe\n  riga 2: BINDING Luce VERSION 0.1\n  riga 4: BIND modo\ncontratto: 2\n" and
       readFile(w / "ac361b.csc") == "BINDING Luce VERSION 0.1\n  STATUS RATIFIED BY D-200\n  BIND accesa: VERBAL \"la plafoniera emette luce piena\"\n  BIND modo STATUS RATIFIED BY D-200: VERBAL \"la spia\"\nEND\n", r1.output
     let r2 = run(@["ratify", "ac361b.csc", "D-3"], w)
-    ac 361, "BINDING già ratificato: rifiuto", r2.code == 1 and r2.errout == "bcdd ratify: il BINDING Luce VERSION 0.1 è già ratificato (D-200): non cambio nulla\n", r2.errout
+    ac 361, "BINDING già ratificato: rifiuto", r2.code == 1 and r2.errout == "bcdd ratify: il BINDING Luce VERSION 0.1 è già approvato (D-200): non cambio nulla\n", r2.errout
     let r3 = run(@["ratify", "ac361c.csc", "A1", "D-5"], w)
-    ac 361, "dettaglio di DEFINE per ID", r3.code == 0 and r3.output == "ratificata la riga 4: DEFINE A1 con D-5\n" and
+    ac 361, "dettaglio di DEFINE per ID", r3.code == 0 and r3.output == "approvata la riga 4: DEFINE A1 con D-5\n" and
       "  DEFINE A1 DETAILS A STATUS RATIFIED BY D-5 := 2\n" in readFile(w / "ac361c.csc"), r3.output
     let r4 = run(@["ratify", "ac361d.csc", "D-1"], w)
-    ac 361, "una VERIFICATION sola: rifiuto", r4.code == 1 and r4.errout == "bcdd ratify: il file non contiene nessun blocco da ratificare: una VERIFICATION non si ratifica\n", r4.errout
+    ac 361, "una VERIFICATION sola: rifiuto", r4.code == 1 and r4.errout == "bcdd ratify: il file non contiene nessun blocco da approvare: una VERIFICATION non si approva\n", r4.errout
     let r5 = run(@["ratify", "ac361b.csc", "x", "D-1"], w)
-    ac 361, "BINDING con ID: rifiuto", r5.code == 1 and r5.errout == "bcdd ratify: nel BINDING si ratificano l'intestazione o --all, non una riga\n", r5.errout
+    ac 361, "BINDING con ID: rifiuto", r5.code == 1 and r5.errout == "bcdd ratify: nel BINDING si approvano l'intestazione o --all, non una riga\n", r5.errout
     let w2 = newWd()
     discard cpTo(w12 / "Segnale03.csc", w2, "Segnale.csc")
     let r6 = run(@["ratify", "Segnale.csc", "--csc", "Segnale", "--all", "D-9"], w2)
-    ac 361, "profilo con --csc e --all: ratificato", r6.code == 0 and r6.output == "ratificato il PROFILE Segnale VERSION 0.3 (riga 1) con D-9\nestensioni: 1\n", r6.output
+    ac 361, "profilo con --csc e --all: ratificato", r6.code == 0 and r6.output == "approvato il PROFILE Segnale VERSION 0.3 (riga 1) con D-9\nestensioni: 1\n", r6.output
     let r7 = run(@["ratify", "Segnale.csc", "x", "D-9"], w2)
-    ac 361, "profilo con ID: rifiuto", r7.code == 1 and r7.errout == "bcdd ratify: nel PROFILE si ratifica il profilo intero, non una riga\n", r7.errout
+    ac 361, "profilo con ID: rifiuto", r7.code == 1 and r7.errout == "bcdd ratify: nel PROFILE si approva il profilo intero, non una riga\n", r7.errout
   # AC-362: sezione 15 e JSON 5
   block:
     let r = c12(@["ac362.csc"], w12 / "blk")
@@ -4179,7 +4179,7 @@ block:
       has(r, "riga 51: GUARANTEE g1 estensione dichiarata", "riga 52: GUARANTEE g2 estensione dichiarata", "riga 53: GUARANTEE g3 formale"), r.output
     ac 383, "sezione 15: storie di SQ (C3), coerenza di NR (C2)", has(r, "  storie: riga 54\n  coerenza di presupposti e promesse: righe 52, 53\n"), r.output
     let rt = cg("g383rat.csc")
-    ac 383, "in una CSC approvata g3 (DEFINE K := SQ r) è da approvare (sezione 4)", has(rt, "4. IPOTESI, NON CONTRATTO: 7", "  riga 54: GUARANTEE g3\n"), rt.output
+    ac 383, "in una CSC approvata g3 (DEFINE K := SQ r) è da approvare (sezione 4)", has(rt, "4. DA APPROVARE, NON CONTRATTO: 7", "  riga 54: GUARANTEE g3\n"), rt.output
   # AC-385..AC-386: quarto gate (G-23, G-24)
   block:
     let r = cg("g385a.csc")
@@ -4228,7 +4228,7 @@ block:
   let r2b = tenta("Bind.csc", bnd.replace("VERSION 0.1", "VERSION 0.2"))
   rec("AC-401", "la versione di un BINDING approvato è bloccata", r2b.code == 1 and "il numero della versione non si cambia" in r2b.errout, r2b.errout)
   let r3 = tenta("Bind.csc", bnd.replace("  BIND accesa", "  BIND modo: VERBAL \"nuova\"\n  BIND accesa"))
-  rec("AC-401", "una riga BIND nuova in un BINDING approvato diventerebbe contratto", r3.code == 1 and "diventerebbe contratto senza una ratifica" in r3.errout, r3.errout)
+  rec("AC-401", "una riga BIND nuova in un BINDING approvato diventerebbe contratto", r3.code == 1 and "diventerebbe contratto senza un'approvazione" in r3.errout, r3.errout)
   let ip = "BINDING Luce VERSION 0.1\n  STATUS HYPOTHESIS\n  BIND accesa: VERBAL \"la plafoniera\"\nEND\n"
   writeFile(w / "Ip.csc", ip)
   let r3b = tenta("Ip.csc", ip.replace("HYPOTHESIS", "RATIFIED BY D-9"))
@@ -4272,13 +4272,13 @@ block:
   rec("AC-389", "una riga BIND con un suo STATUS approvato, in un BINDING da approvare, non si cambia (il messaggio nomina il blocco)",
     r1.code == 1 and "BIND accesa di Luce è contratto" in r1.errout, r1.errout)
   let r2 = tenta("Bind2.csc", bind2.replace("BIND altra:", "BIND altra STATUS RATIFIED BY D-4:"))
-  rec("AC-390", "una riga BIND che si scrive già approvata: rifiuto", r2.code == 1 and "BIND altra di Luce diventerebbe contratto senza una ratifica" in r2.errout, r2.errout)
+  rec("AC-390", "una riga BIND che si scrive già approvata: rifiuto", r2.code == 1 and "BIND altra di Luce diventerebbe contratto senza un'approvazione" in r2.errout, r2.errout)
   let r3 = tenta("Bind2.csc", bind2.replace("D-4", "D-6"))
   rec("AC-391", "la decisione di una riga BIND approvata non si cambia", r3.code == 1 and "è contratto" in r3.errout, r3.errout)
   let prof = "PROFILE Segnale VERSION 0.3\n  STATUS HYPOTHESIS\n  EXTENSION sale(s) KIND rising\nEND\n"
   writeFile(w / "Prof.csc", prof)
   let r4 = tenta("Prof.csc", prof.replace("HYPOTHESIS", "RATIFIED BY D-2"))
-  rec("AC-392", "un profilo che diventa approvato senza ratify: rifiuto", r4.code == 1 and "diventerebbe contratto senza una ratifica" in r4.errout, r4.errout)
+  rec("AC-392", "un profilo che diventa approvato senza ratify: rifiuto", r4.code == 1 and "diventerebbe contratto senza un'approvazione" in r4.errout, r4.errout)
   let profA = prof.replace("HYPOTHESIS", "RATIFIED BY D-2")
   writeFile(w / "ProfA.csc", profA)
   let r5 = tenta("ProfA.csc", profA.replace("Segnale", "Altro"))
