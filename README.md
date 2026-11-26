@@ -8,6 +8,8 @@
 
 **Site, manual and grammar (English and Italian): <https://bcdd.nolisoft.it/>**
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24571473.svg)](https://doi.org/10.5281/zenodo.24571473)
+
 BCDD (Behavioural Contract-Driven Design) is a language for writing the behaviour of a system as contracts, one *capability
 state contract* (CSC) per file. This repository holds the source of the two programs that read and help write those files.
 This is version **1.0-beta**: the language and the programs work, but they have not had the field use of a final release.
@@ -91,6 +93,12 @@ profiles of the Claude Code subagents in [`claude-code/agents/`](claude-code/age
 `bcdd-csc-reviewer`), which write and review CSC files and look for the grammar at the root of this repository. Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
 own licences. The BCDD and CSC logos in `docs/logos/` are Copyright 2026 Noli Paolo, all rights reserved: they are not
 covered by the BSD licence.
+
+## Citing BCDD
+
+Noli, P. (2026). *BCDD: Behavioural Contract-Driven Design* (software). Zenodo.
+[doi:10.5281/zenodo.24571473](https://doi.org/10.5281/zenodo.24571473). The DOI covers all versions; the metadata are in
+[`CITATION.cff`](CITATION.cff). Author ORCID: [0009-0007-5795-6862](https://orcid.org/0009-0007-5795-6862).
 
 ## Contact
 

@@ -10,11 +10,13 @@ abstract: >-
 authors:
   - family-names: Noli
     given-names: Paolo
+    orcid: "https://orcid.org/0009-0007-5795-6862"
 version: "1.0-beta.2"
 date-released: "2026-11-26"
 license: BSD-3-Clause
 repository-code: "https://github.com/paolonoli/bcdd"
 url: "https://bcdd.nolisoft.it/"
+doi: "10.5281/zenodo.24571473"
 keywords:
   - behavioural specification
   - contract-based design
