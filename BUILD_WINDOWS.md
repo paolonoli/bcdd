@@ -127,7 +127,7 @@ distinguish upper and lower case, so the second file cannot be created), and the
   The search for `claude`, `claude.cmd` and the standard place, the message when it is missing and the stop of the process tree at the time limit
   were tried only with a fake `claude` (`tests/windows/UProvaClaude.bat`), never with the real one.
 - PowerShell and a visible console screen (W-4); a disk with a case-sensitive directory.
-- Windows 10, and any x86-64 machine other than the test one.
+- Any x86-64 machine other than the test ones; on Windows 10 22H2 only the checks of the release packages were run (usage, `check` in English and Italian).
 
 ## `bcdd-editor` (window)
 
@@ -196,6 +196,6 @@ The test version writes a trace file (`BCDD_EDITOR_TRACCIA`) and clicks buttons 
 ### Known limits and not verified
 
 - The editor tests replace the language model with the fake `llmfinto.exe` (see `tests/windows/`); the real `claude` was called through `bcdd refine` only (see the `bcdd` section).
-- Windows 10, a second monitor with another DPI scale, and keyboard layouts other than the one of the test machine were not tried.
+- A second monitor with another DPI scale and keyboard layouts other than the one of the test machine were not tried. On Windows 10 22H2 the editor of the release package was tried by hand only: start by double click, choice of the folder, opening of a file.
 - The window title bar follows the accent colour chosen in Windows.
 - With the WebView2 Runtime missing the window cannot be created: the program is written to report it and exit with code 2, but this case was not tried.
