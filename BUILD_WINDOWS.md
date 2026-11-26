@@ -170,13 +170,14 @@ The result is one executable of about 3 MB. It imports only system DLLs (`kernel
 Copy `bcdd-editor.exe` and `bcdd.exe` into the same folder, then:
 
 ```sh
+bcdd-editor.exe                                          # asks for the folder containing the .csc files and remembers it
 bcdd-editor.exe --dir C:\path\to\csc-folder
-bcdd-editor.exe --lang it --dir C:\path\to\csc-folder    # Italian; the default is English
+bcdd-editor.exe --lang it --dir C:\path\to\csc-folder    # Italian; without --lang or BCDD_LANG the system language is used
 ```
 
-The window opens maximized. The language chosen in the window is remembered in `%APPDATA%\bcdd-editor\lingua`; the WebView2 profile is
-`%LOCALAPPDATA%\bcdd-editor` (local, never roaming). Messages for a wrong command line (exit code 2) go to the console that started the program, or to the redirected
-standard error. A new entity named `CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9` or `LPT1`-`LPT9` is refused on every system, as `bcdd new` does.
+The window opens maximised. The language chosen in the window is remembered in `%APPDATA%\bcdd-editor\lingua`, the last folder used in `%APPDATA%\bcdd-editor\cartella`; the WebView2 profile is
+`%LOCALAPPDATA%\bcdd-editor` (local, never roaming). Messages for a wrong command line or a failed start (exit code 2) are shown in a message box and also go to the console that
+started the program, or to the redirected standard error. A new entity named `CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9` or `LPT1`-`LPT9` is refused on every system, as `bcdd new` does.
 
 ### What was checked on Windows
 

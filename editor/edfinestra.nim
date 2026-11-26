@@ -1459,7 +1459,7 @@ proc allaChiusa() {.nimcall.} =
   fermaAsincrono()
 
 proc esci(msg: string, codice = 2) =
-  stderr.write msg
+  segnalaErrore msg
   quit(codice)
 
 proc apriFinestra*(a: Argomenti) =

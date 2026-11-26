@@ -19,6 +19,7 @@ type
     linguaErrata*: bool     # `--lang` con un valore che non è it né en (anche vuoto)
     erroreLingua*: string   # quel valore
     dir*: string
+    scegli*: bool           # nessun `--dir`: la cartella si sceglie con la finestra del sistema (dir vuota)
     nome*: string           # l'entità da aprire; vuoto = il banco mostra le entità della cartella
 
   Lettura* = object
@@ -37,7 +38,7 @@ proc nomeValido*(s: string): bool =
   true
 
 proc leggiArgomenti*(args: seq[string]): Argomenti =
-  ## 001:2:1 `[--lang it|en] --dir CARTELLA [NOME]`; --lang solo come primi due argomenti (come per `bcdd`);
+  ## 001:2:1 `[--lang it|en] [--dir CARTELLA] [NOME]` (senza `--dir` si sceglie la cartella); --lang solo come primi due argomenti (come per `bcdd`);
   ## --dir una volta sola e con la cartella dopo; NOME al più uno.
   var i = 0
   if args.len > 0 and args[0] == "--lang":
@@ -63,7 +64,8 @@ proc leggiArgomenti*(args: seq[string]): Argomenti =
       haNome = true
       result.nome = a
       inc i
-  if not haDir or result.dir.len == 0: return
+  if haDir and result.dir.len == 0: return
+  result.scegli = not haDir
   result.ok = true
 
 proc argomentiCheck*(file: string): seq[string] =
@@ -73,9 +75,22 @@ proc argomentiCheck*(file: string): seq[string] =
 proc messaggioVersione*(bcdd, forma, versione, file: string): string =
   tx(kVersioneNonLetta, formaAttesa, versioneAttesa, bcdd, forma, versione, file)
 
-proc sceltaLingua*(arg, ricordata, ambiente: string): Lingua =
-  ## 001:5:1 Precedenza: `--lang` > scelta ricordata > BCDD_LANG > inglese. Un valore che non è `it` o `en` vale come assente.
-  for v in [arg, ricordata, ambiente]:
+when defined(windows):
+  proc getUserDefaultUILanguage(): uint16 {.stdcall, dynlib: "kernel32", importc: "GetUserDefaultUILanguage".}
+
+proc linguaSistema*(): string =
+  ## 001:5:5 La lingua del sistema, `it` o `en`. Windows: `GetUserDefaultUILanguage`, lingua primaria `LANG_ITALIAN` (0x10) = it. Linux: la prima fra `LC_ALL`, `LC_MESSAGES`, `LANG` non vuota; comincia per `it` = it. Ogni altro caso (anche `C`, `POSIX`, vuoto) = en.
+  when defined(windows):
+    if (getUserDefaultUILanguage() and 0x3FF'u16) == 0x10'u16: "it" else: "en"
+  else:
+    for k in ["LC_ALL", "LC_MESSAGES", "LANG"]:
+      let v = getEnv(k)
+      if v.len > 0: return (if v.startsWith("it"): "it" else: "en")
+    "en"
+
+proc sceltaLingua*(arg, ricordata, ambiente: string, sistema = ""): Lingua =
+  ## 001:5:1 Precedenza: `--lang` > scelta ricordata > BCDD_LANG > lingua del sistema > inglese. Un valore che non è `it` o `en` vale come assente. La lingua del sistema non scrive la scelta ricordata.
+  for v in [arg, ricordata, ambiente, sistema]:
     if v == "it": return lgIt
     if v == "en": return lgEn
   lgEn
@@ -105,6 +120,28 @@ proc ricordaLingua*(l: Lingua): bool =
     createDir(parentDir(f))
     let tmp = f & ".tmp"
     writeFile(tmp, $l & "\n")
+    moveFile(tmp, f)
+    true
+  except CatchableError:
+    false
+
+proc fileCartella*(): string = cartellaConfigurazione() / "bcdd-editor" / "cartella"
+
+proc leggiCartellaRicordata*(): string =
+  ## 001:5:5 L'ultima cartella aperta, se il file c'è e la cartella esiste ancora; altrimenti "".
+  try:
+    let s = readFile(fileCartella()).strip(chars = {'\n', '\r'})
+    if s.len > 0 and dirExists(s): s else: ""
+  except CatchableError:
+    ""
+
+proc ricordaCartella*(dir: string): bool =
+  ## 001:5:6 Scrive il percorso assoluto + LF con un file temporaneo e la sostituzione, accanto alla lingua; false se non ci riesce.
+  try:
+    let f = fileCartella()
+    createDir(parentDir(f))
+    let tmp = f & ".tmp"
+    writeFile(tmp, absolutePath(dir) & "\n")
     moveFile(tmp, f)
     true
   except CatchableError:

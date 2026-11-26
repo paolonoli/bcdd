@@ -69,6 +69,20 @@ proc gtk_container_add*(c, w: pointer) {.importc, cdecl.}
 proc gtk_widget_override_background_color*(w: pointer, state: cint, c: ptr GdkRGBA) {.importc, cdecl.}
 proc gtk_widget_show_all*(w: pointer) {.importc, cdecl.}
 
+# 001:10:1 la finestra di scelta della cartella
+const
+  GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER* = 2.cint
+  GTK_RESPONSE_CANCEL* = -6.cint
+  GTK_RESPONSE_ACCEPT* = -3.cint
+proc gtk_file_chooser_dialog_new*(title: cstring, parent: pointer, action: cint, b1: cstring, r1: cint, b2: cstring,
+    r2: cint, fine: pointer): pointer {.importc, cdecl.}
+proc gtk_dialog_run*(d: pointer): cint {.importc, cdecl.}
+proc gtk_file_chooser_set_current_folder*(c: pointer, path: cstring): cint {.importc, cdecl.}
+proc gtk_file_chooser_get_filename*(c: pointer): cstring {.importc, cdecl.}
+proc gtk_widget_destroy*(w: pointer) {.importc, cdecl.}
+proc gtk_events_pending*(): cint {.importc, cdecl.}
+proc gtk_main_iteration*(): cint {.importc, cdecl.}
+
 # WebKit2GTK 4.1
 proc webkit_web_context_new_ephemeral*(): pointer {.importc, cdecl.}
 proc webkit_web_view_new_with_context*(ctx: pointer): pointer {.importc, cdecl.}

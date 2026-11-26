@@ -204,6 +204,49 @@ proc impostazioni(s: pointer, politica: PoliticaGrafica) =
   webkit_settings_set_enable_webgl(s, 0)
   webkit_settings_set_enable_webaudio(s, 0)
 
+var gtkIniziato = false
+
+proc iniziaGtk(): bool =
+  ## Una sola volta: la finestra di scelta della cartella e la finestra dell'editor condividono l'inizializzazione.
+  if gtkIniziato: return true
+  # 005:6:1 Tastiera con GTK_IM_MODULE=xim senza server XIM (minthome): si passa al contesto semplice prima di gtk_init
+  let im = metodoInput(getEnv("GTK_IM_MODULE"), getEnv("XMODIFIERS"))
+  if im.len > 0:
+    putEnv("GTK_IM_MODULE", im)
+    traccia("input " & im)
+  var argc: cint = 0
+  if gtk_init_check(addr argc, nil) == 0: return false
+  gtkIniziato = true
+  true
+
+proc scegliCartella*(titolo, annulla, scegli, iniziale: string): tuple[ok: bool, cartella: string] =
+  ## la finestra di scelta della cartella del sistema (GTK, SELECT_FOLDER), che parte da `iniziale` se non è vuota.
+  ## ok=false: GTK non apre il display. ok=true e cartella "": annullato.
+  when defined(bcddEditorProva):
+    # solo la versione di prova: BCDD_EDITOR_PROVA_CARTELLA=<cartella> sceglie senza finestra, `-` annulla
+    let finta = getEnv("BCDD_EDITOR_PROVA_CARTELLA")
+    if finta.len > 0:
+      traccia("scelta finta " & finta)
+      return (true, if finta == "-": "" else: finta)
+  if not iniziaGtk(): return (false, "")
+  traccia("scelta cartella iniziale=" & iniziale)
+  let d = gtk_file_chooser_dialog_new(cstring(titolo), nil, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+    cstring(annulla), GTK_RESPONSE_CANCEL, cstring(scegli), GTK_RESPONSE_ACCEPT, nil)
+  if iniziale.len > 0: discard gtk_file_chooser_set_current_folder(d, cstring(iniziale))
+  var cartella = ""
+  if gtk_dialog_run(d) == GTK_RESPONSE_ACCEPT:
+    let f = gtk_file_chooser_get_filename(d)
+    if f != nil:
+      cartella = $f
+      g_free(f)
+  gtk_widget_destroy(d)
+  while gtk_events_pending() != 0: discard gtk_main_iteration()    # la finestra sparisce prima che l'editor ne apra un'altra
+  (true, cartella)
+
+proc mostraErrore*(titolo, testo: string) =
+  ## su Linux gli errori d'avvio vanno solo sullo standard error (già scritti da chi chiama); su Windows anche in una finestra.
+  discard
+
 proc apri*(sc: Scheda, g: Gestori): string =
   ## Apre la finestra e gira finché non è chiusa. Ritorna "" a chiusura normale, altrimenti il codice del messaggio di errore da dire
   ## ("display": GTK non apre il display).
@@ -214,13 +257,7 @@ proc apri*(sc: Scheda, g: Gestori): string =
   let scelta = sceltaGrafica(getEnv("WEBKIT_DISABLE_COMPOSITING_MODE"), getEnv("BCDD_EDITOR_COMPOSITING"), getEnv("DISPLAY"))
   remoto = scelta.remoto
   traccia("grafica remoto=" & $scelta.remoto & " politica=" & $scelta.politica & " (" & scelta.perche & ")")
-  # 005:6:1 Tastiera con GTK_IM_MODULE=xim senza server XIM (minthome): si passa al contesto semplice prima di gtk_init
-  let im = metodoInput(getEnv("GTK_IM_MODULE"), getEnv("XMODIFIERS"))
-  if im.len > 0:
-    putEnv("GTK_IM_MODULE", im)
-    traccia("input " & im)
-  var argc: cint = 0
-  if gtk_init_check(addr argc, nil) == 0: return "display"
+  if not iniziaGtk(): return "display"
   # Il cursore che lampeggia ridisegna la vista intera a ogni lampo: 54 MB in 4 s via ssh -X con un campo di testo con il fuoco (P2)
   g_object_set(gtk_settings_get_default(), "gtk-cursor-blink", 0.cint, nil)
   finestra = gtk_window_new(GTK_WINDOW_TOPLEVEL)

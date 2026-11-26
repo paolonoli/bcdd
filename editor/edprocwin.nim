@@ -158,3 +158,54 @@ proc collegaConsolePadre*() =
       if setConsoleOutputCP(65001) != 0: addQuitProc(ripristinaCp)
       else: cpPrima = 0
     except CatchableError: discard
+
+# 009:2:1 la scelta della cartella e i messaggi d'avvio di un programma senza console. Funzioni di shell32/ole32/user32 già collegate (-lshell32 -lole32 -luser32).
+type
+  BrowseInfoW = object
+    hwndOwner: Handle
+    pidlRoot: pointer
+    nomeVisto: ptr Utf16Char
+    titolo: ptr Utf16Char
+    flags: uint32
+    cb: proc(hwnd: Handle, msg: uint32, lp, dati: int): int32 {.stdcall.}
+    lParam: int
+    immagine: int32
+
+proc shBrowseForFolderW(bi: ptr BrowseInfoW): pointer {.stdcall, dynlib: "shell32", importc: "SHBrowseForFolderW".}
+proc shGetPathFromIDListW(pidl: pointer, path: ptr Utf16Char): WINBOOL {.stdcall, dynlib: "shell32", importc: "SHGetPathFromIDListW".}
+proc coTaskMemFree(p: pointer) {.stdcall, dynlib: "ole32", importc: "CoTaskMemFree".}
+proc oleInitialize(r: pointer): int32 {.stdcall, dynlib: "ole32", importc: "OleInitialize".}
+proc sendMessageW(h: Handle, msg: uint32, wp, lp: int): int {.stdcall, dynlib: "user32", importc: "SendMessageW".}
+proc messageBoxW(h: Handle, testo, titolo: ptr Utf16Char, tipo: uint32): int32 {.stdcall, dynlib: "user32", importc: "MessageBoxW".}
+
+var
+  cartellaIniziale: WideCStringObj      # letta dalla funzione di richiamo, che non cattura niente
+  haIniziale = false
+
+proc alLancioScelta(hwnd: Handle, msg: uint32, lp, dati: int): int32 {.stdcall.} =
+  const bffmInitialized = 1'u32
+  const bffmSetSelectionW = 0x467'u32      # WM_USER + 103
+  if msg == bffmInitialized and haIniziale:
+    discard sendMessageW(hwnd, bffmSetSelectionW, 1, cast[int](addr cartellaIniziale[0]))
+  0
+
+proc sceltaCartellaWin*(iniziale: string): string =
+  ## La finestra standard di scelta della cartella (`SHBrowseForFolderW`, stile nuovo), che parte da `iniziale` se non è vuota.
+  ## "" se la persona annulla.
+  discard oleInitialize(nil)
+  var nome: array[1024, Utf16Char]
+  haIniziale = iniziale.len > 0
+  if haIniziale: cartellaIniziale = newWideCString(iniziale)
+  var bi = BrowseInfoW(nomeVisto: addr nome[0], flags: 0x1'u32 or 0x40'u32, cb: alLancioScelta)   # SOLO_CARTELLE_DEL_FILE_SYSTEM | STILE_NUOVO
+  let pidl = shBrowseForFolderW(addr bi)
+  if pidl == nil: return ""
+  var percorso: array[1024, Utf16Char]
+  if shGetPathFromIDListW(pidl, addr percorso[0]) != 0:
+    result = $cast[WideCString](addr percorso[0])
+  coTaskMemFree(pidl)
+
+proc messaggioWin*(titolo, testo: string) =
+  ## Una finestra con il testo e il pulsante OK (MB_OK | MB_ICONERROR): un programma grafico non ha la console dove scrivere l'errore.
+  let t = newWideCString(testo)
+  let ti = newWideCString(titolo)
+  discard messageBoxW(0, addr t[0], addr ti[0], 0x10'u32)

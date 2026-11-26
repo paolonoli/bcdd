@@ -30,6 +30,21 @@ This is version **1.0-beta**: the language and the programs work, but they have 
   Claude Code, to propose questions and lines of the contract. The operator answers, chooses and approves: nothing
   becomes part of the contract without approval (`bcdd ratify`).
 
+## Looking for testers and contributors
+
+BCDD is at version 1.0-beta: the language and the programs work, but they have not yet been tried enough on real cases.
+We are looking first for **testers**: people who try BCDD on a system they know (software, hardware or mixed) and report
+what they wrote, what was difficult and what the results were. Anyone who wants to go further can also discuss the
+language, improve the examples and the documentation, or work on the programs.
+
+Helpful experience includes systems or hardware design, embedded software, testing and verification, technical writing,
+and work with generative language models. Collaboration is voluntary.
+
+To take part, introduce yourself in [Discussions](https://github.com/paolonoli/bcdd/discussions): say what interests you
+and which contribution you would like to start with. Small, well-defined tasks are listed in the
+[issues labelled `good first issue`](https://github.com/paolonoli/bcdd/labels/good%20first%20issue). How to propose
+changes is described in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
 Ready-to-run packages for Linux x86_64 and Windows x86_64 are on the site and in the
 [Releases](https://github.com/paolonoli/bcdd/releases) of this repository.
 
@@ -69,8 +84,8 @@ The folders `prove/`, `esempi/` and `tests/` hold the test material: small CSC f
 
 ## Licence
 
-Source code: BSD 3-Clause, see [`LICENSE`](LICENSE). The documentation published on the site has its own licence, stated
-in each document. Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
+Source code: BSD 3-Clause, see [`LICENSE`](LICENSE). The documentation (the grammar in this repository, the manual and the
+grammar on the site) is under CC BY 4.0, see [`LICENSE_DOCS.md`](LICENSE_DOCS.md). Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
 own licences. The BCDD and CSC logos in `docs/logos/` are Copyright 2026 Noli Paolo, all rights reserved: they are not
 covered by the BSD licence.
 

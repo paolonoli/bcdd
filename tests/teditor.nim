@@ -63,6 +63,10 @@ proc envPulito(extra: openArray[(string, string)] = [], senzaDisplay = true): St
     if k in ["DISPLAY", "WAYLAND_DISPLAY"] and senzaDisplay: continue
     result[k] = v
   result["BCDD_LANG"] = "it"
+  # la suite non dipende dalla lingua della macchina (senza BCDD_LANG vale quella del sistema)
+  result["LANG"] = "C"
+  result.del("LC_ALL")
+  result.del("LC_MESSAGES")
   for (k, v) in extra: result[k] = v
 
 proc runExe(exe: string, args: seq[string], cwd: string, env: StringTableRef = nil): Res =
@@ -314,12 +318,17 @@ block:
   let uso = usoEditor() & "\n"
   proc senzaDisp(exe: string, args: seq[string], cwd = root): Res = runExe(exe, args, cwd, ambiente)
   for (exe, nome) in [(edRel, "release"), (edProva, "prova")]:
-    for (etichetta, args) in [("nessun argomento", newSeq[string]()), ("solo NOME", @["Nome"]),
-        ("--dir senza cartella", @["--dir"]), ("--dir a --dir a", @["--dir", "a", "--dir", "a"]),
+    for (etichetta, args) in [("--dir senza cartella", @["--dir"]), ("--dir a --dir a", @["--dir", "a", "--dir", "a"]),
         ("--x", @["--x", "--dir", "a"]), ("--dir=a", @["--dir=a"]), ("due NOMI", @["--dir", "a", "N1", "N2"]),
         ("NOME non valido", @["--dir", "a", "N-1"])]:
       let r = senzaDisp(exe, args)
       rec("AC-186", nome & " " & etichetta, r.code == 2 and r.errout == uso and r.output.len == 0,
+        "codice " & $r.code & " stderr [" & cut(r.errout) & "]")
+  # senza `--dir` si sceglie la cartella: senza display il messaggio è quello del display, non la riga d'uso
+  for (exe, nome) in [(edRel, "release"), (edProva, "prova")]:
+    for (etichetta, args) in [("nessun argomento", newSeq[string]()), ("solo NOME", @["Nome"]), ("--lang it", @["--lang", "it"])]:
+      let r = senzaDisp(exe, args)
+      rec("AC-186", nome & " " & etichetta & " senza display: dice del display", r.code == 2 and r.errout == "bcdd-editor: non riesco ad aprire il display\n" and r.output.len == 0,
         "codice " & $r.code & " stderr [" & cut(r.errout) & "]")
   for (exe, nome, figlio) in [(edRel, "release", "bcdd"), (edProva, "prova", "bcdd_prova")]:
     # editor da solo in una cartella
@@ -2634,10 +2643,23 @@ block lingue:
     rec("L-E3", "...e senza BCDD_LANG vale l'inglese", lingua1(@[], @[("XDG_CONFIG_HOME", cfg2), ("BCDD_LANG", "")]) == "en", "")
     let vuota = tmpBase / "cfg_vuota"
     createDir(vuota)
+    # lingua del sistema, senza --lang, senza scelta ricordata (XDG_CONFIG_HOME vuota), senza BCDD_LANG
+    let cfgS = tmpBase / "cfg_sistema"
+    createDir(cfgS)
+    let sv = @[("XDG_CONFIG_HOME", cfgS), ("BCDD_LANG", "")]
+    rec("L-E12", "LANG=it_IT.UTF-8: italiano", lingua1(@[], sv & @[("LANG", "it_IT.UTF-8")]) == "it", "")
+    rec("L-E12", "LC_ALL=en_US.UTF-8 con LANG=it_IT.UTF-8: inglese (vale LC_ALL)", lingua1(@[], sv & @[("LC_ALL", "en_US.UTF-8"), ("LANG", "it_IT.UTF-8")]) == "en", "")
+    rec("L-E12", "LANG=C: inglese", lingua1(@[], sv & @[("LANG", "C")]) == "en", "")
+    rec("L-E12", "BCDD_LANG=en con LANG=it_IT.UTF-8: inglese", lingua1(@[], @[("XDG_CONFIG_HOME", cfgS), ("BCDD_LANG", "en"), ("LANG", "it_IT.UTF-8")]) == "en", "")
+    rec("L-E12", "il ripiego sul sistema non scrive la scelta ricordata", not fileExists(cfgS / "bcdd-editor" / "lingua"), "")
+    let cfgR = tmpBase / "cfg_sistema_ricordata"
+    createDir(cfgR / "bcdd-editor")
+    writeFile(cfgR / "bcdd-editor" / "lingua", "it\n")
+    rec("L-E12", "scelta ricordata it con LANG=C: italiano", lingua1(@[], @[("XDG_CONFIG_HOME", cfgR), ("BCDD_LANG", ""), ("LANG", "C")]) == "it", "")
     let r = runExe(edProva, @["--lang", "fr", "--dir", fixLingue], root, envPulito([("BCDD_LANG", ""), ("XDG_CONFIG_HOME", vuota)]))
     rec("L-E3", "--lang fr: codice 2 e il messaggio nella lingua che varrebbe senza l'opzione", r.code == 2 and "--lang accepts it or en: fr" in r.errout, r.errout)
-    let r2 = runExe(edProva, @["--lang", "en"], root, envPulito([("XDG_CONFIG_HOME", vuota)]))
-    rec("L-E3", "senza --dir: la riga d'uso con --lang (it con BCDD_LANG=it)", r2.code == 2 and r2.errout.startsWith("uso: bcdd-editor [--lang it|en] --dir CARTELLA [NOME]"), r2.errout)
+    let r2 = runExe(edProva, @["--lang", "en", "--x"], root, envPulito([("XDG_CONFIG_HOME", vuota)]))
+    rec("L-E3", "argomento sconosciuto: la riga d'uso con --lang (it con BCDD_LANG=it)", r2.code == 2 and r2.errout.startsWith("uso: bcdd-editor [--lang it|en] [--dir CARTELLA] [NOME]"), r2.errout)
 
   # --- L-E4: il comando della lingua è spento con modifiche non salvate e con un giro di Completa aperto
   block:
@@ -2877,6 +2899,81 @@ block:
     "innerHTML" notin w2 and "webview_navigate" notin w2 and "when defined(bcddEditorProva): getEnv(\"BCDD_EDITOR_DEVTOOLS\")" in w2.replace("let debug = ", "") , "")
 
 # 080:9:1 Verdetto compatto
+
+# 080:10:1 AC-249: senza `--dir` si sceglie la cartella con la finestra del sistema; l'ultima cartella è ricordata
+if not xvfbOk:
+  senzaXvfb("AC-249", "sessione con Xvfb")
+else:
+  let titoloScelta = "Scegli la cartella dei file CSC"
+  block:
+    # (a) la finestra compare, parte dalla cartella ricordata (se c'è ancora), e Esc annulla con codice 0 e senza messaggi
+    let cartellaA = copiaCartella(root / "prove" / "f3" / "luce")
+    var s = nuovaSessione()
+    createDir s.dir / "xdg_config" / "bcdd-editor"
+    writeFile(s.dir / "xdg_config" / "bcdd-editor" / "cartella", cartellaA & "\n")
+    s.avviaEditor(@[], root)
+    let w = trovaFinestra(display, titoloScelta, 10)
+    rec("AC-249", "senza --dir compare la finestra di scelta della cartella (titolo dal catalogo)", w.len > 0, "nessuna finestra")
+    rec("AC-249", "...che parte dall'ultima cartella ricordata", attendi(s.trace, "scelta cartella iniziale=" & cartellaA, 5), leggiSe(s.trace))
+    rec("AC-249", "...e l'editor non si è aperto intanto", "pagina 1" notin leggiSe(s.trace), "")
+    if w.len > 0:
+      discard xdo(display, @["windowfocus", "--sync", w])
+      discard xdo(display, @["key", "--window", w, "Escape"])
+      discard xdo(display, @["key", "Escape"])
+    var fineA = epochTime() + 5.0
+    while s.p.running and epochTime() < fineA: sleep(100)
+    rec("AC-249", "Esc nella finestra: l'editor esce con 0 e senza messaggi", not s.p.running and s.p.peekExitCode == 0 and leggiSe(s.dir / "errori").len == 0,
+      "in corso " & $s.p.running & " errori [" & leggiSe(s.dir / "errori") & "]")
+    s.finisci()
+  block:
+    # (a2) la cartella ricordata non c'è più: la finestra parte senza cartella
+    var s = nuovaSessione()
+    createDir s.dir / "xdg_config" / "bcdd-editor"
+    writeFile(s.dir / "xdg_config" / "bcdd-editor" / "cartella", tmpBase / "non_c_e_piu" & "\n")
+    s.avviaEditor(@[], root)
+    rec("AC-249", "cartella ricordata sparita: la finestra parte senza cartella", attendi(s.trace, "scelta cartella iniziale=\n", 8), leggiSe(s.trace))
+    s.finisci()
+  block:
+    # (b) scelta di una cartella (la finestra è sostituita dal gancio della versione di prova): si apre e si ricorda
+    let cartellaB = copiaCartella(root / "prove" / "f3" / "luce")
+    var s = nuovaSessione()
+    s.avviaEditor(@["--lang", "it"], root, @[("BCDD_EDITOR_PROVA_CARTELLA", cartellaB)])
+    rec("AC-249", "scelta una cartella l'editor si apre su quella", attendi(s.trace, "pagina 1", 20) and trovaFinestra(display, "bcdd-editor: " & cartellaB, 5).len > 0, leggiSe(s.trace))
+    let f = s.dir / "xdg_config" / "bcdd-editor" / "cartella"
+    rec("AC-249", "...e la ricorda (percorso assoluto + LF, accanto al file della lingua)", leggiSe(f) == cartellaB & "\n", "[" & leggiSe(f) & "]")
+    s.finisci()
+    # al giro dopo la finestra parte da lì
+    var s2 = nuovaSessione()
+    createDir s2.dir / "xdg_config" / "bcdd-editor"
+    writeFile(s2.dir / "xdg_config" / "bcdd-editor" / "cartella", readFile(f))
+    s2.avviaEditor(@[], root)
+    rec("AC-249", "riaprendo senza --dir la finestra parte dalla cartella ricordata", attendi(s2.trace, "scelta cartella iniziale=" & cartellaB & "\n", 8), leggiSe(s2.trace))
+    s2.finisci()
+  block:
+    # (c) annullare: codice 0, nessun messaggio, nessuna finestra dell'editor, nessun file ricordato
+    var s = nuovaSessione()
+    s.avviaEditor(@[], root, @[("BCDD_EDITOR_PROVA_CARTELLA", "-")])
+    let codice = s.p.waitForExit(10000)
+    rec("AC-249", "annullando la scelta l'editor esce con 0, senza messaggi e senza aprirsi",
+      codice == 0 and leggiSe(s.dir / "errori").len == 0 and "pagina 1" notin leggiSe(s.trace) and not fileExists(s.dir / "xdg_config" / "bcdd-editor" / "cartella"),
+      "codice " & $codice & " errori [" & leggiSe(s.dir / "errori") & "]")
+    s.finisci()
+  block:
+    # (d) con --dir non cambia niente: nessuna finestra di scelta, la cartella è ricordata
+    let cartellaD = copiaCartella(root / "prove" / "f3" / "luce")
+    var s = nuovaSessione()
+    s.avviaEditor(@["--dir", cartellaD], root, @[("BCDD_EDITOR_PROVA_CARTELLA", "-")])
+    rec("AC-249", "con --dir l'editor si apre senza la scelta (anche col gancio che annullerebbe)", attendi(s.trace, "pagina 1", 20) and "scelta" notin leggiSe(s.trace), leggiSe(s.trace))
+    rec("AC-249", "...e ricorda la cartella", leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") == cartellaD & "\n", "")
+    s.finisci()
+  block:
+    # --dir con una cartella che non c'è: l'errore di prima, e niente da ricordare
+    var s = nuovaSessione()
+    s.avviaEditor(@["--dir", tmpBase / "non_c_e"], root)
+    let codice = s.p.waitForExit(10000)
+    rec("AC-249", "--dir con una cartella che non c'è: codice 2 e nessuna cartella ricordata", codice == 2 and not fileExists(s.dir / "xdg_config" / "bcdd-editor" / "cartella"), "codice " & $codice)
+    s.finisci()
+
 spegni(xvfb)
 removeDir(tmpBase)
 var acFail0 = 0

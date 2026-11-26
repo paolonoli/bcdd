@@ -35,8 +35,20 @@ macro catalogo(body: untyped): untyped =
 catalogo:
 
   voce kUsoEditor,
-    "uso: bcdd-editor [--lang it|en] --dir CARTELLA [NOME]",
-    "usage: bcdd-editor [--lang it|en] --dir FOLDER [NAME]"
+    "uso: bcdd-editor [--lang it|en] [--dir CARTELLA] [NOME]",
+    "usage: bcdd-editor [--lang it|en] [--dir FOLDER] [NAME]"
+  voce kScegliCartella,
+    "Scegli la cartella dei file CSC",
+    "Choose the folder containing the CSC files"
+  voce kScegliAnnulla,
+    "Annulla",
+    "Cancel"
+  voce kScegliApri,
+    "Scegli",
+    "Choose"
+  voce kTitoloErrore,
+    "bcdd-editor: avvio non riuscito",
+    "bcdd-editor: cannot start"
   voce kLangNonValida,
     "bcdd-editor: --lang accetta it oppure en: $1",
     "bcdd-editor: --lang accepts it or en: $1"

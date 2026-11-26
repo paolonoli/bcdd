@@ -110,8 +110,9 @@ This builds `./bcdd-editor` and, for the tests, `tests/bcdd-editor_prova`. Put `
 ### Run
 
 ```sh
-./bcdd-editor --dir FOLDER            # the folder that contains the .csc files
-./bcdd-editor --lang it --dir FOLDER  # Italian; the default is English; the language chosen in the window is remembered
+./bcdd-editor                         # asks for the folder containing the .csc files and remembers it
+./bcdd-editor --dir FOLDER            # opens FOLDER directly
+./bcdd-editor --lang it --dir FOLDER  # Italian; without --lang or BCDD_LANG the system language is used; the choice in the window is remembered
 ```
 
 ### Test

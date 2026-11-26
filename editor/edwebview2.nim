@@ -157,6 +157,18 @@ proc cbAttiva(attiva: cint) {.cdecl.} =
   traccia("wm_activate " & $attiva)
   if gest.attiva != nil: gest.attiva(attiva != 0)
 
+proc scegliCartella*(titolo, annulla, scegli, iniziale: string): tuple[ok: bool, cartella: string] =
+  ## la finestra standard di Windows per scegliere una cartella (titolo e pulsanti sono quelli del sistema). ok=true e cartella "": annullato.
+  when defined(bcddEditorProva):
+    let finta = getEnv("BCDD_EDITOR_PROVA_CARTELLA")
+    if finta.len > 0:
+      traccia("scelta finta " & finta)
+      return (true, if finta == "-": "" else: finta)
+  traccia("scelta cartella iniziale=" & iniziale)
+  (true, sceltaCartellaWin(iniziale))
+
+proc mostraErrore*(titolo, testo: string) = messaggioWin(titolo, testo)
+
 proc apri*(sc: Scheda, g: Gestori): string =
   ## Apre la finestra e gira finché non è chiusa. Ritorna "" a chiusura normale, altrimenti il codice del messaggio di errore da dire
   ## ("display": la finestra o WebView2 non si aprono).
