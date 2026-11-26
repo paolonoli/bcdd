@@ -12,6 +12,24 @@ BCDD (Behavioural Contract-Driven Design) is a language for writing the behaviou
 state contract* (CSC) per file. This repository holds the source of the two programs that read and help write those files.
 This is version **1.0-beta**: the language and the programs work, but they have not had the field use of a final release.
 
+## Why BCDD
+
+- **Not just software.** A CSC describes a system only through its boundaries, that is its interfaces with the outside:
+  what can be requested of it and what can be observed from outside. It does not describe how the system is built. The
+  same language can therefore describe software, hardware and mixed systems, including complex ones; the manual's real
+  case is an audio measurement kit.
+- **A formal language for generative models.** The aim is a precise and complete language for communicating with
+  generative language models: a description that leaves as little room as possible for interpretation of what is
+  required.
+- **Closed at every level of detail.** CSCs and entities can be written at different levels of detail, from the whole
+  system down to a single part. An entity made of parts that passes `bcdd check` is closed: every boundary that a part
+  uses is provided by another part or used by the entity towards the outside, every public boundary is entrusted to a
+  part, and every boundary provided is used. It is therefore complete at its level of detail: whoever builds it finds no
+  boundary missing. Whether the system can actually be built is not something `bcdd` checks.
+- **The language model as an assistant.** `bcdd refine` and the editor's “Complete” button use a language model, through
+  Claude Code, to propose questions and lines of the contract. The operator answers, chooses and approves: nothing
+  becomes part of the contract without approval (`bcdd ratify`).
+
 Ready-to-run packages for Linux x86_64 and Windows x86_64 are on the site and in the
 [Releases](https://github.com/paolonoli/bcdd/releases) of this repository.
 
