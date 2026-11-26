@@ -4,7 +4,7 @@
 # . Le azioni scrivono SOLO con `bcdd save` e `bcdd new`, una scrittura per azione; il resto è
 # `bcdd check --json`; Approva (pezzo 5) lancia `bcdd ratify`, una volta per riga. Nessun timer e nessun osservatore di file: si rilegge quando la finestra torna attiva.
 # I lanci di bcdd sono sincroni (GSubprocess, argomenti uno per uno, senza shell): sono brevi e ogni azione è una sequenza.
-import std/[json, os, strutils, times, algorithm, sequtils]
+import std/[json, os, strutils, times, algorithm, sequtils, tables]
 import checksums/sha2
 import edfin, edbcdd, edmodello, edazioni, edtesti, edtraccia, edlinea
 
@@ -193,6 +193,11 @@ var
   programma = ""
   cartella = ""
   titoloCartella = ""
+  cartelle: seq[string]                  # le cartelle di lavoro, assolute, nell'ordine dell'elenco (tutte uguali)
+  cartellaSel = 0                        # l'indice della cartella evidenziata: ci si creano i file nuovi
+  dove: Table[string, int]               # il file `.csc` -> la cartella (indice) da cui si legge: il primo nome nell'ordine dell'elenco
+  doppi: seq[(string, int, int)]         # (nome, cartella tenuta, cartella lasciata fuori) per i nomi che stanno in più cartelle
+  tuttiCsc: seq[(int, string)]           # ogni `.csc` di ogni cartella, anche quelli lasciati fuori
   caricati: seq[(string, JsonNode)]      # l'ultima lettura riuscita: (file, JSON di check)
   ultimoTesto = ""                       # il modello dell'ultimo disegno, per accorgersi se è cambiato
   paginaPronta = false
@@ -224,38 +229,69 @@ var
 proc improntaDi(s: string): string = "sha256:" & toLowerAscii($secureHash(Sha_256, s))
 
 # 005:2:1 Il lancio di bcdd: gli argomenti uno per uno, senza shell (il livello di piattaforma: edgtkfin, edwebview2)
+proc cartellaDi(file: string): int =
+  ## L'indice della cartella di un file `.csc` letto; un nome nuovo (o che non c'è) è nella cartella evidenziata.
+  if file in dove: dove[file] else: cartellaSel
+
+proc percorso(file: string): string =
+  ## Il percorso vero di un file della cartella di lavoro (o del suo `.dialogo`, che sta accanto al `.csc`).
+  let base = if file.endsWith(".dialogo"): file[0 ..< file.len - 8] else: file
+  cartelle[cartellaDi(base)] / file
+
+proc fileSuDisco(nome: string): bool =
+  ## Un file `NOME.csc` esiste in una qualunque delle cartelle (anche se è stato lasciato fuori).
+  for d in cartelle:
+    if fileExists(d / (nome & ".csc")): return true
+
 proc eseguiBcdd(args: seq[string], input = ""): (string, string, int) =
   traccia("lancio --lang " & $lingua & " " & args.join(" "))
   let v = @[programma, "--lang", $lingua] & args           # ogni lancio porta --lang con la lingua effettiva, mai quella dell'ambiente
+  # La cartella corrente del lancio è la cartella del file (il primo argomento `.csc`; per `new` e per un file nuovo, la cartella evidenziata):
+  # `save`, `refine` e `new` non hanno `--dir`; `check` e `ratify` ricevono tutte le cartelle e cercano prima nella cartella del file.
+  var idx = cartellaSel
+  for a in args:
+    if a.endsWith(".csc"):
+      idx = cartellaDi(a)
+      break
+  try: setCurrentDir(cartelle[idx])
+  except OSError: discard
   lanciaSincrono(v, input)
 
-var memo: MemoCheck                      # i check già letti, validi finché l'impronta di TUTTI i `.csc` della cartella è la stessa
+var memo: MemoCheck                      # i check già letti, validi finché l'impronta di TUTTI i `.csc` di TUTTE le cartelle è la stessa
+
+proc elencoCsc(): seq[(int, string)] =
+  ## Tutti i `.csc` (non ricorsivo): cartella per cartella nell'ordine dell'elenco, in ordine di nome dentro ogni cartella.
+  ## Una cartella che non si legge (di rete e sparita) non ha file.
+  for i, d in cartelle:
+    var nomi: seq[string]
+    try:
+      for k, p in walkDir(d, relative = true):
+        if k in {pcFile, pcLinkToFile} and p.endsWith(".csc"): nomi.add p
+    except OSError: discard
+    nomi.sort()
+    for n in nomi: result.add (i, n)
 
 proc digestCartella(): string =
-  ## 005:2:8 Impronta di nomi e contenuti di tutti i `.csc`. `check --json --dir .` di un file guarda anche gli altri
-  ## file della cartella (chiusura del gruppo, rapporto), quindi un check in memoria vale solo finché la cartella intera è
-  ## identica: basta un byte diverso in un file qualsiasi e si rilancia tutto. Leggere i file non lancia niente.
-  var nomi: seq[string]
-  for k, p in walkDir(".", relative = true):
-    if k in {pcFile, pcLinkToFile} and p.endsWith(".csc"): nomi.add p
-  nomi.sort()
+  ## 005:2:8 Impronta di nomi e contenuti di tutti i `.csc` di tutte le cartelle. `check --json --dir ...` di un file guarda anche
+  ## gli altri file (chiusura del gruppo, rapporto), quindi un check in memoria vale solo finché tutto è identico: basta un byte diverso in un
+  ## file qualsiasi e si rilancia tutto. Leggere i file non lancia niente.
   var tutto = ""
-  for f in nomi:
+  for (i, f) in elencoCsc():
     try:
-      let raw = readFile(f)
-      tutto.add f & "\0" & $raw.len & "\0" & raw & "\0"
-    except IOError: tutto.add f & "\0?\0"
-  improntaDi($lingua & "\0" & tutto)          # la lingua è nella chiave: un check letto in un'altra lingua non vale
+      let raw = readFile(cartelle[i] / f)
+      tutto.add $i & "/" & f & "\0" & $raw.len & "\0" & raw & "\0"
+    except IOError: tutto.add $i & "/" & f & "\0?\0"
+  improntaDi($lingua & "\0" & cartelle.join("\1") & "\0" & tutto)          # la lingua è nella chiave: un check letto in un'altra lingua non vale
 
 proc leggiFile(file: string, digest = digestCartella()): (JsonNode, string) =
-  ## 005:2:2 `check --json` su un file della cartella; (JSON, "") oppure (nil, messaggio). Se la cartella è identica a quando
-  ## il file è stato controllato l'ultima volta si risponde dalla memoria, senza lanciare bcdd. Il risultato non
-  ## entra in memoria se la cartella è cambiata mentre bcdd lavorava: la memoria non è mai più vecchia della cartella.
+  ## 005:2:2 `check --json` su un file; (JSON, "") oppure (nil, messaggio). Se tutto è identico a quando il file è stato controllato
+  ## l'ultima volta si risponde dalla memoria, senza lanciare bcdd. Il risultato non entra in memoria se qualcosa è cambiato
+  ## mentre bcdd lavorava: la memoria non è mai più vecchia delle cartelle.
   let inMemoria = memo.daMemoria(digest, file)
   if inMemoria != nil:
     traccia("check_in_memoria " & file)
     return (inMemoria, "")
-  let (o, e, c) = eseguiBcdd(argomentiCheck(file))
+  let (o, e, c) = eseguiBcdd(argomentiCheck(file, cartelle, cartellaDi(file)))
   if c != 0 and c != 1:
     return (nil, file & ": " & e.strip(leading = false, chars = {'\n'}) & " (codice " & $c & ")")
   let l = leggiUscita(programma, file, o, c)
@@ -266,31 +302,58 @@ proc leggiFile(file: string, digest = digestCartella()): (JsonNode, string) =
 var ultimaFirma = ""
 
 proc firmaCartella(): string =
-  ## 005:2:5 Nome, data e dimensione di ogni `.csc`: basta a sapere se qualcosa è cambiato fuori, senza lanciare
+  ## 005:2:5 Cartella, nome, data e dimensione di ogni `.csc`: basta a sapere se qualcosa è cambiato fuori, senza lanciare
   ## `bcdd` e senza bloccare la finestra quando torna attiva (con l'inoltro X di SSH il blocco si vede lampeggiare).
   var righe: seq[string]
-  for k, p in walkDir(".", relative = true):
-    if k in {pcFile, pcLinkToFile} and p.endsWith(".csc"):
-      try: righe.add p & "|" & $getLastModificationTime(p).toUnixFloat() & "|" & $getFileSize(p)
-      except OSError: righe.add p & "|?"
+  for (i, p) in elencoCsc():
+    let f = cartelle[i] / p
+    try: righe.add $i & "/" & p & "|" & $getLastModificationTime(f).toUnixFloat() & "|" & $getFileSize(f)
+    except OSError: righe.add $i & "/" & p & "|?"
   righe.sort()
   righe.join("\n")
 
 proc scansiona(): (seq[(string, JsonNode)], string) =
-  ## 005:2:3 Tutti i `.csc` della cartella (non ricorsivo), in ordine di nome. Il primo che non si legge ferma la scansione.
+  ## 005:2:3 Tutti i `.csc` delle cartelle (non ricorsivo): cartella per cartella, in ordine di nome. Il primo che non si legge ferma la scansione.
+  ## Un nome che sta in più cartelle si legge una volta sola, dalla prima nell'ordine dell'elenco (come lo trova `bcdd` per le citazioni);
+  ## gli altri restano fuori, e si ricordano in `doppi` per dirlo.
   let firma = firmaCartella()
   let digest = digestCartella()
-  var nomi: seq[string]
-  for k, p in walkDir(".", relative = true):
-    if k in {pcFile, pcLinkToFile} and p.endsWith(".csc"): nomi.add p
-  nomi.sort()
-  for f in nomi:
+  tuttiCsc = elencoCsc()
+  dove = initTable[string, int]()
+  doppi = @[]
+  var daLeggere: seq[string]
+  for (i, n) in tuttiCsc:
+    if n in dove: doppi.add (n, dove[n], i)
+    else:
+      dove[n] = i
+      daLeggere.add n
+  for f in daLeggere:
     let (j, m) = leggiFile(f, digest)
     if j == nil: return (@[], m)
     result[0].add (f, j)
   ultimaFirma = firma
 
-proc modelloTesto(): string = $buildBanco(titoloCartella, caricati)
+proc nomeCartella(i: int): string =
+  ## L'ultimo pezzo del percorso, per dirlo alla persona; la radice di un'unità resta com'è.
+  let n = lastPathPart(cartelle[i])
+  if n.len > 0: n else: cartelle[i]
+
+proc modelloTesto(): string =
+  ## Il banco più le cartelle: per ognuna il percorso, i suoi file (quelli lasciati fuori sono segnati) e se è l'evidenziata;
+  ## e i nomi che stanno in più cartelle (la cartella tenuta e quella lasciata fuori).
+  var m = buildBanco(titoloCartella, caricati)
+  var cs = newJArray()
+  for i, d in cartelle:
+    var fs = newJArray()
+    for (k, n) in tuttiCsc:
+      if k != i: continue
+      fs.add %*{"nome": n, "fuori": dove.getOrDefault(n, -1) != i}
+    cs.add %*{"percorso": d, "nome": nomeCartella(i), "selezionata": i == cartellaSel, "file": fs}
+  m["cartelle"] = cs
+  var dd = newJArray()
+  for (n, t, f) in doppi: dd.add %*{"nome": n, "tenuta": cartelle[t], "fuori": cartelle[f]}
+  m["doppi"] = dd
+  $m
 
 # 005:2:4 Nim -> pagina
 when defined(bcddEditorProva):
@@ -405,7 +468,7 @@ proc esisteCsc(nome: string): bool =
 
 proc nomeLibero(nome: string): bool =
   ## Nessuna entità né CSC della cartella ha già questo nome, e nessun file si chiama così.
-  if fileExists(nome & ".csc") or esisteCsc(nome): return false
+  if fileSuDisco(nome) or esisteCsc(nome): return false
   for (_, j) in caricati:
     if bloccoEntita(j, nome) != nil: return false
   true
@@ -413,7 +476,7 @@ proc nomeLibero(nome: string): bool =
 proc salva(file, expect, testo: string): string =
   var prima = ""
   if expect != "nuovo":
-    try: prima = readFile(file)
+    try: prima = readFile(percorso(file))
     except IOError: discard
   let (_, e, c) = eseguiBcdd(@["save", file, "--expect", expect], testo)
   if c != 0: return e.strip(leading = false, chars = {'\n'})
@@ -429,7 +492,7 @@ proc creaCsc(nome: string): string =
 proc togliFile(file: string): string =
   ## 005:3:7 Il file di un'entità si toglie solo con `bcdd save --remove --expect IMPRONTA`, che lascia FILE.prima.
   var prima = ""
-  try: prima = readFile(file)
+  try: prima = readFile(percorso(file))
   except IOError: return tx(kNonRiescoLeggere, file)
   let imp = improntaDi(prima)
   let (_, e, c) = eseguiBcdd(@["save", file, "--remove", "--expect", imp])
@@ -448,7 +511,7 @@ proc assicuraCsc(nome: string): string =
   if not nomeValido(nome): return tx(kNomeNonValidoMin, nome)
   if nomeDispositivoWindows(nome) and not esisteCsc(nome): return tx(kNomeDispositivo, nome)
   if esisteCsc(nome): return ""
-  if fileExists(nome & ".csc"): return tx(kCscEsisteNonContiene, nome)
+  if fileSuDisco(nome): return tx(kCscEsisteNonContiene, nome)
   creaCsc(nome)
 
 type Composizione = proc(raw: string, j: JsonNode, errore: var string): string
@@ -456,7 +519,7 @@ type Composizione = proc(raw: string, j: JsonNode, errore: var string): string
 proc modificaFile(file: string, comp: Composizione): string =
   ## Legge il file, lo ricontrolla (deve essere ancora quello), compone il testo nuovo e lo salva con la sua impronta.
   var raw: string
-  try: raw = readFile(file)
+  try: raw = readFile(percorso(file))
   except IOError: return tx(kNonRiescoLeggere, file)
   let imp = "sha256:" & toLowerAscii($secureHash(Sha_256, raw))
   let (j, m) = leggiFile(file)
@@ -509,11 +572,11 @@ proc annullaUltima(): string =
       restano.add m.file
       continue
     if m.tolto:
-      if fileExists(m.file): return tx(kFileTornatoAltro, m.file)
+      if fileExists(percorso(m.file)): return tx(kFileTornatoAltro, m.file)
       daRiscrivere.add m
       continue
     var ora: string
-    try: ora = readFile(m.file)
+    try: ora = readFile(percorso(m.file))
     except IOError: return tx(kFileNonSiLegge, m.file)
     if improntaDi(ora) != m.dopo: return tx(kFileModificatoAltro, m.file)
     daRiscrivere.add m
@@ -588,22 +651,22 @@ proc scriviCompleta(a: JsonNode): string =
   if file.len == 0: return tx(kNonTrovoCartella, a["nome"].getStr)
   let dlg = file & ".dialogo"
   var cscPrima, dlgPrima = ""
-  let dlgEsisteva = fileExists(dlg)
+  let dlgEsisteva = fileExists(percorso(dlg))
   try:
-    cscPrima = readFile(file)
-    if dlgEsisteva: dlgPrima = readFile(dlg)
+    cscPrima = readFile(percorso(file))
+    if dlgEsisteva: dlgPrima = readFile(percorso(dlg))
   except IOError: return tx(kNonRiescoLeggere, file)
   var acc = newJArray()
   for x in a["accettate"]: acc.add x
   let (o, e, c) = eseguiBcdd(@["refine", "--json", "--accept", file], $(%*{"accettate": acc}))
   # ciò che è cambiato davvero, anche se il comando è finito male a metà (il CSC scritto e il dialogo no)
   try:
-    let cscDopo = readFile(file)
+    let cscDopo = readFile(percorso(file))
     if cscDopo != cscPrima:
       scritti.add file
       modifiche.add Modifica(file: file, prima: cscPrima, dopo: improntaDi(cscDopo))
-    if fileExists(dlg):
-      let dlgDopo = readFile(dlg)
+    if fileExists(percorso(dlg)):
+      let dlgDopo = readFile(percorso(dlg))
       if not dlgEsisteva or dlgDopo != dlgPrima:
         scritti.add dlg
         modifiche.add Modifica(file: dlg, prima: dlgPrima, dopo: improntaDi(dlgDopo), creato: not dlgEsisteva)
@@ -651,7 +714,7 @@ proc approva(a: JsonNode, interoCsc: bool, improntaVista: string): string =
   let file = if tipo == "entita": fileDiEntita(nome) else: fileDiCsc(nome)
   if file.len == 0: return tx(kNonTrovoCartella, nome)
   var raw: string
-  try: raw = readFile(file)
+  try: raw = readFile(percorso(file))
   except IOError: return tx(kNonRiescoLeggere, file)
   if improntaVista.len > 0 and improntaDi(raw) != improntaVista:
     return tx(kFileCambiatoLetto, file)
@@ -662,7 +725,7 @@ proc approva(a: JsonNode, interoCsc: bool, improntaVista: string): string =
     return tx(kPrimaErrori)
   let b = bloccoDi(j, (if tipo == "entita": "ENTITY" else: "CSC"), nome)
   if b == nil: return tx(kNonTrovoNelFile, nome)
-  var base = @["ratify", file, "--dir", ".", "--csc", nome]    # A-12: `--csc` sempre, il comando non dipende dagli altri blocchi del file
+  var base = @["ratify", file] & argomentiDir(cartelle, cartellaDi(file)) & @["--csc", nome]    # A-12: `--csc` sempre, il comando non dipende dagli altri blocchi del file
   var ids: seq[string]
   var quante = 0
   var resto = 0
@@ -684,7 +747,7 @@ proc approva(a: JsonNode, interoCsc: bool, improntaVista: string): string =
   proc registra() =
     ## ciò che è cambiato davvero, anche se un ratify a metà è fallito
     try:
-      let dopo = readFile(file)
+      let dopo = readFile(percorso(file))
       if dopo != raw:
         scritti.add file
         modifiche.add Modifica(file: file, prima: raw, dopo: improntaDi(dopo))
@@ -726,7 +789,7 @@ proc approvaBlocco(a: JsonNode, improntaVista: string): string =
   let decisione = a["decisione"].getStr
   if not fileNoto(file): return tx(kNonTrovoFileCartella, file)
   var raw: string
-  try: raw = readFile(file)
+  try: raw = readFile(percorso(file))
   except IOError: return tx(kNonRiescoLeggere, file)
   if improntaVista.len > 0 and improntaDi(raw) != improntaVista:
     return tx(kFileCambiatoLetto, file)
@@ -735,12 +798,12 @@ proc approvaBlocco(a: JsonNode, improntaVista: string): string =
   if j["impronta"].getStr != improntaDi(raw): return tx(kFileCambiatoLeggevo, file)
   if j["rapporto"]["errori"].len > 0 or j["rapporto"]["non_riconosciute"].len > 0:
     return tx(kPrimaErrori)
-  var args = @["ratify", file, "--dir", ".", "--csc", arg]
+  var args = @["ratify", file] & argomentiDir(cartelle, cartellaDi(file)) & @["--csc", arg]
   if modo == "forme": args.add "--all"
   args.add decisione
   let (_, e, c) = eseguiBcdd(args)
   try:
-    let dopo = readFile(file)
+    let dopo = readFile(percorso(file))
     if dopo != raw:
       scritti.add file
       modifiche.add Modifica(file: file, prima: raw, dopo: improntaDi(dopo))
@@ -800,7 +863,7 @@ proc creaProfilo(a: JsonNode): string =
   for (_, j) in caricati:
     for b in j["blocchi"]:
       if b["tipo"].getStr == "PROFILE" and b["nome"].getStr == nome: return tx(kProfiloEsiste, nome)
-  if fileExists(nome & ".csc"): return tx(kFileEsiste, nome)
+  if fileSuDisco(nome): return tx(kFileEsiste, nome)
   salva(nome & ".csc", "nuovo", "PROFILE " & nome & " VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"" & scopo & "\"\nEND\n")
 
 proc togliProfilo(a: JsonNode): string =
@@ -1151,6 +1214,52 @@ proc rinfresca(esito: JsonNode) =
     traccia("controllato")
     valuta("bcddControllato(" & escapeJson(now().format("HH:mm:ss")) & ");", "", cbEsito)
 
+proc titoloDa(prima: string): string =
+  ## Il nome dell'insieme: la prima cartella, e «+N» per le altre.
+  if cartelle.len > 1: prima & " +" & $(cartelle.len - 1) else: prima
+
+proc gestisciCartelle(j: JsonNode) =
+  ## Le tre azioni sull'insieme delle cartelle (nessuna scrive un `.csc`): scegliere la cartella dei file nuovi, aggiungerne (con la finestra
+  ## di scelta), toglierne. Ogni cambio dell'insieme è ricordato; dopo, tutto si rilegge.
+  let az = j["azione"].getStr
+  var esito: JsonNode = nil
+  let i = parseInt(j["indice"].getStr)
+  case az
+  of "cartella_scegli":
+    if i < cartelle.len: cartellaSel = i
+  of "cartella_togli":
+    if cartelle.len <= 1: esito = esitoJson(false, tx(kCartellaUltima))
+    elif i < cartelle.len:
+      let nome = cartelle[i]
+      cartelle.delete(i)
+      if i < cartellaSel: dec cartellaSel
+      cartellaSel = min(cartellaSel, cartelle.len - 1)
+      discard ricordaCartelle(cartelle)
+      titoloCartella = titoloDa(cartelle[0])
+      esito = esitoJson(true, tx(kCartellaTolta, nome))
+  else:
+    let sc = scegliCartelle(tx(kScegliCartella), tx(kScegliAnnulla), tx(kScegliApri), cartelle[cartellaSel], aggiungi = true)
+    if not sc.ok:
+      esito = esitoJson(false, tx(kEsciDisplay))
+    else:
+      var errori, aggiunte: seq[string]
+      for r in sc.rifiutate: errori.add tx(kCartellaSenzaPercorso, r)
+      for c in sc.cartelle:
+        let a = percorsoPulito(c)
+        if a in cartelle or a in aggiunte: errori.add tx(kCartellaGiaNellElenco, a)
+        elif not dirExists(a): errori.add tx(kCartellaNonSiTrova, a)
+        else: aggiunte.add a
+      if aggiunte.len > 0:
+        cartellaSel = cartelle.len
+        cartelle.add aggiunte
+        discard ricordaCartelle(cartelle)
+        titoloCartella = titoloDa(cartelle[0])
+        esito = esitoJson(true, (if aggiunte.len == 1: tx(kCartellaAggiunta, aggiunte[0]) else: tx(kCartelleAggiunte, aggiunte.join(", "))) &
+          (if errori.len > 0: "; " & errori.join(" ") else: ""))
+      elif errori.len > 0: esito = esitoJson(false, errori.join(" "))
+      else: return                                   # annullata: niente cambia
+  rinfresca(esito)
+
 proc alCambioFuoco(attiva: bool) {.nimcall.} =
   if attiva:
     traccia("attiva")
@@ -1218,6 +1327,10 @@ proc messaggioValido(j: JsonNode): bool =
   if j.kind != JObject or not (j.hasKey("azione") and j["azione"].kind == JString): return false
   proc nome(k: string): bool = nomeValido(j[k].getStr)
   case j["azione"].getStr
+  of "cartella_scegli", "cartella_togli":
+    result = campiEsatti(j, ["azione", "indice"]) and cifre(j["indice"].getStr)
+  of "cartella_aggiungi":
+    result = campiEsatti(j, ["azione", "indice"]) and j["indice"].getStr == "0"
   of "nuova_entita":
     result = campiEsatti(j, ["azione", "nome", "scopo"]) and nome("nome") and j["scopo"].getStr.len <= 200
   of "pubblico":
@@ -1427,6 +1540,9 @@ proc alMessaggio(testo: string) {.nimcall.} =
     else:
       avviaRefine(2, @["refine", "--json", "--answers", file], $(%*{"risposte": j["risposte"]}))
     return
+  if az in ["cartella_scegli", "cartella_togli", "cartella_aggiungi"]:
+    gestisciCartelle(j)
+    return
   if az == "lingua":
     # : la scelta è subito applicata (bcdd rilanciato con la lingua nuova su tutti i file, pagina ridisegnata col dizionario
     # nuovo), ricordata nel file di configurazione; se non si riesce a scrivere vale per la finestra aperta e lo Stato lo dice.
@@ -1464,8 +1580,9 @@ proc esci(msg: string, codice = 2) =
 
 proc apriFinestra*(a: Argomenti) =
   ## 005:5:1 Il programma: prima scansione (senza finestra), poi GTK. Codici d'uscita: 2 per ogni caso che non apre.
-  titoloCartella = a.dir
-  let dirAssoluta = a.dir
+  ## Le cartelle sono quelle di `a.dirs`, rese assolute prima di ogni cambio di cartella corrente.
+  for d in a.dirs: cartelle.add percorsoPulito(d)
+  titoloCartella = titoloDa(a.dirs[0])
   programma = getAppDir() / nomeBcdd
   var eseguibile = fileExists(programma)
   when not defined(windows):
@@ -1473,17 +1590,19 @@ proc apriFinestra*(a: Argomenti) =
       try: eseguibile = fpUserExec in getFilePermissions(programma)
       except OSError: eseguibile = false
   if not eseguibile: esci(tx(kEsciNonTrovoBcdd, getAppDir()) & "\n")
-  if not dirExists(dirAssoluta): esci(tx(kEsciCartellaNonTrovata, a.dir) & "\n")
-  try: setCurrentDir(dirAssoluta)
-  except OSError: esci(tx(kEsciCartellaNonLeggibile, a.dir) & "\n")
-  traccia("apertura")
+  for k, d in a.dirs:
+    if not dirExists(cartelle[k]): esci(tx(kEsciCartellaNonTrovata, d) & "\n")
+    try: setCurrentDir(cartelle[k])
+    except OSError: esci(tx(kEsciCartellaNonLeggibile, d) & "\n")
+  cartellaSel = 0
+  traccia("apertura cartelle=" & $cartelle.len)
   let (c, m) = scansiona()
   if m.len > 0: esci(m & "\n")
   caricati = c
   if a.nome.len > 0:
-    if fileDiEntita(a.nome).len == 0: esci(tx(kEsciNessunaEntita, a.nome, a.dir) & "\n")
+    if fileDiEntita(a.nome).len == 0: esci(tx(kEsciNessunaEntita, a.nome, titoloCartella) & "\n")
     daSelezionare = a.nome
-  var sc = Scheda(titolo: "bcdd-editor: " & a.dir, html: paginaHtmlBase.replace("/*LINGUA*/", $lingua), script: @[paginaJs])
+  var sc = Scheda(titolo: "bcdd-editor: " & titoloCartella, html: paginaHtmlBase.replace("/*LINGUA*/", $lingua), script: @[paginaJs])
   when defined(bcddEditorProva):
     sc.dimensioniProva = getEnv("BCDD_EDITOR_PROVA_DIM")
     sc.script.add provaJs

@@ -22,6 +22,7 @@ type FnAttiva = proc(attiva: cint) {.cdecl.}
 
 proc webview_create(debug: cint, window: pointer): Vista {.importc, cdecl.}
 proc webview_destroy(w: Vista): cint {.importc, cdecl.}
+proc webview_get_window(w: Vista): pointer {.importc, cdecl.}
 proc webview_run(w: Vista): cint {.importc, cdecl.}
 proc webview_terminate(w: Vista): cint {.importc, cdecl.}
 proc webview_dispatch(w: Vista, fn: FnDispatch, arg: pointer): cint {.importc, cdecl.}
@@ -157,15 +158,19 @@ proc cbAttiva(attiva: cint) {.cdecl.} =
   traccia("wm_activate " & $attiva)
   if gest.attiva != nil: gest.attiva(attiva != 0)
 
-proc scegliCartella*(titolo, annulla, scegli, iniziale: string): tuple[ok: bool, cartella: string] =
-  ## la finestra standard di Windows per scegliere una cartella (titolo e pulsanti sono quelli del sistema). ok=true e cartella "": annullato.
+proc scegliCartelle*(titolo, annulla, scegli, iniziale: string, aggiungi = false): Scelta =
+  ## la finestra moderna di Esplora file per scegliere una o più cartelle (anche di rete, anche scritte nella barra dell'indirizzo).
+  ## I titoli e i pulsanti sono quelli del catalogo (`annulla` è quello del sistema). `ok` falso: la finestra non si crea. Annullata: nessuna cartella.
+  ## Con `FOS_FORCEFILESYSTEM` ogni scelta ha un percorso: `rifiutate` resta vuoto.
   when defined(bcddEditorProva):
-    let finta = getEnv("BCDD_EDITOR_PROVA_CARTELLA")
+    let finta = getEnv(if aggiungi: "BCDD_EDITOR_PROVA_AGGIUNGI" else: "BCDD_EDITOR_PROVA_CARTELLA")   # nomi solo nella versione di prova
     if finta.len > 0:
       traccia("scelta finta " & finta)
-      return (true, if finta == "-": "" else: finta)
+      return sceltaDaGancio(finta)
   traccia("scelta cartella iniziale=" & iniziale)
-  (true, sceltaCartellaWin(iniziale))
+  let padre = if vista != nil: cast[Handle](webview_get_window(vista)) else: Handle(0)
+  let (ok, c) = sceltaCartelleWin(titolo, scegli, iniziale, padre)
+  Scelta(ok: ok, cartelle: c)
 
 proc mostraErrore*(titolo, testo: string) = messaggioWin(titolo, testo)
 

@@ -36,7 +36,7 @@
   <div id="avviso" class="avviso" hidden></div>
   <div class="colonne">
     <section id="entita-pannello" class="pannello alberello" data-t-aria="sez_entita">
-      <div class="sez-testa"><div class="sez-titolo" data-t="sez_entita"></div><div id="albero-conto" class="muto piccolo"></div><button id="b-profilo" class="btn neutro mini" data-t="b_profilo" data-t-title="b_profilo_aiuto"></button></div>
+      <div class="sez-testa"><div class="sez-titolo" data-t="sez_entita"></div><div id="albero-conto" class="muto piccolo"></div><button id="b-cartelle" class="btn neutro mini" data-t="b_cartelle" data-t-title="b_cartelle_aiuto" aria-expanded="false" aria-controls="cartelle-riquadro"></button><button id="b-profilo" class="btn neutro mini" data-t="b_profilo" data-t-title="b_profilo_aiuto"></button></div>
       <input id="albero-cerca" class="cerca" type="text" maxlength="64" data-t-ph="cerca_albero" data-t-aria="cerca_albero" spellcheck="false" autocomplete="off">
       <div id="fascia-fuori" class="fascia-fuori" hidden data-t="fuori_da_tutte"></div>
       <div id="albero" class="albero" role="tree" data-t-aria="albero_aria"></div>
@@ -81,6 +81,12 @@
     <div id="esito" class="esito" hidden></div>
     <div class="muto piccolo"><span id="letto"></span> <span id="controllato"></span></div>
   </footer>
+  <div id="cartelle-riquadro" class="cartelle-riquadro" role="dialog" hidden data-t-aria="cartelle_titolo">
+    <div class="cartelle-testa"><div class="sez-titolo" data-t="cartelle_titolo"></div><button id="b-cartelle-chiudi" class="btn neutro mini" data-t="chiudi"></button></div>
+    <div id="cartelle-nota" class="muto piccolo"></div>
+    <div id="cartelle-elenco" class="cartelle-elenco"></div>
+    <div class="azioni"><button id="b-cartella-aggiungi" class="btn" data-t="cartella_aggiungi" data-t-title="cartella_aggiungi_aiuto"></button><button id="b-cartella-togli" class="btn togli" data-t="cartella_togli" data-t-title="cartella_togli_aiuto"></button></div>
+  </div>
 </div>
 </body>
 </html>

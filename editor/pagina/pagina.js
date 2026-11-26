@@ -2194,6 +2194,7 @@ function ridisegna() {
   $('t-fuori').disabled = !e;
   $('t-dentro').disabled = !haVistaDentro(e);
   ridisegnaAlbero();
+  ridisegnaCartelle();
   ridisegnaPercorso(cartellaBreve);
   ridisegnaAzioni();
   if (moduloAperto && !e && moduloAperto !== 'nuova') chiudiModulo();
@@ -2234,6 +2235,7 @@ function bcddDisegna(testo, ora, esito, seleziona) {
   $('letto').textContent = T('letto_alle', ora);
   $('controllato').textContent = '';
   $('avviso').hidden = true;
+  mostraDoppi();
   ridisegna();
   // un errore che parla di righe precise: la casella di testo si apre su quelle righe
   if (ultimoEsito && ultimoEsito.casella) {
@@ -3289,6 +3291,71 @@ function ridisegnaApprovaBlocco(o, box, chiave) {
   aggiorna();
 }
 $('b-profilo').addEventListener('click', () => apriNuovoProfilo());
+
+// ---- le cartelle di lavoro: tutte uguali; quella evidenziata è dove si creano i file nuovi. Il riquadro si apre dal comando «Cartelle».
+function cartelleAperto() { return !$('cartelle-riquadro').hidden; }
+function ridisegnaCartelle() {
+  var cs = (M && M.cartelle) || [];
+  var attuale = '';
+  cs.forEach((c) => { if (c.selezionata) attuale = c.percorso; });
+  $('b-cartelle').setAttribute('aria-expanded', cartelleAperto() ? 'true' : 'false');
+  $('cartelle-nota').textContent = cs.length > 1 ? T('cartelle_nota', attuale) : T('cartelle_nota_una');
+  var tg = $('b-cartella-togli');
+  tg.disabled = cs.length <= 1;
+  tg.title = cs.length <= 1 ? T('cartella_togli_ultima') : T('cartella_togli_aiuto');
+  var box = $('cartelle-elenco');
+  svuota(box);
+  cs.forEach((c, i) => {
+    var g = el('div', 'car-gruppo');
+    var t = el('button', 'car-testa' + (c.selezionata ? ' on' : ''), c.nome);
+    t.type = 'button';
+    t.setAttribute('data-id', 'car:' + i);
+    t.setAttribute('aria-pressed', c.selezionata ? 'true' : 'false');
+    t.title = c.percorso;
+    t.addEventListener('click', () => invia({azione: 'cartella_scegli', indice: String(i)}));
+    g.appendChild(t);
+    g.appendChild(el('div', 'car-percorso mono muto piccolo', c.percorso));
+    if (c.file.length === 0) g.appendChild(el('div', 'car-vuoto muto piccolo', T('cartella_senza_file')));
+    c.file.forEach((f) => {
+      var b = el('button', 'car-file' + (f.fuori ? ' fuori' : ''), f.nome);
+      b.type = 'button';
+      b.setAttribute('data-id', 'fil:' + i + '/' + f.nome);
+      if (f.fuori) {
+        var d = (M.doppi || []).filter((x) => x.nome === f.nome)[0];
+        b.title = T('file_fuori_titolo', d ? d.tenuta : '');
+        b.setAttribute('aria-disabled', 'true');
+      } else {
+        b.addEventListener('click', () => {
+          var e = M.entita.filter((x) => x.file === f.nome)[0];
+          var k = M.csc.filter((x) => x.file === f.nome)[0];
+          if (e) scegliEntita(e.nome, null); else if (k) scegliCsc(k.nome);
+          if (!c.selezionata) invia({azione: 'cartella_scegli', indice: String(i)});
+        });
+      }
+      g.appendChild(b);
+    });
+    box.appendChild(g);
+  });
+}
+function mostraDoppi() {
+  var dd = (M && M.doppi) || [];
+  if (dd.length === 0) return;
+  var a = $('avviso');
+  a.hidden = false;
+  a.textContent = dd.map((d) => T('doppio_avviso', d.nome, d.tenuta, d.fuori)).join('\n');
+}
+function apriChiudiCartelle(apri) {
+  $('cartelle-riquadro').hidden = !apri;
+  ridisegnaCartelle();
+}
+$('b-cartelle').addEventListener('click', () => apriChiudiCartelle(!cartelleAperto()));
+$('b-cartelle-chiudi').addEventListener('click', () => apriChiudiCartelle(false));
+$('b-cartella-aggiungi').addEventListener('click', () => invia({azione: 'cartella_aggiungi', indice: '0'}));
+$('b-cartella-togli').addEventListener('click', () => {
+  var i = (M.cartelle || []).findIndex((c) => c.selezionata);
+  if (i >= 0 && M.cartelle.length > 1) invia({azione: 'cartella_togli', indice: String(i)});
+});
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && cartelleAperto()) apriChiudiCartelle(false); });
 
 // ---- l'ultima cosa: le etichette fisse nella lingua della pagina (<html lang>)
 applicaLingua();

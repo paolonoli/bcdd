@@ -3,6 +3,7 @@
 # 007:2:1 edfintipi: i tipi dell'interfaccia fra `edfinestra` e il livello di piattaforma. Il livello è uno solo per eseguibile:
 # `edgtkfin` (GTK3 + WebKit2GTK 4.1, Linux) oppure `edwebview2` (WebView2, Windows); entrambi offrono le stesse procedure, le sole che
 # `edfinestra` usa per la finestra, la vista web e i processi. Nessuna chiusura: gli ascoltatori sono procedure `nimcall` senza ambiente.
+import std/strutils
 type
   RispostaJs* = proc(valore: string, haValore: bool, errore: string, dato: int) {.nimcall.}
     ## Come è finita una valutazione di JavaScript nella pagina: `valore` è il risultato in testo (se `haValore`), `errore` il messaggio
@@ -21,3 +22,23 @@ type
     html*: string                                   ## la pagina, senza i programmi JavaScript
     script*: seq[string]                            ## i programmi JavaScript da eseguire a pagina costruita, in ordine
     dimensioniProva*: string                        ## solo la versione di prova: "LxA" (BCDD_EDITOR_PROVA_DIM), vuoto per quella di partenza
+
+  Scelta* = object
+    ## La scelta della finestra di cartelle. `ok` falso: il display non si apre. `cartelle`: i percorsi locali scelti (vuoto = annullato).
+    ## `rifiutate`: le cartelle scelte che non hanno un percorso locale (di rete e non montate), con l'indirizzo che il sistema dà.
+    ok*: bool
+    cartelle*: seq[string]
+    rifiutate*: seq[string]
+
+proc dividiElenco*(s: string): seq[string] =
+  ## L'elenco delle cartelle di un gancio di prova: separate da `|`, senza voci vuote.
+  for p in s.split('|'):
+    if p.len > 0: result.add p
+
+proc sceltaDaGancio*(finta: string): Scelta =
+  ## Solo la versione di prova: la scelta dell'ambiente (cartelle separate da `|`; `-` annulla; una voce che comincia con `!` è una cartella
+  ## senza percorso locale, come una di rete non montata).
+  result.ok = true
+  if finta == "-": return
+  for p in dividiElenco(finta):
+    if p[0] == '!': result.rifiutate.add p[1 .. ^1] else: result.cartelle.add p

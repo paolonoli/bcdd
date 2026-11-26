@@ -2659,7 +2659,7 @@ block lingue:
     let r = runExe(edProva, @["--lang", "fr", "--dir", fixLingue], root, envPulito([("BCDD_LANG", ""), ("XDG_CONFIG_HOME", vuota)]))
     rec("L-E3", "--lang fr: codice 2 e il messaggio nella lingua che varrebbe senza l'opzione", r.code == 2 and "--lang accepts it or en: fr" in r.errout, r.errout)
     let r2 = runExe(edProva, @["--lang", "en", "--x"], root, envPulito([("XDG_CONFIG_HOME", vuota)]))
-    rec("L-E3", "argomento sconosciuto: la riga d'uso con --lang (it con BCDD_LANG=it)", r2.code == 2 and r2.errout.startsWith("uso: bcdd-editor [--lang it|en] [--dir CARTELLA] [NOME]"), r2.errout)
+    rec("L-E3", "argomento sconosciuto: la riga d'uso con --lang (it con BCDD_LANG=it)", r2.code == 2 and r2.errout.startsWith("uso: bcdd-editor [--lang it|en] [--dir CARTELLA]... [NOME]"), r2.errout)
 
   # --- L-E4: il comando della lingua è spento con modifiche non salvate e con un giro di Completa aperto
   block:
@@ -2904,7 +2904,7 @@ block:
 if not xvfbOk:
   senzaXvfb("AC-249", "sessione con Xvfb")
 else:
-  let titoloScelta = "Scegli la cartella dei file CSC"
+  let titoloScelta = "Scegli una o più cartelle con i file CSC"
   block:
     # (a) la finestra compare, parte dalla cartella ricordata (se c'è ancora), e Esc annulla con codice 0 e senza messaggi
     let cartellaA = copiaCartella(root / "prove" / "f3" / "luce")
@@ -2973,6 +2973,131 @@ else:
     let codice = s.p.waitForExit(10000)
     rec("AC-249", "--dir con una cartella che non c'è: codice 2 e nessuna cartella ricordata", codice == 2 and not fileExists(s.dir / "xdg_config" / "bcdd-editor" / "cartella"), "codice " & $codice)
     s.finisci()
+
+# 080:11:1 AC-250: più cartelle, tutte uguali; la finestra di scelta moderna
+if not xvfbOk:
+  senzaXvfb("AC-250", "sessione con Xvfb")
+else:
+  let luce = root / "prove" / "f3" / "luce"
+  proc cartellaAltra(): string =
+    ## Una cartella con un solo file, `Altra.csc`, scritto da `bcdd new`.
+    result = newWd0()
+    discard runBcdd(@["new", "Altra"], result)
+  proc cartellaDoppia(): string =
+    ## Una cartella con un file che ha lo stesso nome di uno della cartella `luce`.
+    result = newWd0()
+    copyFile(luce / "Pulsante.csc", result / "Pulsante.csc")
+  proc sonde250(s: Sess): seq[string] = leggiSe(s.trace).splitLines().filterIt("sonda Q:" in it).mapIt(it[it.find("sonda Q:") + 8 .. ^1])
+  block:
+    # (a) due --dir: la finestra le mostra, ogni check le riceve tutte nell'ordine, l'insieme è ricordato, il file nuovo nasce nella cartella evidenziata
+    let a = copiaCartella(luce)
+    let b = cartellaAltra()
+    var s = nuovaSessione()
+    s.avviaEditor(@["--lang", "it", "--dir", a, "--dir", b, "LuceScale"], root,
+      @[("BCDD_EDITOR_PROVA_CLIC", "@b-cartelle|?cartelle-elenco|?cartelle-nota|#car:1|?cartelle-nota|@b-nuova|=f-nome:Nuova|=f-scopo:una prova|@f-ok")])
+    let fine = attendi(s.trace, "pagina 3", 40)
+    rec("AC-250", "due --dir: l'editor si apre, titolo con la prima cartella e «+1»", attendi(s.trace, "pagina 1", 20) and trovaFinestra(display, "bcdd-editor: " & a & " \\+1", 5).len > 0, leggiSe(s.trace))
+    rec("AC-250", "...e ricorda le due cartelle, una per riga", leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") == a & "\n" & b & "\n", "[" & leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") & "]")
+    let l = righe(s.lanci)
+    rec("AC-250", "il check di un file della prima cartella riceve tutte le cartelle, nell'ordine (`.` per la sua)",
+      l.anyIt(it == "check --json --dir . --dir " & b & " LuceScale.csc"), $l)
+    rec("AC-250", "il check del file della seconda cartella: la prima per percorso, la sua `.`",
+      l.anyIt(it == "check --json --dir " & a & " --dir . Altra.csc"), $l)
+    let q = sonde250(s)
+    rec("AC-250", "l'elenco è raggruppato per cartella: i file di ognuna sotto la sua",
+      q.len >= 1 and q[0].find(a.lastPathPart) >= 0 and q[0].find("LuceScale.csc") > q[0].find(a.lastPathPart) and q[0].find(b.lastPathPart) > q[0].find("LuceScale.csc") and
+      q[0].find("Altra.csc") > q[0].find(b.lastPathPart), $q)
+    rec("AC-250", "la nota dice la cartella evidenziata (la prima), poi la seconda dopo il clic",
+      q.len >= 3 and ("nella cartella evidenziata: " & a) in q[1] and ("nella cartella evidenziata: " & b) in q[2], $q)
+    rec("AC-250", "il file nuovo nasce nella cartella selezionata (la seconda), non nella prima", fine and fileExists(b / "Nuova.csc") and not fileExists(a / "Nuova.csc"), cut(leggiSe(s.trace), 600))
+    rec("AC-250", "...e `save` lo scrive con la cartella corrente della seconda", l.anyIt(it == "save Nuova.csc --expect nuovo"), $l)
+    s.finisci()
+  block:
+    # (b) «Aggiungi cartella…» (gancio di prova): l'insieme cresce, è ricordato; un nome doppio è tenuto una volta sola e c'è l'avviso
+    let a = copiaCartella(luce)
+    let c = cartellaDoppia()
+    var s = nuovaSessione()
+    s.avviaEditor(@["--lang", "it", "--dir", a, "LuceScale"], root,
+      @[("BCDD_EDITOR_PROVA_AGGIUNGI", c & "|" & a), ("BCDD_EDITOR_PROVA_CLIC", "@b-cartelle|!b-cartella-togli|@b-cartella-aggiungi|?cartelle-elenco|?avviso|?esito|!b-cartella-togli")])
+    discard attendi(s.trace, "pagina 2", 40)
+    sleep(300)
+    let q = sonde250(s)
+    rec("AC-250", "con una cartella sola «Togli cartella» è spento", q.len >= 1 and "spento" in q[0], $q)
+    rec("AC-250", "«Aggiungi cartella…» aggiunge la cartella nuova; quella già nell'elenco è rifiutata con una frase",
+      q.len >= 4 and (c.lastPathPart) in q[1] and ("«" & a & "» è già nell'elenco") in q[3], $q)
+    rec("AC-250", "il file con lo stesso nome è lasciato fuori e l'avviso lo dice, con la cartella tenuta e quella lasciata fuori",
+      q.len >= 3 and "Pulsante.csc è in più cartelle" in q[2] and ("si usa quello in " & a) in q[2] and ("Quello in " & c & " non si usa") in q[2], $q)
+    rec("AC-250", "...e `bcdd` controlla Pulsante.csc una volta sola (quello della prima cartella)", righe(s.lanci).filterIt(it.endsWith(" Pulsante.csc") and c in it).len == 1 and not righe(s.lanci).anyIt(it.contains("--dir " & a & " --dir .")), $righe(s.lanci))
+    rec("AC-250", "...e «Togli cartella» ora è acceso", q.len >= 5 and "acceso" in q[4], $q)
+    rec("AC-250", "l'insieme ricordato ha le due cartelle", leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") == a & "\n" & c & "\n", "[" & leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") & "]")
+    s.finisci()
+  block:
+    # (c) «Togli cartella» toglie la evidenziata e riscrive l'insieme; l'ultima non si toglie
+    let a = copiaCartella(luce)
+    let b = cartellaAltra()
+    var s = nuovaSessione()
+    s.avviaEditor(@["--lang", "it", "--dir", a, "--dir", b, "LuceScale"], root,
+      @[("BCDD_EDITOR_PROVA_CLIC", "@b-cartelle|#car:1|@b-cartella-togli|?cartelle-elenco|!b-cartella-togli")])
+    discard attendi(s.trace, "pagina 3", 40)
+    sleep(300)
+    let q = sonde250(s)
+    rec("AC-250", "togliendo la seconda restano la prima e i suoi file", q.len >= 2 and a.lastPathPart in q[0] and b.lastPathPart notin q[0] and "LuceScale.csc" in q[0], $q)
+    rec("AC-250", "...l'insieme ricordato è la sola prima cartella e i file della seconda non sono toccati",
+      leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") == a & "\n" and fileExists(b / "Altra.csc"), "[" & leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") & "]")
+    rec("AC-250", "...e l'ultima cartella non si toglie (comando spento)", q.len >= 2 and "spento" in q[1], $q)
+    s.finisci()
+  block:
+    # (d) la finestra di scelta all'avvio con più cartelle (gancio): tutte aperte e ricordate; una senza percorso locale è rifiutata con un messaggio
+    let a = copiaCartella(luce)
+    let b = cartellaAltra()
+    var s = nuovaSessione()
+    s.avviaEditor(@["--lang", "it"], root, @[("BCDD_EDITOR_PROVA_CARTELLA", a & "|" & b)])
+    rec("AC-250", "la scelta di due cartelle le apre tutte e due, nell'ordine, e le ricorda",
+      attendi(s.trace, "pagina 1", 20) and leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") == a & "\n" & b & "\n", cut(leggiSe(s.trace)))
+    s.finisci()
+    var s2 = nuovaSessione()
+    s2.avviaEditor(@["--lang", "it"], root, @[("BCDD_EDITOR_PROVA_CARTELLA", a & "|!smb://server/condivisa")])
+    let codice = s2.p.waitForExit(10000)
+    let err = leggiSe(s2.dir / "errori")
+    rec("AC-250", "una cartella senza percorso locale: messaggio chiaro, codice 2, niente aperto né ricordato",
+      codice == 2 and "«smb://server/condivisa» non si può usare perché" in err and "pagina 1" notin leggiSe(s2.trace) and not fileExists(s2.dir / "xdg_config" / "bcdd-editor" / "cartella"),
+      "codice " & $codice & " [" & err & "]")
+    s2.finisci()
+  block:
+    # (e) il file di una riga di vale come insieme di una cartella; una cartella ricordata sparita non si riapre
+    let a = copiaCartella(luce)
+    var s = nuovaSessione()
+    createDir s.dir / "xdg_config" / "bcdd-editor"
+    writeFile(s.dir / "xdg_config" / "bcdd-editor" / "cartella", tmpBase / "sparita" & "\n" & a & "\n")
+    s.avviaEditor(@[], root)
+    rec("AC-250", "la finestra di scelta parte dalla prima cartella ricordata che esiste ancora", attendi(s.trace, "scelta cartella iniziale=" & a & "\n", 8), leggiSe(s.trace))
+    s.finisci()
+  block:
+    # (f) il percorso scritto a mano con Ctrl+L, nella finestra GTK vera: la cartella si apre e si ricorda
+    let a = copiaCartella(luce)
+    var s = nuovaSessione()
+    s.avviaEditor(@["--lang", "it"], root)
+    let w = trovaFinestra(display, "Scegli una o più cartelle con i file CSC", 10)
+    if w.len > 0:
+      discard xdo(display, @["windowfocus", "--sync", w])
+      discard xdo(display, @["key", "ctrl+l"])
+      sleep(300)
+      discard xdo(display, @["type", "--delay", "20", a])
+      sleep(300)
+      discard xdo(display, @["key", "Return"])
+      sleep(500)
+      if not attendi(s.trace, "pagina 1", 3): discard xdo(display, @["key", "Return"])
+    rec("AC-250", "GTK: Ctrl+L, il percorso scritto, Invio: l'editor si apre su quella cartella e la ricorda",
+      w.len > 0 and attendi(s.trace, "pagina 1", 15) and leggiSe(s.dir / "xdg_config" / "bcdd-editor" / "cartella") == a & "\n", "finestra " & w & " " & cut(leggiSe(s.trace)))
+    s.finisci()
+  # sorgenti: la finestra moderna di Windows e le opzioni di GTK
+  let ed250 = root / "editor"
+  let pw = readFile(ed250 / "edprocwin.nim")
+  let gt = readFile(ed250 / "edgtkfin.nim")
+  rec("AC-250", "Windows: IFileOpenDialog con FOS_PICKFOLDERS, FOS_FORCEFILESYSTEM e FOS_ALLOWMULTISELECT, risultati con GetResults; niente SHBrowseForFolderW",
+    "fosPickFolders" in pw and "fosForceFileSystem" in pw and "fosAllowMultiSelect" in pw and "27)(d" in pw and "sigdnFileSysPath" in pw and "SHBrowseForFolderW" notin pw, "")
+  rec("AC-250", "GTK: scelta multipla e local-only spento; il percorso locale con g_file_get_path, la cartella senza percorso è rifiutata",
+    "gtk_file_chooser_set_select_multiple(d, 1)" in gt and "gtk_file_chooser_set_local_only(d, 0)" in gt and "g_file_get_path" in gt and "rifiutate.add" in gt, "")
 
 spegni(xvfb)
 removeDir(tmpBase)

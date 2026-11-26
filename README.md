@@ -84,8 +84,11 @@ The folders `prove/`, `esempi/` and `tests/` hold the test material: small CSC f
 
 ## Licence
 
-Source code: BSD 3-Clause, see [`LICENSE`](LICENSE). The documentation (the grammar in this repository, the manual and the
-grammar on the site) is under CC BY 4.0, see [`LICENSE_DOCS.md`](LICENSE_DOCS.md). Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
+Source code: BSD 3-Clause, see [`LICENSE`](LICENSE). The documentation is under CC BY 4.0, see
+[`LICENSE_DOCS.md`](LICENSE_DOCS.md): the manual ([`MANUALE_BCDD.md`](MANUALE_BCDD.md) in Italian,
+[`MANUALE_BCDD.en.md`](MANUALE_BCDD.en.md) in English), the grammar (`GRAMMATICA_F1.md`, `GRAMMATICA_F1.en.md`), and the
+profiles of the Claude Code subagents in [`claude-code/agents/`](claude-code/agents/) (`bcdd-csc-author`,
+`bcdd-csc-reviewer`), which write and review CSC files and look for the grammar at the root of this repository. Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
 own licences. The BCDD and CSC logos in `docs/logos/` are Copyright 2026 Noli Paolo, all rights reserved: they are not
 covered by the BSD licence.
 

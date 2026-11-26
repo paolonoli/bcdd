@@ -18,7 +18,8 @@ type
     lingua*: string         # "it" | "en" se c'è `--lang` valido come primo argomento, altrimenti ""
     linguaErrata*: bool     # `--lang` con un valore che non è it né en (anche vuoto)
     erroreLingua*: string   # quel valore
-    dir*: string
+    dir*: string            # la prima cartella (vuota se si sceglie con la finestra)
+    dirs*: seq[string]      # tutte le `--dir`, nell'ordine scritto
     scegli*: bool           # nessun `--dir`: la cartella si sceglie con la finestra del sistema (dir vuota)
     nome*: string           # l'entità da aprire; vuoto = il banco mostra le entità della cartella
 
@@ -38,8 +39,9 @@ proc nomeValido*(s: string): bool =
   true
 
 proc leggiArgomenti*(args: seq[string]): Argomenti =
-  ## 001:2:1 `[--lang it|en] [--dir CARTELLA] [NOME]` (senza `--dir` si sceglie la cartella); --lang solo come primi due argomenti (come per `bcdd`);
-  ## --dir una volta sola e con la cartella dopo; NOME al più uno.
+  ## 001:2:1 `[--lang it|en] [--dir CARTELLA]... [NOME]` (senza `--dir` si sceglie la cartella: `--dir` si ripete, come per `bcdd`,
+  ## ma la stessa cartella due volte è un uso sbagliato); --lang solo come primi due argomenti (come per `bcdd`);
+  ## ogni --dir con la cartella dopo; NOME al più uno.
   var i = 0
   if args.len > 0 and args[0] == "--lang":
     if args.len < 2 or args[1] notin ["it", "en"]:
@@ -53,9 +55,9 @@ proc leggiArgomenti*(args: seq[string]): Argomenti =
   while i < args.len:
     let a = args[i]
     if a == "--dir":
-      if haDir or i + 1 >= args.len: return
+      if i + 1 >= args.len or args[i + 1].len == 0 or args[i + 1] in result.dirs: return
       haDir = true
-      result.dir = args[i + 1]
+      result.dirs.add args[i + 1]
       i += 2
     elif a.startsWith("-"):
       return
@@ -64,13 +66,25 @@ proc leggiArgomenti*(args: seq[string]): Argomenti =
       haNome = true
       result.nome = a
       inc i
-  if haDir and result.dir.len == 0: return
+  if haDir: result.dir = result.dirs[0]
   result.scegli = not haDir
   result.ok = true
 
-proc argomentiCheck*(file: string): seq[string] =
-  ## 001:2:2 Gli argomenti di `check` per un file della cartella di lavoro (l'editor ci entra con chdir): check --json --dir . FILE.
-  @["check", "--json", "--dir", ".", file]
+proc percorsoPulito*(d: string): string =
+  ## 001:2:7 Il percorso assoluto di una cartella, senza separatori in fondo (la radice di un'unità o di `/` resta com'è).
+  result = absolutePath(d)
+  while result.len > 1 and result[^1] in {'/', '\\'} and not (result.len == 3 and result[1] == ':'): result.setLen(result.len - 1)
+
+proc argomentiDir*(cartelle: seq[string], propria: int): seq[string] =
+  ## 001:2:6 Le `--dir` di `check` e di `ratify` per il file della cartella `propria` (indice in `cartelle`), nell'ordine dell'elenco: `.` per
+  ## la cartella del file (è la cartella corrente del lancio), il percorso assoluto per le altre. Con una cartella sola: `--dir .`, come prima.
+  for i, d in cartelle:
+    result.add "--dir"
+    result.add (if i == propria: "." else: d)
+
+proc argomentiCheck*(file: string, cartelle: seq[string] = @["."], propria = 0): seq[string] =
+  ## 001:2:2 Gli argomenti di `check` per un file: check --json --dir ... FILE (cartella corrente = cartella del file).
+  @["check", "--json"] & argomentiDir(cartelle, propria) & @[file]
 
 proc messaggioVersione*(bcdd, forma, versione, file: string): string =
   tx(kVersioneNonLetta, formaAttesa, versioneAttesa, bcdd, forma, versione, file)
@@ -127,25 +141,36 @@ proc ricordaLingua*(l: Lingua): bool =
 
 proc fileCartella*(): string = cartellaConfigurazione() / "bcdd-editor" / "cartella"
 
-proc leggiCartellaRicordata*(): string =
-  ## 001:5:5 L'ultima cartella aperta, se il file c'è e la cartella esiste ancora; altrimenti "".
+proc leggiCartelleRicordate*(): seq[string] =
+  ## 001:5:5 Le cartelle dell'ultima apertura, una per riga, nell'ordine; si tengono solo quelle che esistono ancora, ognuna una volta
+  ## sola. File assente o illeggibile: nessuna. Il file di una riga di è un insieme di una cartella.
   try:
-    let s = readFile(fileCartella()).strip(chars = {'\n', '\r'})
-    if s.len > 0 and dirExists(s): s else: ""
+    for r in readFile(fileCartella()).split('\n'):
+      let d = r.strip(chars = {'\r'})
+      if d.len > 0 and dirExists(d) and d notin result: result.add d
   except CatchableError:
-    ""
+    discard
 
-proc ricordaCartella*(dir: string): bool =
-  ## 001:5:6 Scrive il percorso assoluto + LF con un file temporaneo e la sostituzione, accanto alla lingua; false se non ci riesce.
+proc leggiCartellaRicordata*(): string =
+  ## 001:5:5 La prima delle cartelle ricordate (da dove parte la finestra di scelta); "" se non ce n'è.
+  let l = leggiCartelleRicordate()
+  if l.len > 0: l[0] else: ""
+
+proc ricordaCartelle*(dirs: seq[string]): bool =
+  ## 001:5:6 Scrive i percorsi assoluti, uno per riga, con LF, con un file temporaneo e la sostituzione, accanto alla lingua; false se non ci riesce.
   try:
     let f = fileCartella()
     createDir(parentDir(f))
     let tmp = f & ".tmp"
-    writeFile(tmp, absolutePath(dir) & "\n")
+    var t = ""
+    for d in dirs: t.add absolutePath(d) & "\n"
+    writeFile(tmp, t)
     moveFile(tmp, f)
     true
   except CatchableError:
     false
+
+proc ricordaCartella*(dir: string): bool = ricordaCartelle(@[dir])
 
 proc leggiUscita*(bcdd, file, output: string, codice: int): Lettura =
   ## 001:2:3 Controlla forma, versione e i valori di `stato_di`. Con codice 0 o 1 l'uscita è un oggetto JSON.

@@ -287,3 +287,16 @@ body:not(.remoto) .riq-clic:hover { text-decoration: underline; }
 .riq-nome { padding: 0 var(--sp-2); text-decoration: underline; color: var(--text); }
 .riq-ext { display: flex; flex-direction: column; gap: var(--sp-1); margin-top: var(--sp-2); }
 .riq-ext .codice { padding: var(--sp-1) var(--sp-3); min-height: 0; }
+
+/* il riquadro delle cartelle di lavoro, sopra tutto il resto, senza cambiare la disposizione delle tre zone */
+.cartelle-riquadro { position: fixed; left: var(--sp-4); top: 96px; z-index: 20; width: min(460px, calc(100vw - 2 * var(--sp-4))); max-height: calc(100vh - 140px); overflow-y: auto; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-4); background: var(--surface); border: 1px solid var(--border2); border-radius: var(--r-l); }
+.cartelle-testa { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-2); }
+.cartelle-elenco { display: flex; flex-direction: column; gap: var(--sp-2); }
+.car-gruppo { display: flex; flex-direction: column; gap: 2px; padding: var(--sp-2); border: 1px solid var(--border); border-radius: var(--r); }
+.car-testa { text-align: left; font-weight: 600; font-size: var(--t-b); padding: 2px var(--sp-2); border: 1px solid transparent; border-radius: var(--r); background: transparent; color: var(--text); cursor: pointer; overflow-wrap: anywhere; }
+.car-testa.on { background: var(--text); color: var(--surface); }
+.car-percorso { overflow-wrap: anywhere; padding: 0 var(--sp-2); }
+.car-file { text-align: left; font-size: var(--t-s); padding: 1px var(--sp-2) 1px var(--sp-4); border: none; background: transparent; color: var(--text); cursor: pointer; overflow-wrap: anywhere; }
+.car-file.fuori { color: var(--dis-t); cursor: not-allowed; text-decoration: line-through; }
+.car-vuoto { padding: 0 var(--sp-4); }

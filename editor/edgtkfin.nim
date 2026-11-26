@@ -219,29 +219,43 @@ proc iniziaGtk(): bool =
   gtkIniziato = true
   true
 
-proc scegliCartella*(titolo, annulla, scegli, iniziale: string): tuple[ok: bool, cartella: string] =
-  ## la finestra di scelta della cartella del sistema (GTK, SELECT_FOLDER), che parte da `iniziale` se non è vuota.
-  ## ok=false: GTK non apre il display. ok=true e cartella "": annullato.
+proc scegliCartelle*(titolo, annulla, scegli, iniziale: string, aggiungi = false): Scelta =
+  ## la finestra di scelta delle cartelle del sistema (GTK, SELECT_FOLDER, scelta multipla, anche posti che non sono locali:
+  ## quelli di gvfs si danno col percorso locale della FUSE). Parte da `iniziale` se non è vuota. `ok` falso: GTK non apre il display.
   when defined(bcddEditorProva):
-    # solo la versione di prova: BCDD_EDITOR_PROVA_CARTELLA=<cartella> sceglie senza finestra, `-` annulla
-    let finta = getEnv("BCDD_EDITOR_PROVA_CARTELLA")
+    # solo la versione di prova: la variabile BCDD_EDITOR_PROVA_CARTELLA (BCDD_EDITOR_PROVA_AGGIUNGI con `aggiungi`) (cartelle separate da `|`) sceglie senza finestra, `-` annulla
+    let finta = getEnv(if aggiungi: "BCDD_EDITOR_PROVA_AGGIUNGI" else: "BCDD_EDITOR_PROVA_CARTELLA")   # nomi solo nella versione di prova
     if finta.len > 0:
       traccia("scelta finta " & finta)
-      return (true, if finta == "-": "" else: finta)
-  if not iniziaGtk(): return (false, "")
+      return sceltaDaGancio(finta)
+  if not iniziaGtk(): return Scelta()
   traccia("scelta cartella iniziale=" & iniziale)
+  result.ok = true
   let d = gtk_file_chooser_dialog_new(cstring(titolo), nil, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
     cstring(annulla), GTK_RESPONSE_CANCEL, cstring(scegli), GTK_RESPONSE_ACCEPT, nil)
-  if iniziale.len > 0: discard gtk_file_chooser_set_current_folder(d, cstring(iniziale))
-  var cartella = ""
+  if finestra != nil: gtk_window_set_transient_for(d, finestra)      # «Aggiungi cartella»: la finestra dell'editor è già aperta
+  gtk_file_chooser_set_select_multiple(d, 1)
+  gtk_file_chooser_set_local_only(d, 0)
+  # senza cartella ricordata GTK partirebbe dai «Recenti», dove il comando «Scegli» è spento e il percorso scritto non porta da nessuna parte: si parte dalla cartella personale
+  discard gtk_file_chooser_set_current_folder(d, cstring(if iniziale.len > 0: iniziale else: getHomeDir()))
   if gtk_dialog_run(d) == GTK_RESPONSE_ACCEPT:
-    let f = gtk_file_chooser_get_filename(d)
-    if f != nil:
-      cartella = $f
-      g_free(f)
+    let lista = gtk_file_chooser_get_files(d)
+    var n = lista
+    while n != nil:
+      let p = g_file_get_path(n.data)
+      if p != nil:
+        result.cartelle.add $p
+        g_free(p)
+      else:
+        let u = g_file_get_uri(n.data)
+        if u != nil:
+          result.rifiutate.add $u
+          g_free(u)
+      g_object_unref(n.data)
+      n = n.next
+    g_slist_free(lista)
   gtk_widget_destroy(d)
   while gtk_events_pending() != 0: discard gtk_main_iteration()    # la finestra sparisce prima che l'editor ne apra un'altra
-  (true, cartella)
 
 proc mostraErrore*(titolo, testo: string) =
   ## su Linux gli errori d'avvio vanno solo sullo standard error (già scritti da chi chiama); su Windows anche in una finestra.

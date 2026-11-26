@@ -70,6 +70,9 @@ proc gtk_widget_override_background_color*(w: pointer, state: cint, c: ptr GdkRG
 proc gtk_widget_show_all*(w: pointer) {.importc, cdecl.}
 
 # 001:10:1 la finestra di scelta della cartella
+type GSListNodo* = object
+  data*: pointer
+  next*: ptr GSListNodo
 const
   GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER* = 2.cint
   GTK_RESPONSE_CANCEL* = -6.cint
@@ -79,6 +82,13 @@ proc gtk_file_chooser_dialog_new*(title: cstring, parent: pointer, action: cint,
 proc gtk_dialog_run*(d: pointer): cint {.importc, cdecl.}
 proc gtk_file_chooser_set_current_folder*(c: pointer, path: cstring): cint {.importc, cdecl.}
 proc gtk_file_chooser_get_filename*(c: pointer): cstring {.importc, cdecl.}
+proc gtk_window_set_transient_for*(w, padre: pointer) {.importc, cdecl.}
+proc gtk_file_chooser_set_select_multiple*(c: pointer, v: cint) {.importc, cdecl.}
+proc gtk_file_chooser_set_local_only*(c: pointer, v: cint) {.importc, cdecl.}
+proc gtk_file_chooser_get_files*(c: pointer): ptr GSListNodo {.importc, cdecl.}      # una GSList di GFile (da liberare)
+proc g_file_get_path*(f: pointer): cstring {.importc, cdecl.}                        # nil se il file non ha un percorso locale (gvfs non montato)
+proc g_file_get_uri*(f: pointer): cstring {.importc, cdecl.}
+proc g_slist_free*(l: ptr GSListNodo) {.importc, cdecl.}
 proc gtk_widget_destroy*(w: pointer) {.importc, cdecl.}
 proc gtk_events_pending*(): cint {.importc, cdecl.}
 proc gtk_main_iteration*(): cint {.importc, cdecl.}

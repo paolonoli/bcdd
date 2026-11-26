@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use BCDD, please cite it using the metadata below."
+type: software
+title: "BCDD: Behavioural Contract-Driven Design"
+abstract: >-
+  BCDD is a textual specification language whose unit is the Capability State Contract (CSC): one boundary of a
+  system described through requests, input and output events, observable states, and guarantees and assumptions,
+  each stating how it is verified. The tool bcdd checks form, names, types and the structural closure of entities
+  made of parts; bcdd-editor is a graphical editor around it.
+authors:
+  - family-names: Noli
+    given-names: Paolo
+version: "1.0-beta.1"
+date-released: "2026-11-26"
+license:
+  - BSD-3-Clause
+  - CC-BY-4.0
+repository-code: "https://github.com/paolonoli/bcdd"
+url: "https://bcdd.nolisoft.it/"
+keywords:
+  - behavioural specification
+  - contract-based design
+  - specification languages
+  - AI-assisted software engineering
+  - compositional design

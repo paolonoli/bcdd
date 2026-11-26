@@ -159,50 +159,92 @@ proc collegaConsolePadre*() =
       else: cpPrima = 0
     except CatchableError: discard
 
-# 009:2:1 la scelta della cartella e i messaggi d'avvio di un programma senza console. Funzioni di shell32/ole32/user32 già collegate (-lshell32 -lole32 -luser32).
+# 009:2:1 la scelta delle cartelle e i messaggi d'avvio di un programma senza console. Funzioni di ole32/shell32/user32 già collegate
+# (-lole32 -lshell32 -luser32). La scelta è la finestra moderna di Esplora file (`IFileOpenDialog`, solo cartelle, anche di rete, anche più d'una),
+# dichiarata qui a mano (interfacce COM per tabella di funzioni; nessuna libreria): ogni interfaccia è un puntatore a un puntatore alla tabella.
 type
-  BrowseInfoW = object
-    hwndOwner: Handle
-    pidlRoot: pointer
-    nomeVisto: ptr Utf16Char
-    titolo: ptr Utf16Char
-    flags: uint32
-    cb: proc(hwnd: Handle, msg: uint32, lp, dati: int): int32 {.stdcall.}
-    lParam: int
-    immagine: int32
+  Guid = object
+    d1: uint32
+    d2, d3: uint16
+    d4: array[8, uint8]
+  Com = ptr ptr UncheckedArray[pointer]       # un'interfaccia COM: `com[][i]` è la i-esima funzione della tabella
 
-proc shBrowseForFolderW(bi: ptr BrowseInfoW): pointer {.stdcall, dynlib: "shell32", importc: "SHBrowseForFolderW".}
-proc shGetPathFromIDListW(pidl: pointer, path: ptr Utf16Char): WINBOOL {.stdcall, dynlib: "shell32", importc: "SHGetPathFromIDListW".}
+const
+  clsidFileOpenDialog = Guid(d1: 0xDC1C5A9C'u32, d2: 0xE88A'u16, d3: 0x4DDE'u16, d4: [0xA5'u8, 0xA1, 0x60, 0xF8, 0x2A, 0x20, 0xAE, 0xF7])
+  iidFileOpenDialog = Guid(d1: 0xD57C7288'u32, d2: 0xD4AD'u16, d3: 0x4768'u16, d4: [0xBE'u8, 0x02, 0x9D, 0x96, 0x95, 0x32, 0xD9, 0x60])
+  iidShellItem = Guid(d1: 0x43826D1E'u32, d2: 0xE718'u16, d3: 0x42EE'u16, d4: [0xBC'u8, 0x55, 0xA1, 0xE2, 0x61, 0xC3, 0x7B, 0xFE])
+  fosPickFolders = 0x20'u32
+  fosForceFileSystem = 0x40'u32
+  fosAllowMultiSelect = 0x200'u32
+  fosPathMustExist = 0x800'u32
+  sigdnFileSysPath = 0x80058000'u32
+  clsctxInprocServer = 1'u32
+
+type
+  FnQI = proc(self: Com, iid: ptr Guid, ris: ptr pointer): int32 {.stdcall.}
+  FnRelease = proc(self: Com): uint32 {.stdcall.}
+  FnShow = proc(self: Com, owner: Handle): int32 {.stdcall.}
+  FnGetOptions = proc(self: Com, o: ptr uint32): int32 {.stdcall.}
+  FnSetOptions = proc(self: Com, o: uint32): int32 {.stdcall.}
+  FnSetFolder = proc(self: Com, item: Com): int32 {.stdcall.}
+  FnSetStringa = proc(self: Com, s: ptr Utf16Char): int32 {.stdcall.}
+  FnGetResults = proc(self: Com, ris: ptr Com): int32 {.stdcall.}
+  FnGetCount = proc(self: Com, n: ptr uint32): int32 {.stdcall.}
+  FnGetItemAt = proc(self: Com, i: uint32, ris: ptr Com): int32 {.stdcall.}
+  FnGetDisplayName = proc(self: Com, sigdn: uint32, ris: ptr ptr Utf16Char): int32 {.stdcall.}
+
+proc coCreateInstance(clsid: ptr Guid, esterno: pointer, ctx: uint32, iid: ptr Guid, ris: ptr pointer): int32 {.stdcall, dynlib: "ole32", importc: "CoCreateInstance".}
+proc shCreateItemFromParsingName(percorso: ptr Utf16Char, pbc: pointer, iid: ptr Guid, ris: ptr pointer): int32 {.stdcall, dynlib: "shell32", importc: "SHCreateItemFromParsingName".}
 proc coTaskMemFree(p: pointer) {.stdcall, dynlib: "ole32", importc: "CoTaskMemFree".}
 proc oleInitialize(r: pointer): int32 {.stdcall, dynlib: "ole32", importc: "OleInitialize".}
-proc sendMessageW(h: Handle, msg: uint32, wp, lp: int): int {.stdcall, dynlib: "user32", importc: "SendMessageW".}
 proc messageBoxW(h: Handle, testo, titolo: ptr Utf16Char, tipo: uint32): int32 {.stdcall, dynlib: "user32", importc: "MessageBoxW".}
 
-var
-  cartellaIniziale: WideCStringObj      # letta dalla funzione di richiamo, che non cattura niente
-  haIniziale = false
+proc fn[T](c: Com, i: int): T = cast[T](c[][i])
+proc rilascia(c: Com) =
+  if c != nil: discard fn[FnRelease](c, 2)(c)
 
-proc alLancioScelta(hwnd: Handle, msg: uint32, lp, dati: int): int32 {.stdcall.} =
-  const bffmInitialized = 1'u32
-  const bffmSetSelectionW = 0x467'u32      # WM_USER + 103
-  if msg == bffmInitialized and haIniziale:
-    discard sendMessageW(hwnd, bffmSetSelectionW, 1, cast[int](addr cartellaIniziale[0]))
-  0
-
-proc sceltaCartellaWin*(iniziale: string): string =
-  ## La finestra standard di scelta della cartella (`SHBrowseForFolderW`, stile nuovo), che parte da `iniziale` se non è vuota.
-  ## "" se la persona annulla.
+proc sceltaCartelleWin*(titolo, scegli, iniziale: string, padre: Handle): tuple[ok: bool, cartelle: seq[string]] =
+  ## La finestra di scelta delle cartelle di Esplora file: solo cartelle del file system (anche `\\server\share\...`, scritte nella barra
+  ## dell'indirizzo), scelta multipla, parte da `iniziale` se non è vuota. `ok` falso: la finestra non si crea. Annullata: ok e nessuna cartella.
+  ## Nomi dei percorsi con `SIGDN_FILESYSPATH`: un elemento che non è del file system non entra (FOS_FORCEFILESYSTEM lo esclude già).
   discard oleInitialize(nil)
-  var nome: array[1024, Utf16Char]
-  haIniziale = iniziale.len > 0
-  if haIniziale: cartellaIniziale = newWideCString(iniziale)
-  var bi = BrowseInfoW(nomeVisto: addr nome[0], flags: 0x1'u32 or 0x40'u32, cb: alLancioScelta)   # SOLO_CARTELLE_DEL_FILE_SYSTEM | STILE_NUOVO
-  let pidl = shBrowseForFolderW(addr bi)
-  if pidl == nil: return ""
-  var percorso: array[1024, Utf16Char]
-  if shGetPathFromIDListW(pidl, addr percorso[0]) != 0:
-    result = $cast[WideCString](addr percorso[0])
-  coTaskMemFree(pidl)
+  var clsid = clsidFileOpenDialog
+  var iid = iidFileOpenDialog
+  var pd: pointer
+  if coCreateInstance(addr clsid, nil, clsctxInprocServer, addr iid, addr pd) < 0 or pd == nil: return (false, @[])
+  let d = cast[Com](pd)
+  result.ok = true
+  try:
+    var opz: uint32
+    if fn[FnGetOptions](d, 10)(d, addr opz) >= 0:
+      discard fn[FnSetOptions](d, 9)(d, opz or fosPickFolders or fosForceFileSystem or fosAllowMultiSelect or fosPathMustExist)
+    let t = newWideCString(titolo)
+    discard fn[FnSetStringa](d, 17)(d, addr t[0])             # SetTitle
+    let b = newWideCString(scegli)
+    discard fn[FnSetStringa](d, 18)(d, addr b[0])             # SetOkButtonLabel
+    if iniziale.len > 0:
+      var iidItem = iidShellItem
+      var pit: pointer
+      let w = newWideCString(iniziale)
+      if shCreateItemFromParsingName(addr w[0], nil, addr iidItem, addr pit) >= 0 and pit != nil:
+        discard fn[FnSetFolder](d, 12)(d, cast[Com](pit))      # SetFolder
+        rilascia(cast[Com](pit))
+    if fn[FnShow](d, 3)(d, padre) < 0: return                  # annullata (HRESULT_FROM_WIN32(ERROR_CANCELLED)) o non riuscita: nessuna cartella
+    var pr: Com
+    if fn[FnGetResults](d, 27)(d, addr pr) < 0 or pr == nil: return
+    var n: uint32
+    if fn[FnGetCount](pr, 7)(pr, addr n) >= 0:
+      for k in 0'u32 ..< n:
+        var item: Com
+        if fn[FnGetItemAt](pr, 8)(pr, k, addr item) < 0 or item == nil: continue
+        var nome: ptr Utf16Char
+        if fn[FnGetDisplayName](item, 5)(item, sigdnFileSysPath, addr nome) >= 0 and nome != nil:
+          result.cartelle.add $cast[WideCString](nome)
+          coTaskMemFree(nome)
+        rilascia(item)
+    rilascia(pr)
+  finally:
+    rilascia(d)
 
 proc messaggioWin*(titolo, testo: string) =
   ## Una finestra con il testo e il pulsante OK (MB_OK | MB_ICONERROR): un programma grafico non ha la console dove scrivere l'errore.

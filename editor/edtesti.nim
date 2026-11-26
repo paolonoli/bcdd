@@ -35,11 +35,11 @@ macro catalogo(body: untyped): untyped =
 catalogo:
 
   voce kUsoEditor,
-    "uso: bcdd-editor [--lang it|en] [--dir CARTELLA] [NOME]",
-    "usage: bcdd-editor [--lang it|en] [--dir FOLDER] [NAME]"
+    "uso: bcdd-editor [--lang it|en] [--dir CARTELLA]... [NOME]",
+    "usage: bcdd-editor [--lang it|en] [--dir FOLDER]... [NAME]"
   voce kScegliCartella,
-    "Scegli la cartella dei file CSC",
-    "Choose the folder containing the CSC files"
+    "Scegli una o più cartelle con i file CSC",
+    "Choose one or more folders with the CSC files"
   voce kScegliAnnulla,
     "Annulla",
     "Cancel"
@@ -616,6 +616,27 @@ catalogo:
   voce kEsciNessunaEntita,
     "bcdd-editor: nessuna entità $1 in $2",
     "bcdd-editor: no entity $1 in $2"
+  voce kCartellaSenzaPercorso,
+    "La cartella «$1» non si può usare perché questo computer non la raggiunge come una cartella sua. Di solito è una cartella di rete non collegata: collegala come unità o come cartella di rete, poi scegli di nuovo la cartella.",
+    "The folder “$1” cannot be used because this computer cannot reach it as one of its own folders. It is usually a network folder that is not connected: connect it as a drive or as a network folder, then choose the folder again."
+  voce kCartellaGiaNellElenco,
+    "La cartella «$1» è già nell'elenco.",
+    "The folder \"$1\" is already in the list."
+  voce kCartellaNonSiTrova,
+    "La cartella «$1» non si trova: controlla che esista e sia collegata.",
+    "The folder “$1” cannot be found: check that it exists and is connected."
+  voce kCartelleAggiunte,
+    "aggiunte le cartelle: $1",
+    "folders added: $1"
+  voce kCartellaAggiunta,
+    "aggiunta la cartella $1",
+    "folder added: $1"
+  voce kCartellaTolta,
+    "tolta la cartella $1 (i suoi file restano dove sono)",
+    "folder removed: $1 (its files stay where they are)"
+  voce kCartellaUltima,
+    "Deve restare almeno una cartella.",
+    "At least one folder must remain."
   voce kEsciDisplay,
     "bcdd-editor: non riesco ad aprire il display",
     "bcdd-editor: I cannot open the display"
