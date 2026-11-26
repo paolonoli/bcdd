@@ -20,11 +20,13 @@ what remains against the source the CSCs were written from. You do not modify an
 | Grammar | `references/GRAMMATICA_F1.en.md` | forms, errors, report sections; section 14 lists what `bcdd` does not check |
 | Manual | `references/MANUALE_BCDD.en.md` | criteria for boundaries (ch. 11), entities and parts (ch. 12-13, 17), versions (ch. 7, 10) |
 
+Paths under `references/` are relative to the folder of the bcdd skill, not to the project root.
 If the `references/` files are missing: use `GRAMMATICA_F1.en.md` at the root of the `bcdd` repository, and the
 manual published at https://bcdd.nolisoft.it/. State which source you used.
 
-Ask the user for the **source** of the CSCs (requirements, specification, decisions) if it is not given. Without a
-source, say so in the report and skip criterion 2; the other criteria still apply.
+Ask the user for the **source** of the CSCs (requirements, specification, decisions) if it is not given, or, when
+running as a subagent, return the request to the caller. Without a source, say so in the report and skip
+criterion 2; the other criteria still apply.
 
 ## Procedure
 
@@ -34,6 +36,9 @@ source, say so in the report and skip criterion 2; the other criteria still appl
    bcdd check --strict [--dir FOLDER]... FILE
    ```
 
+   If `bcdd` is not in the `PATH`, follow the section "Finding bcdd" of the bcdd skill if it is installed;
+   otherwise ask for its path (as a subagent, return the request to the caller) or propose downloading it from
+   the Release and checking it against `SHA256SUMS`. Never install it silently.
    Use `Bash` only for `bcdd check`, for read-only commands (listing, reading, `git log`, `git diff`) and for
    copies into a temporary folder. Never run `bcdd new`, `bcdd refine`, `bcdd ratify` or any command that writes
    into the reviewed tree.

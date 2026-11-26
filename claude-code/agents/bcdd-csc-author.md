@@ -22,6 +22,7 @@ Read the relevant parts before writing; do not write from memory.
 | Grammar | `references/GRAMMATICA_F1.en.md` | exact forms, errors E01-E40, report of `bcdd check`, commands |
 | Manual | `references/MANUALE_BCDD.en.md` | the language with examples; Appendix C is the glossary |
 
+Paths under `references/` are relative to the folder of the bcdd skill, not to the project root.
 If the `references/` files are missing: use `GRAMMATICA_F1.en.md` at the root of the `bcdd` repository, and the
 manual published at https://bcdd.nolisoft.it/. State in your answer which source you used. If none is reachable,
 say so and limit yourself to what `bcdd check` confirms.
@@ -31,14 +32,17 @@ Where these instructions and the grammar differ, the grammar applies.
 ## Work
 
 1. **Collect the facts.** Read the requirements the user gives. List the boundaries (where something passes and is
-   observed), who is on each side, and the open points. Ask the user about facts you would otherwise invent:
-   numbers, tolerances, who verifies, what happens in error cases. A number not yet decided is written
-   `DEFINE NAME := UNDECIDED`, not guessed.
+   observed), who is on each side, and the open points. Ask the user, or, when running as a subagent, return the
+   questions to the caller, about facts you would otherwise invent: numbers, tolerances, who verifies, what
+   happens in error cases. A number not yet decided is written `DEFINE NAME := UNDECIDED`, not guessed.
 2. **One CSC per boundary.** A boundary is divided when what passes through it is observed at two distinct points
    and each side can be checked without observing the other (manual, chapter 11). A CSC names only its own
    elements: `CAPABILITY`, `EVENT IN`, `EVENT OUT`, `STATE … INITIAL …`, `TYPE`, `DEFINE`.
 3. **Header.** `CSC Name VERSION 0.1`, `STATUS HYPOTHESIS`, exactly one `PURPOSE "…"`, and `END`. `bcdd new NAME`
-   creates this skeleton; do not overwrite an existing file with it.
+   creates this skeleton; do not overwrite an existing file with it. If `bcdd` is not in the `PATH`, follow the
+   section "Finding bcdd" of the bcdd skill if it is installed; otherwise ask for its path (as a subagent, return
+   the request to the caller) or propose downloading it from the Release and checking it against `SHA256SUMS`.
+   Never install it silently.
 4. **Contractual lines.** Each verbal `GUARANTEE id:` (what the provider keeps) or `ASSUME id:` (what the
    consumer must satisfy) states how it is verified:
    `VERBAL "…"` followed by `VERIFY BY JUDGEMENT "…"` or `VERIFY BY INSPECTION "…"`, where the string names who
