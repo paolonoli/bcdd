@@ -16,7 +16,7 @@ This is version **1.0-beta**: the language and the programs work, but they have 
 
 ## Why BCDD
 
-- **Not just software.** A CSC describes a system only through its boundaries, that is its interfaces with the outside:
+- **Not just software.** A CSC describes a system only through its boundaries, that is, its interfaces with the outside:
   what can be requested of it and what can be observed from outside. It does not describe how the system is built. The
   same language can therefore describe software, hardware and mixed systems, including complex ones; the manual's real
   case is an audio measurement kit.
@@ -77,12 +77,22 @@ bcdd --lang it check FILE.csc    # the same, with messages in Italian
 bcdd new Name                    # create Name.csc from a skeleton
 ```
 
-The messages are in English by default; `--lang it` (before the command) or the variable `BCDD_LANG=it` switches `bcdd`
+The messages are in English by default; `--lang it` (before the command) or the environment variable `BCDD_LANG=it` switches `bcdd`
 and `bcdd-editor` to Italian. `bcdd refine` runs a round of questions through a language model and needs the `claude`
 command; `check` and `new` do not. `bcdd ratify` records an approved contract line.
 
 The folders `prove/`, `esempi/` and `tests/` hold the test material: small CSC files with the expected report of
 `bcdd`, and the test programs that run them.
+
+## Claude Code skill
+
+[`claude-code/skills/bcdd/`](claude-code/skills/bcdd/) holds a skill for using `bcdd` from Claude Code. It describes how
+to locate the `bcdd` program, how to run `bcdd check` on a CSC file and how to read the compact verdict. It also names the two
+subagents in [`claude-code/agents/`](claude-code/agents/), which write and review CSC files.
+
+The skill consists of its instructions (`SKILL.md`), a `references/` folder, two helper scripts (`scripts/UBcddLocate.py` and
+`scripts/UBcddVerdict.py`), a changelog and its licence file. The grammar and the manual it refers to are not copied into it:
+they are the files at the root of this repository.
 
 ## Licence
 
@@ -90,7 +100,9 @@ Source code: BSD 3-Clause, see [`LICENSE`](LICENSE). The documentation is under 
 [`LICENSE_DOCS.md`](LICENSE_DOCS.md): the manual ([`MANUALE_BCDD.md`](MANUALE_BCDD.md) in Italian,
 [`MANUALE_BCDD.en.md`](MANUALE_BCDD.en.md) in English), the grammar (`GRAMMATICA_F1.md`, `GRAMMATICA_F1.en.md`), and the
 profiles of the Claude Code subagents in [`claude-code/agents/`](claude-code/agents/) (`bcdd-csc-author`,
-`bcdd-csc-reviewer`), which write and review CSC files and look for the grammar at the root of this repository. Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
+`bcdd-csc-reviewer`), which write and review CSC files and look for the grammar at the root of this repository.
+The skill in [`claude-code/skills/bcdd/`](claude-code/skills/bcdd/) is licensed in the same way: its documents are under
+CC BY 4.0 and its two scripts under BSD 3-Clause, as declared in its `LICENSE.md`. Third-party code under `editor/windows/webview` and the notices in `editor/THIRD_PARTY.md` keep their
 own licences. The BCDD and CSC logos in `docs/logos/` are Copyright 2026 Noli Paolo, all rights reserved: they are not
 covered by the BSD licence.
 
