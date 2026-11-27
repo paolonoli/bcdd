@@ -1,0 +1,12 @@
+{
+  "name": "bcdd",
+  "description": "Write, check and review BCDD contracts (CSC files) with the bcdd program: a skill and two subagents.",
+  "version": "1.0.0+directory",
+  "author": {
+    "name": "Noli Paolo",
+    "email": "bcdd@nolisoft.it"
+  },
+  "homepage": "https://bcdd.nolisoft.it/",
+  "repository": "https://github.com/paolonoli/bcdd",
+  "license": "CC-BY-4.0"
+}
