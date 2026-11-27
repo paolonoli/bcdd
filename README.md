@@ -90,9 +90,21 @@ The folders `prove/`, `esempi/` and `tests/` hold the test material: small CSC f
 to locate the `bcdd` program, how to run `bcdd check` on a CSC file and how to read the compact verdict. It also names the two
 subagents in [`claude-code/agents/`](claude-code/agents/), which write and review CSC files.
 
-The skill consists of its instructions (`SKILL.md`), a `references/` folder, two helper scripts (`scripts/UBcddLocate.py` and
-`scripts/UBcddVerdict.py`), a changelog and its licence file. The grammar and the manual it refers to are not copied into it:
-they are the files at the root of this repository.
+The skill consists of its instructions (`SKILL.md`), a `references/` folder (which holds copies of the grammar and the
+manual), two helper scripts (`scripts/UBcddLocate.py` and `scripts/UBcddVerdict.py`), a changelog and its licence file.
+
+### Installing as a Claude Code plugin
+
+This repository is also a Claude Code plugin marketplace. To install the plugin, run the following commands in Claude Code:
+
+```text
+/plugin marketplace add paolonoli/bcdd
+/plugin install bcdd@bcdd
+```
+
+The plugin (`claude-code/`, declared in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)) provides the
+skill `bcdd:bcdd` and the two subagents `bcdd:bcdd-csc-author` and `bcdd:bcdd-csc-reviewer`. It does not contain the
+`bcdd` program: install `bcdd` separately from the Release of this repository.
 
 ## Licence
 

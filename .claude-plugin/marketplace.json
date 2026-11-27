@@ -1,0 +1,15 @@
+{
+  "name": "bcdd",
+  "description": "Claude Code plugins for BCDD (Behavioural Contract-Driven Design).",
+  "owner": {
+    "name": "Noli Paolo",
+    "email": "bcdd@nolisoft.it"
+  },
+  "plugins": [
+    {
+      "name": "bcdd",
+      "source": "./claude-code",
+      "description": "A skill and two subagents to write, check and review BCDD contracts (CSC files) with the bcdd program."
+    }
+  ]
+}
