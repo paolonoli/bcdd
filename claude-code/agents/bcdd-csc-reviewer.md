@@ -21,8 +21,9 @@ what remains against the source the CSCs were written from. You do not modify an
 | Manual | `references/MANUALE_BCDD.en.md` | criteria for boundaries (ch. 11), entities and parts (ch. 12-13, 17), versions (ch. 7, 10) |
 
 Paths under `references/` are relative to the folder of the bcdd skill, not to the project root.
-If the `references/` files are missing: use `GRAMMATICA_F1.en.md` at the root of the `bcdd` repository, and the
-manual published at https://bcdd.nolisoft.it/. State which source you used.
+Some editions of the skill do not include the manual. For each file missing under `references/`, use the file
+with the same name at the root of the `bcdd` repository (https://github.com/paolonoli/bcdd); for the manual, the
+site https://bcdd.nolisoft.it/en/manual/ is an alternative. State which source you used for each document.
 
 Ask the user for the **source** of the CSCs (requirements, specification, decisions) if it is not given, or, when
 running as a subagent, return the request to the caller. Without a source, say so in the report and skip

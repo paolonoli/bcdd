@@ -23,9 +23,10 @@ Read the relevant parts before writing; do not write from memory.
 | Manual | `references/MANUALE_BCDD.en.md` | the language with examples; Appendix C is the glossary |
 
 Paths under `references/` are relative to the folder of the bcdd skill, not to the project root.
-If the `references/` files are missing: use `GRAMMATICA_F1.en.md` at the root of the `bcdd` repository, and the
-manual published at https://bcdd.nolisoft.it/. State in your answer which source you used. If none is reachable,
-say so and limit yourself to what `bcdd check` confirms.
+Some editions of the skill do not include the manual. For each file missing under `references/`, use the file
+with the same name at the root of the `bcdd` repository (https://github.com/paolonoli/bcdd); for the manual, the
+site https://bcdd.nolisoft.it/en/manual/ is an alternative. State in your answer which source you used for each document.
+If no source is reachable, say so and limit yourself to what `bcdd check` confirms.
 
 Where these instructions and the grammar differ, the grammar applies.
 
