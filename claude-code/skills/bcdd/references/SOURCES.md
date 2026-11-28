@@ -11,10 +11,10 @@ Written for `bcdd` 1.0-beta and grammar 1.0-beta (release v1.0-beta.2 changes on
 | `references/GRAMMATICA_F1.md` | same as above | same as above | same as above | sha256 `60f219df90a08b079aae6d2cdbfe4346fa8b063bf0ccb0acb45eeb9a9f8a76f3` |
 | `references/MANUALE_BCDD.en.md` | same as above | same as above | same as above | sha256 `c1e3ca9a366774b06b55e92c2371c42dfb4cf3a41330f36074fc61a58ec29e6f` |
 | `references/MANUALE_BCDD.md` | same as above | same as above | same as above | sha256 `c6da53c2d66a328b09d3a50a103fde7126f178bf359f72edd5ba62d2b3a77dea` |
-| `agents/bcdd-csc-author.md` | `claude-code/agents/` of `paolonoli/bcdd` | none (see note) | `013f7092e08e71cfe60ea7b57f264a74224351cc` | md5 `98c3df8551d80a998b94c0e7a5c573db` |
-| `agents/bcdd-csc-reviewer.md` | same as above | same as above | same as above | md5 `813fee1c4d29e1c9f07ae17aca3d1b1a` |
+| `agents/bcdd-csc-author.md` | `claude-code/agents/` of `paolonoli/bcdd` | none (see note) | `4f5f2d47b77e9577888bf617e1cbde873a69e543` | md5 `a2753ba65902b68014482a2398e70a98` |
+| `agents/bcdd-csc-reviewer.md` | same as above | same as above | same as above | md5 `39c5f40945d66fd9572711333cdaf38d` |
 
-The two agent profiles come from commit `013f7092e08e71cfe60ea7b57f264a74224351cc` of `paolonoli/bcdd`, published on 2026-11-26. No tag contains this commit: the tag `v1.0-beta.2` has the earlier profiles.
+The two agent profiles come from commit `4f5f2d47b77e9577888bf617e1cbde873a69e543` of `paolonoli/bcdd`, published on 2026-11-27. No tag contains this commit: the tag `v1.0-beta.2` has earlier profiles.
 
 The reference documents are declared by the `bcdd` project with sha256 and the agent profiles with md5, so each row uses the algorithm of its source. The md5 sums only check that a copy is intact.
 

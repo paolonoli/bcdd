@@ -24,7 +24,8 @@ LOG_FILE = Path(tempfile.gettempdir()) / "{}_{}.log".format(
 ENV_VAR = "BCDD_BIN"
 DOWNLOAD_URLS = [
     "https://github.com/paolonoli/bcdd/releases/tag/v1.0-beta.2",
-    "https://bcdd.nolisoft.it/download/",
+    # 002:1:9 C2: /download/ answers 404, page moved to /en/download.html
+    "https://bcdd.nolisoft.it/en/download.html",
 ]
 EXIT_OK = 0
 EXIT_NOT_FOUND = 4

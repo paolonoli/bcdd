@@ -1,7 +1,7 @@
 ---
 name: bcdd
 description: "Use this skill to write, check and review BCDD files (`.csc`), which contain Capability State Contracts (CSCs) and the entities that provide and use them, using the `bcdd` command-line program. Triggers include: BCDD, Behavioural Contract-Driven Design, CSC, capability state contract, .csc files, `bcdd check --strict`, `--dir` for the parts of an entity, `bcdd new`, bcdd exit codes 0/1/2/3, GUARANTEE, ASSUME, VERIFY BY, SCENARIO, ENTITY with OFFERS/USES, 'write a CSC', 'review a CSC', 'make bcdd check pass', 'scrivere una CSC', 'verificare le CSC con bcdd', 'rivedere una CSC', finding or installing bcdd, the bcdd-csc-author and bcdd-csc-reviewer agents. Do NOT use it for Design by Contract annotations inside C++ source code, for linting the acceptance criteria of a prose design contract, or to change the BCDD grammar or add checks to `bcdd` (ask the language maintainers). It runs `bcdd refine` and `bcdd ratify` only when the user explicitly asks."
-version: "1.0.0"
+version: "1.0.1"
 ---
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 <!-- Copyright 2026 Noli Paolo. Distributed under the Creative Commons Attribution 4.0 International licence. -->
@@ -27,7 +27,7 @@ Run `scripts/UBcddLocate.py` before the first check of a session. It looks for `
 
 An explicit candidate (1 or 2) that does not exist is an error: the script does not fall back to the next one. `bcdd` has no version option, so the script reports no version.
 
-If `bcdd` is not found, **propose** the download to the user. Do not download or install anything without being asked. The release is published at <https://github.com/paolonoli/bcdd/releases/tag/v1.0-beta.2> (packages `bcdd-1.0-beta.2-*`; see also <https://bcdd.nolisoft.it/download/>). Check the package against `SHA256SUMS` before you use it: on Linux, `sha256sum -c --ignore-missing SHA256SUMS`; on Windows, `Get-FileHash -Algorithm SHA256`.
+If `bcdd` is not found, **propose** the download to the user. Do not download or install anything without being asked. The release is published at <https://github.com/paolonoli/bcdd/releases/tag/v1.0-beta.2> (packages `bcdd-1.0-beta.2-*`; see also <https://bcdd.nolisoft.it/en/download.html>). Check the package against `SHA256SUMS` before you use it: on Linux, `sha256sum -c --ignore-missing SHA256SUMS`; on Windows, `Get-FileHash -Algorithm SHA256`.
 
 ## Checking with bcdd check
 
@@ -83,7 +83,7 @@ The verdict comes from the exit code of `bcdd` only. The `outcome` line is copie
 
 The normal flow is: the author writes, `check` reaches 0, the reviewer reports, the user decides, and only then does `bcdd ratify` run.
 
-To install the agents, copy `agents/*.md` into the `.claude/agents/` folder of the project, or into `~/.claude/agents/`, then restart Claude Code. When an agent runs as a subagent, its questions go back to the caller.
+To install the agents, copy `agents/*.md` into the `.claude/agents/` folder of the project, or into `~/.claude/agents/`, then restart Claude Code. If the skill is installed as the `bcdd` plugin, the agents are already loaded as `bcdd:bcdd-csc-author` and `bcdd:bcdd-csc-reviewer`: do not copy them. When an agent runs as a subagent, its questions go back to the caller.
 
 The two profiles are in `agents/` next to this file; in the `bcdd` repository they are in `claude-code/agents/`.
 
@@ -91,7 +91,7 @@ The two profiles are in `agents/` next to this file; in the `bcdd` repository th
 
 The grammar and the manual are in `references/` next to this file, and in the root of the `bcdd` repository. `references/SOURCES.md` gives the tag, commit and checksums they correspond to.
 
-If the files are missing, use the root of the `bcdd` repository or the site <https://bcdd.nolisoft.it/>, and say which source you used.
+If the files are missing, use the root of the `bcdd` repository or the site <https://bcdd.nolisoft.it/en/manual/>, and say which source you used.
 
 ## Installation layouts
 
