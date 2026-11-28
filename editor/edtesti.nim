@@ -182,8 +182,8 @@ catalogo:
     "non trovo la riga END che chiude $1: aggiungila in fondo, nella casella di testo",
     "I cannot find the END line that closes $1: add it at the bottom, in the text box"
   voce kRigaGiaApprovataCambia,
-    "questa riga è già approvata (è un contratto): per cambiarla usa Nuova versione",
-    "this line is already approved (it is a contract): to change it use New version"
+    "questa riga è già approvata (fa parte del contratto): per cambiarla usa Nuova versione",
+    "this line is already approved (it is part of the contract): to change it use New version"
   voce kRigaCambiataNelFrattempo,
     "la riga $1 di $2 è cambiata nel frattempo: richiudi e riapri la scheda",
     "the line $1 of $2 has changed in the meantime: close and reopen the card"
@@ -191,8 +191,8 @@ catalogo:
     "lo scopo non si toglie: si cambia",
     "the purpose cannot be removed: it is changed"
   voce kRigaGiaApprovataTogli,
-    "questa riga è già approvata (è un contratto): per toglierla usa Nuova versione",
-    "this line is already approved (it is a contract): to remove it use New version"
+    "questa riga è già approvata (fa parte del contratto): per toglierla usa Nuova versione",
+    "this line is already approved (it is part of the contract): to remove it use New version"
   voce kRigheNonCiSono,
     "le righe $1-$2 non ci sono più: chiudi la casella e riaprila",
     "the lines $1-$2 are no longer there: close the box and reopen it"
@@ -284,8 +284,8 @@ catalogo:
     " Non sono riuscito a rimettere com'erano i file già scritti: $1",
     " I could not restore the files already written: $1"
   voce kPostoNonVa,
-    "il posto $1 non va bene",
-    "the place $1 is not valid"
+    "il nome della parte $1 non va bene",
+    "the part name $1 is not valid"
   voce kNonDentroSeStessa,
     "$1 non si mette dentro se stessa",
     "$1 cannot be put inside itself"
@@ -293,8 +293,8 @@ catalogo:
     "$1 sta già dentro $2: mettere $2 dentro $1 farebbe un ciclo",
     "$1 is already inside $2: putting $2 inside $1 would make the composition circular"
   voce kHaGiaPosto,
-    "$1 ha già un posto che si chiama $2",
-    "$1 already has a place called $2"
+    "$1 ha già una parte che si chiama $2",
+    "$1 already has a part called $2"
   voce kRigheScritte,
     "righe: $1",
     "lines: $1"
@@ -407,14 +407,14 @@ catalogo:
     "$1 usa già $2: due entità che usano non si collegano, una delle due deve offrirlo",
     "$1 already uses $2: two entities that use it cannot be connected, one of them must provide it"
   voce kNonTrovoPostoIn,
-    "non trovo il posto $1 in $2",
-    "I cannot find the place $1 in $2"
+    "non trovo la parte $1 in $2",
+    "I cannot find the part $1 in $2"
   voce kPostoGiaIn,
     "$1 sta già in $2",
     "$1 is already in $2"
   voce kRigheApprovatePosto,
-    "$1 ha righe approvate: il posto $2 non si toglie",
-    "$1 has approved lines: the place $2 cannot be removed"
+    "$1 ha righe approvate: la parte $2 non si toglie",
+    "$1 has approved lines: the part $2 cannot be removed"
   voce kFileContieneAltro,
     "$1 contiene anche altro: non lo tolgo",
     "$1 contains something else too: I am not removing it"
@@ -422,11 +422,11 @@ catalogo:
     "$1 ha righe approvate: non si toglie",
     "$1 has approved lines: it cannot be removed"
   voce kRigheApprovatePostoQuindi,
-    "$1 ha righe approvate: il posto $2 non si toglie, quindi non tolgo $3",
-    "$1 has approved lines: the place $2 cannot be removed, so I am not removing $3"
+    "$1 ha righe approvate: la parte $2 non si toglie, quindi non tolgo $3",
+    "$1 has approved lines: the part $2 cannot be removed, so I am not removing $3"
   voce kPostiToltiConnettoriRestano,
-    "i posti sono tolti, i connettori restano",
-    "the places are removed, the connectors stay"
+    "le parti sono tolte, i connettori restano",
+    "the parts are removed, the connectors stay"
   voce kConnettoriRestano,
     "i connettori restano",
     "the connectors stay"
@@ -476,14 +476,14 @@ catalogo:
     "tolta la parte $1 da $2",
     "removed the part $1 from $2"
   voce kDPortaFuori,
-    "portato fuori il posto $1 da $2",
-    "moved the place $1 out of $2 to the top level of the tree"
+    "portata fuori la parte $1 da $2",
+    "moved the part $1 out of $2 to the top level of the tree"
   voce kDMettiDentro,
-    "messa $1 dentro $2, al posto $3",
-    "put $1 inside $2, as the place $3"
+    "messa $1 dentro $2, come parte $3",
+    "put $1 inside $2, as the part $3"
   voce kDSposta,
-    "spostato il posto $1 da $2 a $3",
-    "moved the place $1 from $2 to $3"
+    "spostata la parte $1 da $2 a $3",
+    "moved the part $1 from $2 to $3"
   voce kDTogliEntita,
     "tolta l'entità $1",
     "removed the entity $1"
@@ -646,6 +646,49 @@ catalogo:
   voce kLinguaCambiata,
     "lingua: $1",
     "language: $1"
+  voce kRicaricato,
+    "ricaricato dal disco",
+    "reloaded from disk"
+  # 008:5:1 La rinomina: l'esito dopo la scrittura e il giornale di una rinomina interrotta
+  voce kRinomEsito,
+    "Rinominato $1 in $2: $3 in $4$5$6.$7",
+    "Renamed $1 to $2: $3 in $4$5$6.$7"
+  voce kRinomRighe,
+    "$1 righe",
+    "$1 lines"
+  voce kRinomRiga1,
+    "1 riga",
+    "1 line"
+  voce kRinomFile,
+    "$1 file",
+    "$1 files"
+  voce kRinomFile1,
+    "1 file",
+    "1 file"
+  voce kRinomFileRin,
+    ", $1 file rinominati",
+    ", $1 files renamed"
+  voce kRinomFileRin1,
+    ", 1 file rinominato",
+    ", 1 file renamed"
+  voce kRinomTestiResta,
+    "; $1 testi restano con il nome vecchio",
+    "; $1 texts keep the old name"
+  voce kRinomTestiResta1,
+    "; 1 testo resta con il nome vecchio",
+    "; 1 text keeps the old name"
+  voce kRinomTornare,
+    " Per tornare indietro rinomina $1 in $2.",
+    " To undo, rename $1 back to $2."
+  voce kRinomRisposta,
+    "bcdd non ha risposto come previsto: $1",
+    "bcdd did not answer as expected: $1"
+  voce kGiornalePresente,
+    "c'è una rinomina interrotta in $1: non scrivo finché non la ripristini",
+    "there is an interrupted rename in $1: I am not writing until you recover it"
+  voce kRipristinoFatto,
+    "rinomina ripristinata",
+    "rename recovered"
   voce kLatoOfferto,
     " (offerto)",
     " (provided)"

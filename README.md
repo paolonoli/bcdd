@@ -55,6 +55,7 @@ Ready-to-run packages for Linux x86_64 and Windows x86_64 are on the site and in
 - `bcdd`, the command-line tool: `new`, `check`, `refine`, `ratify`. Written in Nim, source in `src/`.
 - `bcdd-editor`, a window around `bcdd` for editing CSC files: GTK 3 and WebKit2GTK on Linux, WebView2 on Windows.
   Source in `editor/`.
+  A short guide with screenshots: [`GUIDA_EDITOR.en.md`](GUIDA_EDITOR.en.md) (English), [`GUIDA_EDITOR.md`](GUIDA_EDITOR.md) (Italian).
 
 ## Build
 
@@ -110,7 +111,7 @@ skill `bcdd:bcdd` and the two subagents `bcdd:bcdd-csc-author` and `bcdd:bcdd-cs
 
 Source code: BSD 3-Clause, see [`LICENSE`](LICENSE). The documentation is under CC BY 4.0, see
 [`LICENSE_DOCS.md`](LICENSE_DOCS.md): the manual ([`MANUALE_BCDD.md`](MANUALE_BCDD.md) in Italian,
-[`MANUALE_BCDD.en.md`](MANUALE_BCDD.en.md) in English), the grammar (`GRAMMATICA_F1.md`, `GRAMMATICA_F1.en.md`), and the
+[`MANUALE_BCDD.en.md`](MANUALE_BCDD.en.md) in English), the grammar (`GRAMMATICA_F1.md`, `GRAMMATICA_F1.en.md`), the short guide to `bcdd-editor` ([`GUIDA_EDITOR.md`](GUIDA_EDITOR.md) in Italian, [`GUIDA_EDITOR.en.md`](GUIDA_EDITOR.en.md) in English) with its screenshots in `immagini/`, and the
 profiles of the Claude Code subagents in [`claude-code/agents/`](claude-code/agents/) (`bcdd-csc-author`,
 `bcdd-csc-reviewer`), which write and review CSC files and look for the grammar at the root of this repository.
 The skill in [`claude-code/skills/bcdd/`](claude-code/skills/bcdd/) is licensed in the same way: its documents are under

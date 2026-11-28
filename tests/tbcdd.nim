@@ -423,7 +423,7 @@ block:
     let w = newWd()
     discard cpTo(rd / "R04_gia_contratto.g2a.dopo.csc", w)
     expectErr("AC-78", "niente da ratificare", "", run(@["ratify", "R04_gia_contratto.g2a.dopo.csc", "--all", "D-131"], w),
-      "bcdd ratify: la CSC Firmata è già tutta contratto: non cambio nulla\n", 1)
+      "bcdd ratify: la CSC Firmata fa già interamente parte del contratto: non cambio nulla\n", 1)
     rec("AC-78", "file invariato", fileEq(w / "R04_gia_contratto.g2a.dopo.csc", rd / "R04_gia_contratto.g2a.dopo.csc") and
       listDir(w) == @["R04_gia_contratto.g2a.dopo.csc"], $listDir(w))
   ratCase("AC-79", "R05all", "R05_due_csc.csc", @["--all", "R05_due_csc.csc", "--csc", "Seconda", "D-130"],
@@ -455,8 +455,8 @@ block:
     let src = rd / "R04_gia_contratto.csc"
     let cases = [
       (@["D-130"], "bcdd ratify: la CSC Firmata è già approvata (D-1): non cambio nulla\n"),
-      (@["g1", "D-130"], "bcdd ratify: g1 è già contratto (riga 8): non cambio nulla\n"),
-      (@["g2", "D-130"], "bcdd ratify: g2 è già contratto (riga 9): non cambio nulla\n"),
+      (@["g1", "D-130"], "bcdd ratify: g1 fa già parte del contratto (riga 8): non cambio nulla\n"),
+      (@["g2", "D-130"], "bcdd ratify: g2 fa già parte del contratto (riga 9): non cambio nulla\n"),
       (@["pressione", "D-130"], "bcdd ratify: pressione non è una GUARANTEE né una ASSUME: si approvano solo righe contrattuali e dettagli\n"),   # 053:3:1 C-34 (1.0-beta, S-20): messaggio cambiato
       (@["g9", "D-130"], "bcdd ratify: nessuna GUARANTEE né ASSUME con id g9 nella CSC Firmata\n")]
     for (a, want) in cases:
@@ -1695,8 +1695,8 @@ block:
   # AC-137 (B.2.4): gli altri rifiuti sul bersaglio; il bersaglio viene prima dei confini
   block:
     let w = wdR()
-    expectErr("AC-137", "g2 già contratto", "", rat(w, @["Scale.csc", "g2", "D-200"]),
-      "bcdd ratify: g2 è già contratto (riga 9): non cambio nulla\n", 1)
+    expectErr("AC-137", "g2 già parte del contratto", "", rat(w, @["Scale.csc", "g2", "D-200"]),
+      "bcdd ratify: g2 fa già parte del contratto (riga 9): non cambio nulla\n", 1)
     expectErr("AC-137", "g9 inesistente", "", rat(w, @["Scale.csc", "g9", "D-200"]),
       "bcdd ratify: nessuna GUARANTEE con id g9 nella ENTITY Scale\n", 1)
     expectErr("AC-137", "x9 su Manca (il bersaglio prima dei confini)", "", rat(w, @["Manca.csc", "x9", "D-1"]),
@@ -1760,7 +1760,7 @@ block:
     let w = wdR()
     expectErr("AC-147", "ratify con un solo posizionale", "", rat(w, @["Scale.csc"]), usoR, 2)
     expectErr("AC-147", "bcdd senza argomenti", "", run(@[], w),
-      "uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero\n", 2)
+      "uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero | rename FILE [--csc NOME] [--dir CARTELLA]... (--dry-run | --expect IMPRONTA) csc|entity|part|id VECCHIO NUOVO | rename --recover CARTELLA\n", 2)
 
   # AC-127..AC-130 (parte C): la scelta del blocco non dipende dall'ordine; una riga non riconosciuta ferma ratify, non refine
   proc wdS(name: string): string =
@@ -1867,7 +1867,7 @@ block:
 
 # 066:1:1 AC-57: messaggio d'uso generale di F2
 block:
-  const usoGen = "uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero\n"
+  const usoGen = "uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero | rename FILE [--csc NOME] [--dir CARTELLA]... (--dry-run | --expect IMPRONTA) csc|entity|part|id VECCHIO NUOVO | rename --recover CARTELLA\n"
   expectErr("AC-57", "bcdd senza argomenti", "", run(@[], root), usoGen, 2)
   expectErr("AC-57", "comando sconosciuto", "", run(@["boh"], root), usoGen, 2)
 
@@ -3732,12 +3732,12 @@ block:
     var spost = ls[0 .. i1 - 1] & ls[i1 + 2 .. iMic] & ls[i1 .. i1 + 1] & ls[iMic + 1 .. ^1]
     let r1 = runX(bcdd, @["save", "Kit1b.csc", "--expect", fp], w, nil, spost.join("\n"))
     rec("AC-295", "k1 (contratto) spostata nel pezzo microfono: rifiutato, codice 1, file invariato", r1.code == 1 and readFile(w / "Kit1b.csc") == orig and
-      "bcdd save: la riga " in r1.errout and ", GUARANTEE k1, è contratto (D-338): non può cambiare segmento VARIANT; per cambiarla serve una VERSION nuova" in r1.errout and
+      "bcdd save: la riga " in r1.errout and ", GUARANTEE k1, fa parte del contratto (D-338): non può cambiare segmento VARIANT; per cambiarla serve una VERSION nuova" in r1.errout and
       r1.output.len == 0, r1.errout & r1.output)
     # il nome della scelta del pezzo di k3 cambia: k3 cambia pezzo
     let r2 = runX(bcdd, @["save", "Kit1b.csc", "--expect", fp], w, nil, orig.replace("  VARIANT sensore = di\n", "  VARIANT sensore = diretto\n"))
     rec("AC-295", "il nome della scelta del pezzo di k3 cambia: rifiutato", r2.code == 1 and readFile(w / "Kit1b.csc") == orig and
-      ", GUARANTEE k3, è contratto (D-338): non può cambiare segmento VARIANT" in r2.errout, r2.errout)
+      ", GUARANTEE k3, fa parte del contratto (D-338): non può cambiare segmento VARIANT" in r2.errout, r2.errout)
     # km2 sposta di riga dentro lo stesso pezzo, testo uguale: ammesso
     var i2 = -1
     for i, l in ls:
@@ -4222,13 +4222,13 @@ block:
   writeFile(w / "Bind.csc", bnd)
   proc tenta(file, testo: string): Res = salvaB(w, file, testo)
   let r1 = tenta("Bind.csc", bnd.replace("la plafoniera", "un'altra"))
-  rec("AC-401", "una riga BIND approvata non si cambia", r1.code == 1 and "BIND accesa" in r1.errout and "è contratto" in r1.errout, r1.errout)
+  rec("AC-401", "una riga BIND approvata non si cambia", r1.code == 1 and "BIND accesa" in r1.errout and "fa parte del contratto" in r1.errout, r1.errout)
   let r2 = tenta("Bind.csc", bnd.replace("BINDING Luce VERSION 0.1", "BINDING Luce VERSION 0.1 AS x"))
   rec("AC-401", "l'intestazione di un BINDING approvato è bloccata", r2.code == 1, r2.errout)
   let r2b = tenta("Bind.csc", bnd.replace("VERSION 0.1", "VERSION 0.2"))
   rec("AC-401", "la versione di un BINDING approvato è bloccata", r2b.code == 1 and "il numero della versione non si cambia" in r2b.errout, r2b.errout)
   let r3 = tenta("Bind.csc", bnd.replace("  BIND accesa", "  BIND modo: VERBAL \"nuova\"\n  BIND accesa"))
-  rec("AC-401", "una riga BIND nuova in un BINDING approvato diventerebbe contratto", r3.code == 1 and "diventerebbe contratto senza un'approvazione" in r3.errout, r3.errout)
+  rec("AC-401", "una riga BIND nuova in un BINDING approvato diventerebbe parte del contratto", r3.code == 1 and "diventerebbe parte del contratto senza un'approvazione" in r3.errout, r3.errout)
   let ip = "BINDING Luce VERSION 0.1\n  STATUS HYPOTHESIS\n  BIND accesa: VERBAL \"la plafoniera\"\nEND\n"
   writeFile(w / "Ip.csc", ip)
   let r3b = tenta("Ip.csc", ip.replace("HYPOTHESIS", "RATIFIED BY D-9"))
@@ -4248,7 +4248,7 @@ block:
   let r7 = tenta("Det.csc", det.replace("DEFINE A1 DETAILS A STATUS RATIFIED BY D-5", "DEFINE A1 DETAILS A STATUS RATIFIED BY D-7"))
   rec("AC-401", "la decisione di un dettaglio approvato non si cambia", r7.code == 1, r7.errout)
   let r8 = tenta("Det.csc", det.replace("DEFINE A := 1\n", "DEFINE A := 1\n  DEFINE A2 DETAILS A STATUS RATIFIED BY D-5 := 4\n"))
-  rec("AC-401", "un dettaglio di DEFINE nuovo scritto già approvato: rifiuto", r8.code == 1 and "diventerebbe contratto" in r8.errout, r8.errout)
+  rec("AC-401", "un dettaglio di DEFINE nuovo scritto già approvato: rifiuto", r8.code == 1 and "diventerebbe parte del contratto" in r8.errout, r8.errout)
   # --remove: righe approvate in qualunque blocco
   let rm = runX(bcdd, @["save", "Bind.csc", "--remove", "--expect", sha256Of(w / "Bind.csc")], w, nil, "")
   rec("AC-401", "--remove rifiuta un file con un BINDING approvato", rm.code == 1 and "ha righe approvate" in rm.errout and fileExists(w / "Bind.csc"), rm.errout)
@@ -4270,15 +4270,15 @@ block:
   writeFile(w / "Bind2.csc", bind2)
   let r1 = tenta("Bind2.csc", bind2.replace("la plafoniera", "diversa"))
   rec("AC-389", "una riga BIND con un suo STATUS approvato, in un BINDING da approvare, non si cambia (il messaggio nomina il blocco)",
-    r1.code == 1 and "BIND accesa di Luce è contratto" in r1.errout, r1.errout)
+    r1.code == 1 and "BIND accesa di Luce fa parte del contratto" in r1.errout, r1.errout)
   let r2 = tenta("Bind2.csc", bind2.replace("BIND altra:", "BIND altra STATUS RATIFIED BY D-4:"))
-  rec("AC-390", "una riga BIND che si scrive già approvata: rifiuto", r2.code == 1 and "BIND altra di Luce diventerebbe contratto senza un'approvazione" in r2.errout, r2.errout)
+  rec("AC-390", "una riga BIND che si scrive già approvata: rifiuto", r2.code == 1 and "BIND altra di Luce diventerebbe parte del contratto senza un'approvazione" in r2.errout, r2.errout)
   let r3 = tenta("Bind2.csc", bind2.replace("D-4", "D-6"))
-  rec("AC-391", "la decisione di una riga BIND approvata non si cambia", r3.code == 1 and "è contratto" in r3.errout, r3.errout)
+  rec("AC-391", "la decisione di una riga BIND approvata non si cambia", r3.code == 1 and "fa parte del contratto" in r3.errout, r3.errout)
   let prof = "PROFILE Segnale VERSION 0.3\n  STATUS HYPOTHESIS\n  EXTENSION sale(s) KIND rising\nEND\n"
   writeFile(w / "Prof.csc", prof)
   let r4 = tenta("Prof.csc", prof.replace("HYPOTHESIS", "RATIFIED BY D-2"))
-  rec("AC-392", "un profilo che diventa approvato senza ratify: rifiuto", r4.code == 1 and "diventerebbe contratto senza un'approvazione" in r4.errout, r4.errout)
+  rec("AC-392", "un profilo che diventa approvato senza ratify: rifiuto", r4.code == 1 and "diventerebbe parte del contratto senza un'approvazione" in r4.errout, r4.errout)
   let profA = prof.replace("HYPOTHESIS", "RATIFIED BY D-2")
   writeFile(w / "ProfA.csc", profA)
   let r5 = tenta("ProfA.csc", profA.replace("Segnale", "Altro"))

@@ -10,7 +10,7 @@ bin           = @["bcdd"]
 requires "nim >= 2.0.0"
 requires "checksums >= 0.2.0"
 
-# 001:1:1 `nimble test`: compila il binario di rilascio, quello di prova e lancia la suite degli AC-1..AC-80.
+# 001:1:1 `nimble test`: compila il binario di rilascio, quello di prova e lancia la suite degli AC-1..AC-80 e quella di `bcdd rename` (tests/trinomina.nim, AC-423..AC-472).
 # 001:1:2 L'eseguibile di prova (-d:bcddProva) è l'unico che legge BCDD_LLM per sostituire `claude`:
 # 001:1:3 serve alle sole prove di `bcdd refine` e non si distribuisce. Il simbolo di compilazione è `bcddProva`.
 # 001:2:1 nimble 0.22.2 (nimble.nim, `when isMainModule`) esce con 0 quando un task solleva un'eccezione: solo
@@ -38,6 +38,7 @@ task test, "compila bcdd e l'eseguibile di prova e lancia la suite dei criteri d
   passo "nimble build -d:release"
   passo "nim c -d:release -d:bcddProva --hints:off --verbosity:0 --nimcache:nimcache/prova --out:tests/bcdd_prova src/bcdd.nim"
   passo "nim c -r --hints:off --verbosity:0 --out:tests/tbcdd tests/tbcdd.nim"
+  passo "nim c -r --hints:off --verbosity:0 --out:tests/trinomina tests/trinomina.nim"
 
 # 002:1:1 F4b: `bcdd-editor`, l'eseguibile a parte con la finestra. `nimble build` e `nimble test` non toccano `editor/`.
 # 002:1:2 `nimble editor` compila bcdd-editor (release) accanto a bcdd e tests/bcdd-editor_prova (-d:bcddEditorProva), la sola

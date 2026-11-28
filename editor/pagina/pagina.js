@@ -22,46 +22,6 @@ function T(chiave) {
   var a = arguments;
   return s.replace(/\{(\d+)\}/g, (m, n) => (a[Number(n)] === undefined ? m : String(a[Number(n)])));
 }
-// 003:1:2 E-4: la lingua della pagina (it | en) e il catalogo TESTI (testi.js, caricato prima di questo file). La lingua viene da
-// <html lang> alla partenza e da M.lingua a ogni modello; i testi per la persona stanno tutti nel catalogo, qui solo le chiavi.
-var LINGUA = (document.documentElement.getAttribute('lang') === 'it') ? 'it' : 'en';
-function T(chiave) {
-  var tab = TESTI[LINGUA] || TESTI.en, s = tab[chiave];
-  if (s === undefined) s = TESTI.en[chiave];
-  if (s === undefined) return chiave;
-  var a = arguments;
-  return s.replace(/\{(\d+)\}/g, (m, n) => (a[Number(n)] === undefined ? m : String(a[Number(n)])));
-}
-// 003:1:2 E-4: la lingua della pagina (it | en) e il catalogo TESTI (testi.js, caricato prima di questo file). La lingua viene da
-// <html lang> alla partenza e da M.lingua a ogni modello; i testi per la persona stanno tutti nel catalogo, qui solo le chiavi.
-var LINGUA = (document.documentElement.getAttribute('lang') === 'it') ? 'it' : 'en';
-function T(chiave) {
-  var tab = TESTI[LINGUA] || TESTI.en, s = tab[chiave];
-  if (s === undefined) s = TESTI.en[chiave];
-  if (s === undefined) return chiave;
-  var a = arguments;
-  return s.replace(/\{(\d+)\}/g, (m, n) => (a[Number(n)] === undefined ? m : String(a[Number(n)])));
-}
-// 003:1:2 E-4: la lingua della pagina (it | en) e il catalogo TESTI (testi.js, caricato prima di questo file). La lingua viene da
-// <html lang> alla partenza e da M.lingua a ogni modello; i testi per la persona stanno tutti nel catalogo, qui solo le chiavi.
-var LINGUA = (document.documentElement.getAttribute('lang') === 'it') ? 'it' : 'en';
-function T(chiave) {
-  var tab = TESTI[LINGUA] || TESTI.en, s = tab[chiave];
-  if (s === undefined) s = TESTI.en[chiave];
-  if (s === undefined) return chiave;
-  var a = arguments;
-  return s.replace(/\{(\d+)\}/g, (m, n) => (a[Number(n)] === undefined ? m : String(a[Number(n)])));
-}
-// 003:1:2 E-4: la lingua della pagina (it | en) e il catalogo TESTI (testi.js, caricato prima di questo file). La lingua viene da
-// <html lang> alla partenza e da M.lingua a ogni modello; i testi per la persona stanno tutti nel catalogo, qui solo le chiavi.
-var LINGUA = (document.documentElement.getAttribute('lang') === 'it') ? 'it' : 'en';
-function T(chiave) {
-  var tab = TESTI[LINGUA] || TESTI.en, s = tab[chiave];
-  if (s === undefined) s = TESTI.en[chiave];
-  if (s === undefined) return chiave;
-  var a = arguments;
-  return s.replace(/\{(\d+)\}/g, (m, n) => (a[Number(n)] === undefined ? m : String(a[Number(n)])));
-}
 
 function svuota(n) { while (n.firstChild) n.removeChild(n.firstChild); }
 function el(tag, cls, testo) {
@@ -127,6 +87,7 @@ function applicaLingua() {
 }
 function linguaBloccata() { return completa !== null ? 'lingua_no_giro' : (sporco ? 'lingua_no_modifiche' : ''); }
 function aggiornaLingua() {
+  aggiornaRicarica();
   var perche = linguaBloccata();
   ['en', 'it'].forEach((l) => {
     var b = $('l-' + l);
@@ -137,9 +98,36 @@ function aggiornaLingua() {
   });
 }
 ['en', 'it'].forEach((l) => $('l-' + l).addEventListener('click', () => { if (l !== LINGUA && linguaBloccata() === '') invia({azione: 'lingua', lingua: l}); }));
+// ---- : «Ricarica» rilegge i file dal disco e rifà il controllo, sempre. Con una modifica non salvata chiede (garanzia e-9):
+// ricaricare perdendo la modifica, o annullare tenendola. Nessun timer: parte solo da un clic.
+function aggiornaRicarica() {
+  var b = $('b-ricarica');
+  if (!b) return;
+  b.disabled = completa != null;
+  b.title = completa != null ? T('ricarica_no_giro') : T('b_ricarica_aiuto');
+}
+function chiudiAvvisoRicarica() { var a = $('avviso'); a.hidden = true; svuota(a); }
+function ricaricaOra() {
+  chiudiAvvisoRicarica();
+  chiudiModulo();
+  chiudiScheda();
+  appr = null;
+  invia({azione: 'ricarica'});
+}
+$('b-ricarica').addEventListener('click', () => {
+  if (completa != null) return;
+  if (!sporco) { ricaricaOra(); return; }
+  var a = $('avviso');
+  svuota(a);
+  a.hidden = false;
+  a.appendChild(el('span', '', T('ricarica_conferma') + ' '));
+  a.appendChild(pulsante('f-ricarica-si', T('ricarica_si'), 'primario', ricaricaOra));
+  a.appendChild(pulsante('f-ricarica-no', T('ricarica_no'), '', chiudiAvvisoRicarica));
+});
 document.addEventListener('input', (ev) => {
   var t = ev.target;
-  if (t && t.closest && t.closest('#modulo, #scheda-modulo, #scheda-approva, #scheda-completa')) { sporco = true; aggiornaLingua(); }
+  // E4: il modulo di rinomina non è una modifica non salvata (il nome scritto e le caselle dell'anteprima si perdono senza conferma)
+  if (t && t.closest && t.closest('#modulo, #scheda-modulo, #scheda-approva, #scheda-completa') && !t.closest('.rinomina')) { sporco = true; aggiornaLingua(); }
 }, true);
 
 // ---- i divisori (001:2:1): fra Entità e Banco e fra Banco e Scheda. Si ridisegna solo durante il trascinamento, la posizione non si salva
@@ -906,6 +894,13 @@ function ridisegnaAzioni() {
   }
   if (puntatoValido(e)) {
     var t = perTogliere(e);
+    if (puntato.tipo === 'parte') {
+      // : il posto puntato si rinomina dal Banco, accanto a «Togli la parte»
+      var spPosto = {kind: 'part', vecchio: puntato.parte, blocco: e.nome, dove: 'entita'};
+      var bpr = pulsante('b-rinomina-posto', T('b_rinomina_posto'), '', () => avviaRinomina(spPosto), completa !== null);
+      bpr.title = T('b_rinomina_aiuto');
+      a.appendChild(bpr);
+    }
     a.appendChild(pulsante('b-togli', t.testo, 'togli dx', () => apriConferma(t.frase, t.msg)));
   }
   aggiungiAnnulla(a);
@@ -918,7 +913,7 @@ function ridisegnaAzioni() {
 // Restano gli stessi bottoni, con le stesse parole, gli stessi id e gli stessi gestori: cambia solo dove stanno.
 // Si lasciano per primi quelli di sotto, nell'ordine; «Nuova entità», «Dividi in parti» e «Nuovo connettore fra due parti» restano sempre in barra.
 var azOrdine = [];
-var azCedi = ['b-passa', 'b-togli', 'b-annulla', 'b-pubblico', 'b-collega', 'b-parte'];
+var azCedi = ['b-passa', 'b-togli', 'b-rinomina-posto', 'b-annulla', 'b-pubblico', 'b-collega', 'b-parte'];
 var azLarg = -1;
 function adattaAzioni() {
   var a = $('azioni');
@@ -1670,6 +1665,7 @@ function ridisegnaScheda() {
   vn.hidden = !(oggetto && oggetto.scheda.versione_nuova);
   vn.textContent = vn.hidden ? '' : T('versione_nuova');
   ridisegnaAzioniScheda(oggetto);
+  ridisegnaRotti(oggetto);
   var c = $('scheda-righe');
   svuota(c);
   if (oggetto) {
@@ -1824,6 +1820,11 @@ function ridisegnaAzioniScheda(oggetto) {
     bv.title = T('b_nuova_versione_aiuto');
     a.appendChild(bv);
   }
+  // : «Rinomina…» accanto a «Nuova versione»: il nome del connettore o dell'entità
+  var spRin = {kind: sel.tipo === 'csc' ? 'csc' : 'entity', vecchio: sel.nome, blocco: '', dove: ''};
+  var br = pulsante('b-rinomina', T('b_rinomina'), '', () => avviaRinomina(spRin));
+  br.title = T('b_rinomina_aiuto');
+  a.appendChild(br);
   if (sel.tipo === 'entita') {
     // : mettere dentro, spostare il posto scelto sul Banco, togliere l'entità
     var nomeS = sel.nome;
@@ -1933,6 +1934,12 @@ function apriCasella(o, da, a, iniz, titolo) {
       invia(msg);
     }
   }));
+  var mi = /^\s*(GUARANTEE|ASSUME|SCENARIO)\s+([A-Za-z][A-Za-z0-9_-]*)/.exec(testi[0]);
+  if (mi && !esBlocco(o) && (base.tipo === 'csc' || base.tipo === 'entita')) {
+    // : una riga che il modulo non conosce (una storia) si rinomina da qui
+    var spId2 = {kind: 'id', vecchio: mi[2], blocco: o.nome, dove: base.tipo === 'csc' ? 'csc' : 'entita'};
+    riga.appendChild(pulsante('f-rinomina-id', T('b_rinomina_id'), '', () => avviaRinomina(spId2), completa !== null));
+  }
   riga.appendChild(pulsante('f-annulla', T('annulla'), '', () => chiudiScheda()));
   m.appendChild(riga);
   controlla();
@@ -2115,6 +2122,11 @@ function apriModuloScheda(genere, d) {
       ridisegna();
     }));
   }
+  if (d && (genere === 'promessa' || genere === 'ipotesi')) {
+    // : l'identificativo di una riga si cambia con la rinomina, non con il modulo
+    var spId = {kind: 'id', vecchio: d.id, blocco: o.nome, dove: base.tipo === 'csc' ? 'csc' : 'entita'};
+    riga.appendChild(pulsante('f-rinomina-id', T('b_rinomina_id'), '', () => avviaRinomina(spId), completa !== null));
+  }
   if (d && genere !== 'scopo') {
     riga.appendChild(pulsante('f-togli', T('b_togli'), 'togli', () => {
       confermaScheda(T('togli_dich_' + genere, d.id, o.nome),
@@ -2178,6 +2190,7 @@ function ridisegnaStato(esito) {
 var ultimoEsito = null;
 function ridisegna() {
   if (!M) return;
+  rifNascondi();
   if (corrente && !entita(corrente)) corrente = null;
   if (sel && !oggettoDi(sel.tipo, sel.nome)) sel = null;
   // il riquadro di Completa appartiene a ciò che è scelto; scegliendo altro si chiude (il giro resta in FILE.giro: si riprende
@@ -2202,6 +2215,7 @@ function ridisegna() {
   ridisegnaScheda();
   ridisegnaStato(ultimoEsito);
   aggiornaLingua();
+  spegniScritture();
 }
 
 $('t-fuori').addEventListener('click', () => { vista = 'fuori'; puntato = null; chiudiModulo(); ridisegna(); });
@@ -2223,6 +2237,7 @@ function bcddDisegna(testo, ora, esito, seleziona) {
   ultimoEsito = esito ? JSON.parse(esito) : null;
   if (ultimoEsito && ultimoEsito.completa) esitoCompleta(ultimoEsito.completa);
   scegliRigheNuove();
+  if (ultimoEsito && ultimoEsito.rinomina) applicaRinomina(ultimoEsito.rinomina);
   if (seleziona && entita(seleziona)) {
     albSel = null;
     corrente = seleziona;
@@ -2236,7 +2251,9 @@ function bcddDisegna(testo, ora, esito, seleziona) {
   $('controllato').textContent = '';
   $('avviso').hidden = true;
   mostraDoppi();
+  mostraGiornale();
   ridisegna();
+  if (rinominaDopo) { var rd = rinominaDopo; rinominaDopo = null; if (rinomEsiste(rd)) apriRinomina(rd); }
   // un errore che parla di righe precise: la casella di testo si apre su quelle righe
   if (ultimoEsito && ultimoEsito.casella) {
     var cz = ultimoEsito.casella;
@@ -2685,9 +2702,28 @@ function campoNumero(box, aggiorna) {
   i.value = appr.numero;
   var err = el('div', 'campo-err');
   err.id = 'a-num-err';
-  var mostra = () => { err.textContent = appr.numero.trim() !== '' && !numeroValido() ? T('ap_numero_err') : ''; };
+  // il primo D-nnn libero del registro di questo file, accanto al campo, senza scriverlo nel campo;
+  // se il numero scritto è già nel registro se ne mostra la riga, come informazione
+  var o = oggettoSel();
+  var fx = o && M && M.ext ? M.ext[o.file] : null;
+  var libero = el('div', 'muto piccolo');
+  libero.id = 'a-num-libero';
+  libero.textContent = fx ? T('ap_libero', 'D-' + fx.libero) : '';
+  var nota = el('div', 'muto piccolo');
+  nota.id = 'a-num-reg';
+  var mostra = () => {
+    err.textContent = appr.numero.trim() !== '' && !numeroValido() ? T('ap_numero_err') : '';
+    var riga = '';
+    if (fx && fx.chiaveReg && numeroValido() && M.registri && M.registri[fx.chiaveReg]) {
+      var rr = M.registri[fx.chiaveReg].righe[String(parseInt(appr.numero.trim().substring(2), 10))];
+      if (rr !== undefined) riga = T('ap_gia_nel_registro', appr.numero.trim(), rr);
+    }
+    nota.textContent = riga;
+  };
   i.addEventListener('input', () => { appr.numero = i.value; mostra(); aggiorna(); });
   l.appendChild(i);
+  l.appendChild(libero);
+  l.appendChild(nota);
   l.appendChild(err);
   box.appendChild(l);
   mostra();
@@ -2905,10 +2941,235 @@ function testoCita(c) {
   if (c.tipo === 'IMPORT') return T('cita_non_trovato', T('cita_profilo', c.nome));
   return T('cita_non_trovato', c.motivo ? c.motivo : c.nome);
 }
+// ---- i riferimenti interni: in una stringa o in un commento, una parola che è un nome dichiarato nelle cartelle aperte
+// (M.nomi: connettori, entità, tipi, eventi, promesse e presupposti) mostra la dichiarazione al passaggio del mouse e porta lì con un clic.
+// Solo il confronto esatto sulla parola intera (con i trattini interni, come i nomi del linguaggio); mai parole comuni, mai testo come HTML.
+var rifDi = null, rifIndice = null;
+function rifTabella() {
+  if (rifDi !== M || !rifIndice) {
+    rifDi = M;
+    rifIndice = Object.create(null);
+    ((M && M.nomi) || []).forEach((o) => { (rifIndice[o.nome] = rifIndice[o.nome] || []).push(o); });
+  }
+  return rifIndice;
+}
+// il pezzo di testo diviso in [testo, nome|null]: nome se la parola intera è dichiarata
+function rifSpezza(testo) {
+  var tab = rifTabella(), out = [], i = 0, cur = '';
+  var parola = (c) => /[A-Za-z0-9_]/.test(c);
+  while (i < testo.length) {
+    var c = testo.charAt(i);
+    if (!parola(c)) { cur += c; i++; continue; }
+    var k = i;
+    while (k < testo.length && (parola(testo.charAt(k)) || (testo.charAt(k) === '-' && k > i && parola(testo.charAt(k + 1) || '')))) k++;
+    var w = testo.substring(i, k);
+    if (tab[w]) { if (cur) out.push([cur, null]); cur = ''; out.push([w, w]); } else cur += w;
+    i = k;
+  }
+  if (cur) out.push([cur, null]);
+  return out;
+}
+// le dichiarazioni di un nome, la più vicina per prima: stessa voce del file, stesso file, stessa cartella, le altre
+function rifOrdina(nome, oggetto) {
+  var l = (rifTabella()[nome] || []).slice(), cart = null;
+  ((M && M.nomi) || []).forEach((o) => { if (cart === null && o.file === oggetto.file) cart = o.cartella; });
+  var peso = (o) => (o.file === oggetto.file && o.blocco === oggetto.nome && o.blocco_tipo === (sel && sel.tipo === 'entita' ? 'ENTITY' : 'CSC') ? 0 : (o.file === oggetto.file ? 1 : (o.cartella === cart ? 2 : 3)));
+  return l.map((o, i) => [peso(o), i, o]).sort((a, b) => a[0] - b[0] || a[1] - b[1]).map((x) => x[2]);
+}
+// un pezzo di testo libero: le parole che sono nomi dichiarati diventano riferimenti interni (W-20), il resto è testo
+function rifPezzo(cont, testo, libero, oggetto) {
+  if (!testo) return;
+  if (!libero) { cont.appendChild(document.createTextNode(testo)); return; }
+  rifSpezza(testo).forEach((p) => {
+    if (p[1] === null) { cont.appendChild(document.createTextNode(p[0])); return; }
+    var r = el('span', 'rif', p[0]);
+    r.setAttribute('data-rif', p[1]);
+    r.addEventListener('click', (ev) => { ev.stopPropagation(); rifNascondi(); rifVai(rifOrdina(p[1], oggetto)[0]); });
+    cont.appendChild(r);
+  });
+}
+// / : i riferimenti esterni e le decisioni di una riga li ha trovati il programma (M.ext[file].linee[riga] = [colonna, lunghezza, chiave],
+// in unità di JavaScript); qui si disegnano. Dentro un riferimento esterno non si riconoscono quelli interni (R5).
+function spanRiferimenti(box, segs, oggetto, n) {
+  var fx = M && M.ext ? M.ext[oggetto.file] : null;
+  var lista = fx && fx.linee && fx.linee[n] ? fx.linee[n].slice().sort((x, y) => x[0] - y[0]) : [];
+  var pos = 0;
+  segs.forEach((s) => {
+    var da = pos, a = pos + s[0].length;
+    pos = a;
+    var libero = s[1] === 'stringa' || s[1] === 'commento';
+    var mie = lista.filter((x) => x[0] >= da && x[0] + x[1] <= a);
+    if (!libero && mie.length === 0) { spanSegmenti(box, [s]); return; }
+    var cont = s[1] ? el('span', 'hl-' + s[1]) : box;
+    var cur = da;
+    mie.forEach((x) => {
+      if (x[0] < cur) return;
+      rifPezzo(cont, s[0].substring(cur - da, x[0] - da), libero, oggetto);
+      var v = fx.voci[x[2]];
+      var r = el('span', 'rife' + (v && v.ok ? '' : ' rotto'), s[0].substring(x[0] - da, x[0] + x[1] - da));
+      r.setAttribute('data-ext', x[2]);
+      r.addEventListener('click', (ev) => { ev.stopPropagation(); rifEsterno(r, oggetto, x[2], ev); });
+      cont.appendChild(r);
+      cur = x[0] + x[1];
+    });
+    rifPezzo(cont, s[0].substring(cur - da), libero, oggetto);
+    if (cont !== box) box.appendChild(cont);
+  });
+}
+function rifVai(d) {
+  if (!d) return;
+  var qui = sel && ((d.blocco_tipo === 'ENTITY' && sel.tipo === 'entita') || (d.blocco_tipo === 'CSC' && sel.tipo === 'csc')) && sel.nome === d.blocco;
+  if (!qui) {
+    chiudiModulo();
+    if (d.blocco_tipo === 'ENTITY') scegliEntita(d.blocco, null); else scegliCsc(d.blocco);
+  }
+  portaARiga(d.riga);
+}
+var rifMax = 4;
+function rifFinestrella(nome, oggetto, ev) {
+  var tip = $('rif-tip');
+  svuota(tip);
+  var l = rifOrdina(nome, oggetto);
+  var piu = M.cartelle && M.cartelle.length > 1;
+  l.slice(0, rifMax).forEach((d) => {
+    var box = el('div', 'rif-voce');
+    box.appendChild(el('div', 'rif-testa', T('rif_testa', T('rif_tipo_' + d.genere), d.nome, d.blocco, d.file + (piu && d.cartella ? ' · ' + etichetta(d.cartella) : ''))));
+    if (d.testo) box.appendChild(el('div', 'rif-testo', d.testo));
+    tip.appendChild(box);
+  });
+  if (l.length > rifMax) tip.appendChild(el('div', 'rif-testa', (l.length - rifMax === 1 ? T('rif_altra') : T('rif_altre', l.length - rifMax))));
+  tip.hidden = false;
+  var w = tip.offsetWidth, h = tip.offsetHeight;
+  var x = ev.clientX + 12, y = ev.clientY + 18;
+  if (x + w > window.innerWidth - 8) x = Math.max(8, window.innerWidth - w - 8);
+  if (y + h > window.innerHeight - 8) y = Math.max(8, ev.clientY - h - 10);
+  tip.style.left = x + 'px';
+  tip.style.top = y + 'px';
+}
+var rifFissa = false;
+function rifNascondi() { var t = $('rif-tip'); if (t) { t.hidden = true; t.classList.remove('fissa'); } rifFissa = false; }
+// ---- i riferimenti a documenti esterni: la resa minima del testo mostrato (T6) e la finestrella (E2, E3)
+// Resa: `**x**` in grassetto, `x` in carattere di codice, [t](u) come t, il resto com'è; sempre testo (T7), mai HTML.
+function rifInline(box, testo) {
+  var re = /\*\*([^*]+)\*\*|`([^`]+)`|\[([^\]]*)\]\([^)]*\)/g, cur = 0, m;
+  var aggiungi = (t, tag) => {
+    if (!t) return;
+    box.appendChild(tag ? el(tag, null, t) : document.createTextNode(t));
+  };
+  while ((m = re.exec(testo)) !== null) {
+    aggiungi(testo.substring(cur, m.index), null);
+    if (m[1] !== undefined) { var b = el('b'); rifInline(b, m[1]); box.appendChild(b); }
+    else if (m[2] !== undefined) aggiungi(m[2], 'code');
+    else aggiungi(m[3], null);
+    cur = m.index + m[0].length;
+  }
+  aggiungi(testo.substring(cur), null);
+}
+function rifResa(box, testo) {
+  testo.split('\n').forEach((r) => {
+    var d = el('div', /^\s*\|/.test(r) ? 'rif-riga rif-tab' : 'rif-riga');
+    if (r === '') d.textContent = ' ';
+    else rifInline(d, r);
+    box.appendChild(d);
+  });
+}
+function rifMotivo(v) {
+  var a = v.a, b = v.b;
+  switch (v.cod) {
+    case 'RF-1': return T('rf1', a);
+    case 'RF-2': return T('rf2', a);
+    case 'RF-3': return T('rf3', a);
+    case 'RF-4': return T('rf4', a, b);
+    case 'RF-5': return T('rf5', a, b);
+    case 'RF-6': return T('rf6', T('rf6_' + a, b));
+    case 'RF-7': return T('rf7', 'D-' + v.num, a);
+    case 'RF-8': return T('rf8', 'D-' + v.num);
+    case 'RF-9': return T('rf9', a);
+    case 'RF-10': return T('rf10', a, b);
+  }
+  return v.cod;
+}
+function rifVoceEsterna(tip, v, fissa, oggetto, chiave) {
+  var box = el('div', 'rif-voce');
+  if (!v) return;
+  if (!v.ok) {
+    box.appendChild(el('div', 'rif-testa rif-rotto', T('rife_rotto', v.cod)));
+    box.appendChild(el('div', 'rif-testo', rifMotivo(v)));
+  } else if (v.t === 'dec') {
+    box.appendChild(el('div', 'rif-testa', T('rife_dec_testa', 'D-' + v.num, v.reg)));
+    var cd = el('div', 'rif-testo');
+    rifResa(cd, v.testo);
+    box.appendChild(cd);
+    if (v.oltre) box.appendChild(el('div', 'rif-testa', '…'));
+    if (v.volte > 1) box.appendChild(el('div', 'rif-testa', T('rife_dec_volte', 'D-' + v.num, v.volte)));
+  } else if (v.t === 'url') {
+    box.appendChild(el('div', 'rif-testa', T('rife_url_testa', v.eti)));
+    box.appendChild(el('div', 'rif-testo', v.dest));
+    if (fissa) box.appendChild(pulsante('rife-apri', T('rife_apri_browser'), 'mini', () => { invia({azione: 'apri_rif', 'file': oggetto.file, chiave: chiave}); }));
+  } else {
+    box.appendChild(el('div', 'rif-testa', T('rife_testa', v.eti, v.dest, v.riga)));
+    if (v.testo) {
+      var ct = el('div', 'rif-testo');
+      rifResa(ct, v.testo);
+      box.appendChild(ct);
+    }
+    if (v.oltre) box.appendChild(el('div', 'rif-testa', T('rife_continua', v.nomefile, v.oltre)));
+    if (fissa) box.appendChild(pulsante('rife-apri', T('rife_apri_file'), 'mini', () => { invia({azione: 'apri_rif', 'file': oggetto.file, chiave: chiave}); }));
+  }
+  tip.appendChild(box);
+}
+function rifPosiziona(tip, ev) {
+  tip.hidden = false;
+  var w = tip.offsetWidth, h = tip.offsetHeight;
+  var x = ev.clientX + 12, y = ev.clientY + 18;
+  if (x + w > window.innerWidth - 8) x = Math.max(8, window.innerWidth - w - 8);
+  if (y + h > window.innerHeight - 8) y = Math.max(8, ev.clientY - h - 10);
+  tip.style.left = x + 'px';
+  tip.style.top = y + 'px';
+}
+function rifEsternaFinestrella(chiave, oggetto, ev, fissa) {
+  var fx = M && M.ext ? M.ext[oggetto.file] : null;
+  if (!fx) return;
+  var tip = $('rif-tip');
+  svuota(tip);
+  rifVoceEsterna(tip, fx.voci[chiave], fissa, oggetto, chiave);
+  tip.classList.toggle('fissa', fissa);
+  rifFissa = fissa;
+  rifPosiziona(tip, ev);
+}
+// il clic: la finestrella resta aperta, con il pulsante che apre il file o l'indirizzo (E3); si chiude con un clic fuori o con Esc
+function rifEsterno(r, oggetto, chiave, ev) { rifEsternaFinestrella(chiave, oggetto, ev, true); }
+document.addEventListener('click', (ev) => { if (rifFissa && !$('rif-tip').contains(ev.target)) rifNascondi(); });
+document.addEventListener('keydown', (ev) => { if (rifFissa && ev.key === 'Escape') rifNascondi(); });
+// una sola coppia di ascoltatori sul riquadro della scheda (le righe si rifanno a ogni disegno); niente timer
+$('scheda-righe').addEventListener('mouseover', (ev) => {
+  if (rifFissa) return;
+  var r = ev.target.closest ? ev.target.closest('.rif, .rife') : null;
+  if (!r) { rifNascondi(); return; }
+  var o = oggettoSel();
+  if (!o) return;
+  if (r.classList.contains('rife')) rifEsternaFinestrella(r.getAttribute('data-ext'), o, ev, false);
+  else rifFinestrella(r.getAttribute('data-rif'), o, ev);
+});
+$('scheda-righe').addEventListener('mouseleave', () => { if (!rifFissa) rifNascondi(); });
+// E7: «link rotti: N» per il file della scheda; il clic porta al primo che la scheda mostra
+function ridisegnaRotti(oggetto) {
+  var b = $('scheda-rotti');
+  var fx = oggetto && M && M.ext ? M.ext[oggetto.file] : null;
+  var n = fx && fx.rotti ? fx.rotti.length : 0;
+  b.hidden = n === 0;
+  b.textContent = n === 0 ? '' : T('rotti_n', n);
+  b.title = n === 0 ? '' : T('rotti_aiuto');
+  b.onclick = () => {
+    var primo = null;
+    if (fx) fx.rotti.forEach((x) => { if (primo === null && document.querySelector('#scheda-righe [data-id="r-' + x + '"]')) primo = x; });
+    if (primo !== null) portaARiga(primo);
+  };
+}
 function creaRiga(oggetto, r) {
   var cl = r.colore === 'verde' ? 'verde' : (r.colore === 'giallo' ? 'ipo' : (r.colore === 'rosso' ? 'rosso' : ''));
   var rd = el('div', cl + (r.g >= 0 || r.nota ? ' riga-cl' : '') + (r.nonric !== undefined ? ' nonric' : '') + (r.ripetuto ? ' ripetuto' : ''));
-  if (r.seg) spanSegmenti(rd, r.seg);
+  if (r.seg) spanRiferimenti(rd, r.seg, oggetto, r.n);
   else rd.appendChild(document.createTextNode(r.testo === '' ? ' ' : r.testo));
   rd.setAttribute('data-id', 'r-' + r.n);
   if (r.approvata) rd.appendChild(el('span', 'et', T('et_approvata', r.approvata)));
@@ -3307,7 +3568,7 @@ function ridisegnaCartelle() {
   svuota(box);
   cs.forEach((c, i) => {
     var g = el('div', 'car-gruppo');
-    var t = el('button', 'car-testa' + (c.selezionata ? ' on' : ''), c.nome);
+    var t = el('button', 'car-testa' + (c.selezionata ? ' on' : ''), etichetta(c.percorso));
     t.type = 'button';
     t.setAttribute('data-id', 'car:' + i);
     t.setAttribute('aria-pressed', c.selezionata ? 'true' : 'false');
@@ -3356,6 +3617,266 @@ $('b-cartella-togli').addEventListener('click', () => {
   if (i >= 0 && M.cartelle.length > 1) invia({azione: 'cartella_togli', indice: String(i)});
 });
 document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && cartelleAperto()) apriChiudiCartelle(false); });
+
+// ---- : «Rinomina…». La pagina chiede a `bcdd rename` l'anteprima (--dry-run) e poi la scrittura (--expect con
+// l'impronta dell'anteprima e i testi scelti); nessuna regola di rinomina è calcolata qui, salvo i controlli d'aiuto N1-N3 sul campo. Testo solo con textContent.
+var rinom = null;           // la rinomina aperta: {sp, m, campo, pann, fase, p, scelte}
+var rinominaDopo = null;    // la rinomina da aprire quando la Ricarica (fatta perdendo la modifica, E1) ha ridisegnato
+var NOME_WINDOWS = /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i;
+var ID_RIN = /^[A-Za-z][A-Za-z0-9_-]{0,63}$/;
+function giornalePresente() { return !!(M && M.giornali && M.giornali.length > 0); }
+function vRinomina(sp) {
+  return (s) => {
+    if (s === '') return T('scrivi_nome');
+    if (sp.kind === 'id') { if (!ID_RIN.test(s) || /-$/.test(s)) return T('rinom_id_non_valido', s); }
+    else if (!NOME.test(s)) return T('nome_non_valido', s);
+    if (M.riservate.indexOf(s) >= 0) return T('parola_riservata', s);
+    if ((sp.kind === 'csc' || sp.kind === 'entity') && NOME_WINDOWS.test(s)) return T('rinom_windows', s);
+    if (s === sp.vecchio) return T('rinom_uguale');
+    return '';
+  };
+}
+function rinomEsiste(sp) {
+  if (sp.kind === 'csc') return !!cscDi(sp.vecchio);
+  if (sp.kind === 'entity') return !!entita(sp.vecchio);
+  if (sp.kind === 'part') { var e = entita(sp.blocco); return !!e && !!e.parti.filter((x) => x.parte === sp.vecchio).length; }
+  return !!oggettoDi(sp.dove === 'csc' ? 'csc' : 'entita', sp.blocco);
+}
+// E1: con una modifica non salvata la striscia chiede, come Ricarica (e-9): perdere la modifica (si rilegge e si apre il modulo) o tenerla
+function avviaRinomina(sp) {
+  if (completa !== null || giornalePresente()) return;
+  if (!sporco) { apriRinomina(sp); return; }
+  var a = $('avviso');
+  svuota(a);
+  a.hidden = false;
+  a.appendChild(el('span', '', T('rinom_sporco') + ' '));
+  a.appendChild(pulsante('f-rinomina-si', T('rinom_sporco_si'), 'primario', () => { chiudiAvvisoRicarica(); rinominaDopo = sp; ricaricaOra(); }));
+  a.appendChild(pulsante('f-rinomina-no', T('rinom_sporco_no'), '', chiudiAvvisoRicarica));
+}
+function chiudiRinomina() { rinom = null; chiudiScheda(); chiudiModulo(); }
+function apriRinomina(sp) {
+  var inBanco = sp.kind === 'part';
+  chiudiModulo();
+  chiudiScheda();
+  var m = inBanco ? $('modulo') : $('scheda-modulo');
+  svuota(m);
+  m.hidden = false;
+  m.className = 'modulo rinomina';
+  if (inBanco) moduloAperto = 'rinomina'; else moduloScheda = {tipo: sel.tipo, nome: sel.nome};
+  m.appendChild(el('div', 'titolo', T('rinom_titolo_' + sp.kind, sp.vecchio, sp.blocco)));
+  var cn = campoV(m, 'f-rin-nome', T('rinom_nome_nuovo'), sp.vecchio, vRinomina(sp));
+  var pann = el('div', 'rin-pannello');
+  pann.id = 'rin-pannello';
+  m.appendChild(pann);
+  var riga = el('div', 'riga-btn');
+  var bm = pulsante('rin-mostra', T('rinom_mostra'), 'primario', () => {
+    if (!cn.verifica()) return;
+    invia({azione: 'rinomina_anteprima', kind: sp.kind, vecchio: sp.vecchio, nuovo: cn.campo.value, blocco: sp.blocco || '', dove: sp.dove || ''});
+  }, true);
+  riga.appendChild(bm);
+  riga.appendChild(pulsante('f-annulla', T('annulla'), '', chiudiRinomina));
+  m.appendChild(riga);
+  rinom = {sp: sp, m: m, campo: cn.campo, pann: pann, bm: bm, riga: riga, fase: 'modulo', p: null, scelte: {}};
+  // cambiando il nome l'anteprima non vale più: sparisce e si rifà con «Mostra che cosa cambia»
+  cn.campo.addEventListener('input', () => {
+    bm.disabled = !cn.verifica();
+    if (rinom && rinom.fase !== 'modulo') { svuota(pann); rinom.fase = 'modulo'; rinom.p = null; }
+  });
+  cn.campo.focus();
+  cn.campo.select();
+  spegniScritture();
+}
+// ---- le etichette delle cartelle (V1-V5): il più breve tratto finale, a segmenti interi, che distingue la cartella da tutte le altre aperte
+function sepCartella(p) { return String(p).indexOf('\\') >= 0 && String(p).indexOf('/') < 0 ? '\\' : '/'; }
+function senzaSepFinale(p) { var q = String(p).replace(/[\\/]+$/, ''); return q === '' ? String(p) : q; }
+function segmentiCartella(p) { return String(p).split(/[\\/]+/).filter((x) => x !== ''); }
+function etichetteCartelle() {
+  var cs = ((M && M.cartelle) || []).map((c) => senzaSepFinale(c.percorso)), sg = cs.map(segmentiCartella), out = {};
+  cs.forEach((p, i) => {
+    var sep = sepCartella(p), s = sg[i], et = p;
+    for (var k = 1; k <= s.length; k++) {
+      var t = s.slice(s.length - k).join('\u0000');
+      var uguale = sg.some((o, j) => j !== i && o.length >= k && o.slice(o.length - k).join('\u0000') === t);
+      if (!uguale) { et = k === s.length ? p : s.slice(s.length - k).join(sep); break; }
+    }
+    out[p] = et;
+  });
+  return out;
+}
+function etichetta(c) { var p = senzaSepFinale(c), e = etichetteCartelle()[p]; return e === undefined ? p : e; }   // V4: una cartella che non c'è si mostra per intero
+function rinFile(c, f) { return etichetta(c) + sepCartella(c) + f; }
+function rinTitolo(e, c) { e.title = senzaSepFinale(c); return e; }
+function senzaPrefisso(t) { return String(t || '').replace(/^bcdd rename: /, ''); }
+// il nome evidenziato dentro una riga: dalla colonna di bcdd (sul testo vecchio) se coincide, se no alla prima occorrenza
+function evidenzia(box, testo, col, nome) {
+  var i = testo.substr(col, nome.length) === nome ? col : testo.indexOf(nome);
+  if (i < 0) { box.textContent = testo; return; }
+  box.appendChild(document.createTextNode(testo.substring(0, i)));
+  box.appendChild(el('mark', 'rin-nome', nome));
+  box.appendChild(document.createTextNode(testo.substring(i + nome.length)));
+}
+function catTesto(c) { return T('rinom_cat_' + (c === 'stringa' || c === 'commento' || c === 'E20' ? c : 'non_riconosciuta')); }
+function bcddRinomina(testo) {
+  var p = JSON.parse(testo);
+  var q = rinom;
+  if (!q || !q.m.isConnected || q.m.hidden || q.sp.kind !== p.kind || q.sp.vecchio !== p.vecchio || (q.sp.blocco || '') !== p.blocco) return;
+  mostraRinomina(q, p);
+}
+function mostraRinomina(q, p) {
+  var pn = q.pann, r = p.r, sp = q.sp, i;
+  svuota(pn);
+  q.p = p;
+  q.campo.disabled = false;
+  q.fase = 'esito';
+  q.riga.querySelectorAll('.rin-ok').forEach((b) => b.remove());
+  if (r === null) {
+    var er = el('div', 'rin-esito no', p.errore || T('rinom_senza_risposta', ''));
+    er.id = 'rin-esito';
+    pn.appendChild(er);
+    return;
+  }
+  if (r.esito === 'rifiutato') {
+    if (r.motivo === 'approvato') {
+      // 8.3: un nome approvato non si cambia con un clic; la spiegazione, i bloccanti e, se stanno tutti nel blocco dell'elemento, «Nuova versione…»
+      q.campo.disabled = true;
+      q.bm.disabled = true;
+      pn.appendChild(el('div', 'rin-esito no', T('rinom_approvato'))).id = 'rin-approvato';
+      var lb = el('div', 'rin-bloccanti');
+      lb.id = 'rin-bloccanti';
+      r.bloccanti.forEach((b) => lb.appendChild(rinTitolo(el('div', 'rin-riga', T('rinom_bloccante', rinFile(b.cartella, b.file), b.riga, b.testo, b.decisione ? b.motivo + ', ' + b.decisione : b.motivo)), b.cartella)));
+      pn.appendChild(lb);
+      var o = (sp.kind === 'csc' || sp.kind === 'entity') ? oggettoDi(sp.kind === 'csc' ? 'csc' : 'entita', sp.vecchio) : null;
+      if (o && o.scheda && o.scheda.nv && sel && sel.nome === sp.vecchio && r.bloccanti.length > 0 && r.bloccanti.every((b) => b.file === o.file))
+        pn.appendChild(pulsante('rin-versione', T('rinom_b_versione'), 'primario', () => { rinom = null; apriVersione(oggettoDi(sp.kind === 'csc' ? 'csc' : 'entita', sp.vecchio)); }));
+      return;
+    }
+    var em = el('div', 'rin-esito no', senzaPrefisso(r.messaggio));
+    em.id = 'rin-esito';
+    pn.appendChild(em);
+    if (r.motivo === 'cambiato' || r.motivo === 'scrittura' || r.motivo === 'giornale') {
+      q.campo.disabled = true;
+      q.bm.disabled = true;
+      pn.appendChild(pulsante('rin-ricarica', T('b_ricarica'), 'primario', ricaricaOra));
+    }
+    return;
+  }
+  // l'anteprima
+  var nr = 0, nf = 0;
+  r.file.forEach((f) => { nr += f.modifiche.length; if (f.modifiche.length > 0 || f.nome_nuovo) nf++; });
+  var sint = nr === 0 ? T('rinom_sintesi_nessuna') : (nr === 1 && nf === 1 ? T('rinom_sintesi_una') : (nf === 1 ? T('rinom_sintesi_un_file', nr) : T('rinom_sintesi', nr, nf)));
+  var sx = el('div', 'rin-sintesi', sint);
+  sx.id = 'rin-sintesi';
+  pn.appendChild(sx);
+  r.file.forEach((f) => {
+    if (f.nome_nuovo) pn.appendChild(rinTitolo(el('div', 'rin-file-nuovo', T('rinom_file_diventa', rinFile(f.cartella, f.nome), f.nome_nuovo)), f.cartella));
+  });
+  r.compagni.forEach((c) => pn.appendChild(rinTitolo(el('div', 'rin-file-nuovo', T('rinom_file_diventa', rinFile(c.cartella, c.da), c.a)), c.cartella)));
+  var elf = el('div', 'rin-righe codice');
+  elf.id = 'rin-righe';
+  r.file.forEach((f) => {
+    if (f.modifiche.length === 0) return;
+    elf.appendChild(rinTitolo(el('div', 'rin-file', rinFile(f.cartella, f.nome)), f.cartella));
+    f.modifiche.forEach((m) => {
+      var a1 = el('div', 'rin-riga'), a2 = el('div', 'rin-riga');
+      a1.appendChild(el('span', 'rin-n', T('rinom_riga_n', m.riga) + ': '));
+      evidenzia(a1, m.prima, m.colonna, r.vecchio);
+      a2.appendChild(el('span', 'rin-n', '→ '));
+      evidenzia(a2, m.dopo, m.colonna, r.nuovo);
+      elf.appendChild(a1);
+      elf.appendChild(a2);
+    });
+  });
+  pn.appendChild(elf);
+  q.scelte = {};
+  if (r.testi.length > 0) {
+    pn.appendChild(el('div', 'rin-nei-testi', T('rinom_nei_testi')));
+    var lt = el('div', 'ap-elenco');
+    lt.id = 'rin-testi';
+    r.testi.forEach((t) => {
+      var desc = T('rinom_testo_riga', rinFile(t.cartella, t.file), t.riga, catTesto(t.categoria), t.testo);
+      if (t.bloccato) {
+        var bl = rinTitolo(el('div', 'ap-voce rin-bloccato', t.n + ' [=] ' + desc + ' (' + T('rinom_resta', r.vecchio) + ')'), t.cartella);
+        bl.id = 'rin-b-' + t.n;
+        lt.appendChild(bl);
+        return;
+      }
+      var lab = rinTitolo(el('label', 'ap-voce'), t.cartella);
+      var c = el('input');
+      c.type = 'checkbox';
+      c.id = 'rin-t-' + t.n;
+      c.checked = !!t.scelto;
+      q.scelte[t.n] = !!t.scelto;
+      c.addEventListener('change', () => { q.scelte[t.n] = c.checked; });
+      lab.appendChild(c);
+      lab.appendChild(el('span', null, t.n + ' ' + desc));
+      lt.appendChild(lab);
+    });
+    pn.appendChild(lt);
+  }
+  pn.appendChild(el('div', 'muto piccolo', T('rinom_cartelle', r.vecchio))).id = 'rin-cartelle';
+  if (r.controllo && r.controllo.invariato) pn.appendChild(el('div', 'muto piccolo', T('rinom_controllo', r.controllo.file))).id = 'rin-controllo';
+  var ok = pulsante('rin-ok', T('rinom_b_rinomina'), 'primario rin-ok', () => {
+    var testi = [];
+    r.testi.forEach((t) => { if (!t.bloccato && q.scelte[t.n]) testi.push(t.n); });
+    ok.disabled = true;
+    invia({azione: 'rinomina_scrivi', kind: sp.kind, vecchio: sp.vecchio, nuovo: p.nuovo, blocco: sp.blocco || '', dove: sp.dove || '', impronta: r.impronta, testi: testi});
+  });
+  q.riga.insertBefore(ok, q.riga.firstChild);
+  q.fase = 'anteprima';
+  spegniScritture();
+}
+// dopo una rinomina riuscita (8.5): la scelta passa al nome nuovo, nella stessa vista; i moduli aperti e la modifica non salvata non ci sono più
+function applicaRinomina(rn) {
+  rinom = null;
+  chiudiModulo();
+  chiudiScheda();
+  ling = '';
+  appr = null;
+  if (rn.kind === 'entity') {
+    if (corrente === rn.vecchio) corrente = rn.nuovo;
+    if (sel && sel.tipo === 'entita' && sel.nome === rn.vecchio) sel = {tipo: 'entita', nome: rn.nuovo};
+    if (scomposte[rn.vecchio]) { scomposte[rn.nuovo] = true; delete scomposte[rn.vecchio]; }
+    albSel = null;
+  } else if (rn.kind === 'csc') {
+    if (sel && sel.tipo === 'csc' && sel.nome === rn.vecchio) sel = {tipo: 'csc', nome: rn.nuovo};
+  }
+}
+
+// ---- : una rinomina interrotta. La striscia dice quale e offre «Ripristina»; finché il giornale c'è ogni azione che scrive è spenta
+function mostraGiornale() {
+  if (!giornalePresente()) return;
+  var a = $('avviso');
+  if (a.hidden) svuota(a);
+  a.hidden = false;
+  var g = M.giornali[0];
+  var rg = el('div', 'rin-giornale');
+  rg.id = 'avviso-giornale';
+  rg.appendChild(el('span', '', (g.vecchio ? T('giornale_avviso', g.vecchio, g.nuovo) : T('giornale_avviso_senza')) + ' '));
+  var b = pulsante('f-ripristina', T('b_ripristina'), 'primario', () => invia({azione: 'rinomina_ripristina', indice: String(g.indice)}));
+  b.title = T('b_ripristina_aiuto');
+  rg.appendChild(b);
+  a.appendChild(rg);
+}
+var LETTURA = ['f-annulla', 'b-apri', 'b-altro', 'rin-ricarica', 'f-ripristina'];
+function spegniScritture() {
+  if (!giornalePresente()) return;
+  ['azioni', 'scheda-azioni', 'modulo', 'scheda-modulo', 'scheda-approva', 'scheda-completa'].forEach((id) => {
+    var c = $(id);
+    if (!c) return;
+    c.querySelectorAll('button, input, select, textarea').forEach((b) => {
+      if (LETTURA.indexOf(b.id) >= 0) return;
+      b.disabled = true;
+      b.title = T('giornale_spento');
+    });
+  });
+}
+// rete di sicurezza: un clic su un bottone che scrive, con il giornale presente, non parte (il programma rifiuterebbe comunque)
+document.addEventListener('click', (ev) => {
+  var b = ev.target && ev.target.closest ? ev.target.closest('button') : null;
+  if (!b || !giornalePresente() || LETTURA.indexOf(b.id) >= 0 || !b.closest('#azioni, #scheda-azioni, #modulo, #scheda-modulo, #scheda-approva, #scheda-completa')) return;
+  ev.preventDefault();
+  ev.stopImmediatePropagation();
+}, true);
 
 // ---- l'ultima cosa: le etichette fisse nella lingua della pagina (<html lang>)
 applicaLingua();

@@ -88,6 +88,8 @@ proc gtk_file_chooser_set_local_only*(c: pointer, v: cint) {.importc, cdecl.}
 proc gtk_file_chooser_get_files*(c: pointer): ptr GSListNodo {.importc, cdecl.}      # una GSList di GFile (da liberare)
 proc g_file_get_path*(f: pointer): cstring {.importc, cdecl.}                        # nil se il file non ha un percorso locale (gvfs non montato)
 proc g_file_get_uri*(f: pointer): cstring {.importc, cdecl.}
+proc g_filename_to_uri*(nome: cstring, host: cstring, err: ptr ptr GError): cstring {.importc, cdecl.}      # «Apri il file»
+proc g_app_info_launch_default_for_uri*(uri: cstring, ctx: pointer, err: ptr ptr GError): cint {.importc, cdecl.}
 proc g_slist_free*(l: ptr GSListNodo) {.importc, cdecl.}
 proc gtk_widget_destroy*(w: pointer) {.importc, cdecl.}
 proc gtk_events_pending*(): cint {.importc, cdecl.}

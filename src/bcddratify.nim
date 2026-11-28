@@ -343,6 +343,7 @@ proc runRatify*(args: seq[string]) =
   # 084:2:1 Lettura, cartelle (F3b, passo 3) e precondizione: il file passa check --strict, con le citazioni cercate anche in --dir
   let raw = loadSource(P, file)
   for d in dirs: checkDirArg(P, d)
+  armGiornale("ratify", file)      # 084:2:2 K1, K6: la cartella di FILE; le --dir si leggono e non si scrivono
   searchFile = file
   searchDirs = dirs
   let rep = analyzeFull(raw)

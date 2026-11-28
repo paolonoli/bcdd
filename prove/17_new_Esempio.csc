@@ -1,5 +1,5 @@
 -- CSC creata da bcdd new. Si scrive a mano; bcdd check controlla la forma.
--- Senza STATUS RATIFIED nessuna riga è contratto: è da approvare finché l'operatore non la approva.
+-- Senza STATUS RATIFIED nessuna riga fa parte del contratto: è da approvare finché l'operatore non la approva.
 
 CSC Esempio VERSION 0.1
   STATUS HYPOTHESIS

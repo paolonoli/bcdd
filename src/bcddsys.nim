@@ -140,6 +140,23 @@ proc pathExistsNoFollow*(path: string): bool =
     var st: Stat
     lstat(path.cstring, st) == 0
 
+type EntryProbe* = enum
+  epAbsent, epPresent, epUnknown
+
+proc probeEntry*(path: string): EntryProbe =
+  ## 076:3:5 la voce c'è, di qualunque tipo e senza seguire i collegamenti (lstat); assente solo se il sistema dice
+  ## «il nome non esiste» (ENOENT, ENOTDIR); ogni altro errore dà epUnknown e chi chiama si comporta come se la voce ci fosse.
+  when defined(windows):
+    let a = getFileAttributesW(wide(path))
+    if a != InvalidAttr: return epPresent
+    let e = getLastError()
+    if e in [ErrFileNotFound, ErrPathNotFound, ErrInvalidName, ErrDirectory]: epAbsent else: epUnknown
+  else:
+    var st: Stat
+    if lstat(path.cstring, st) == 0: return epPresent
+    let e = errno
+    if e == ENOENT or e == ENOTDIR: epAbsent else: epUnknown
+
 proc dirOpenable*(path: string): bool =
   ## 076:3:4 La cartella si può aprire per elencarla.
   when defined(windows):

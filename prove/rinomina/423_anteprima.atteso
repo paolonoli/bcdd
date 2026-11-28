@@ -1,0 +1,31 @@
+bcdd rename: anteprima, csc Luce -> Lampadina
+file rinominato: luce/Luce.csc -> luce/Lampadina.csc
+luce/Lampada.csc
+  riga 4: OFFERS Luce
+       -> OFFERS Lampadina
+luce/Luce.csc
+  riga 2: CSC Luce VERSION 0.1
+       -> CSC Lampadina VERSION 0.1
+  riga 14: BINDING Luce VERSION 0.1
+        -> BINDING Lampadina VERSION 0.1
+luce/LuceProva.csc
+  riga 1: VERIFICATION Luce VERSION 0.1
+       -> VERIFICATION Lampadina VERSION 0.1
+luce/LuceScale.csc
+  riga 4: OFFERS Luce
+       -> OFFERS Lampadina
+  riga 12: @1 s   Luce.accesa = true
+        -> @1 s   Lampadina.accesa = true
+comuni/Corridoio.csc
+  riga 4: OFFERS Luce VERSION 0.1
+       -> OFFERS Lampadina VERSION 0.1
+testi ([x] cambia, [ ] resta, [=] resta: riga approvata):
+  t1 [x] luce/Luce.csc, riga 1, commento: -- Luce: la plafoniera vista da chi la comanda (vedi LuceScale).
+  t2 [x] luce/Luce.csc, riga 4, stringa: PURPOSE "La Luce si accende e si spegne"
+  t3 [x] luce/Luce.csc, riga 6, stringa: GUARANTEE la1: VERBAL "Una pressione accende la Luce"
+  t4 [x] luce/LuceProva.csc, riga 4, stringa: @0 s   VERBAL "la Luce è accesa"
+  t5 [=] luce/LuceScale.csc, riga 8, stringa: GUARANTEE ls1 STATUS RATIFIED BY D-6: VERBAL "Una pressione a Luce spenta la accende"
+  t6 [x] comuni/Corridoio.csc, riga 1, commento: -- Il corridoio usa la stessa Luce delle scale.
+controllo: invariato su 8 file
+impronta: sha256:…
+per scrivere: bcdd rename luce/Luce.csc --dir comuni --expect sha256:… csc Luce Lampadina

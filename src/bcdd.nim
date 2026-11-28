@@ -4,7 +4,7 @@
 # 040:1:2 Codici d'uscita: 0 bene, 1 errori (o file esistente per `new`), 2 uso o file non leggibile,
 # 040:1:3 3 solo righe non riconosciute con --strict (GRAMMATICA_F1 sezioni 10 e 11).
 import std/os
-import bcddcheck, bcddprog, bcddnew, bcddsafe, bcddratify, bcddrefine, bcddsave, bcddtesti, bcddsys
+import bcddcheck, bcddprog, bcddnew, bcddsafe, bcddratify, bcddrefine, bcddsave, bcddrename, bcddtesti, bcddsys
 
 proc fail(msg: string, code: int) = die(msg, code)
 
@@ -57,6 +57,7 @@ proc runNew(args: seq[string]) =
   let name = args[0]
   if not validName(name): fail(testo(kNewNomeNonValido, name), 2)
   if isDeviceName(name): fail(testo(kNewNomeDispositivo, name), 2)
+  armGiornale("new", "x")     # 040:5:1 K1, K5: `new` guarda la cartella corrente, scritta `.`
   let target = name & ".csc"
   var why = ""
   case createExclusive(target, skeleton(name), why)
@@ -68,6 +69,8 @@ proc runNew(args: seq[string]) =
     fail(testo(kNewEsiste, target), 1)
   of crFailed:
     fail(testo(kNewNonRiescoCreare, target, why), 1)
+  of crJournal:
+    fail(testo(kRinGiornaleScrivo, "new", "."), 1)
 
 proc setupLang(args: seq[string]): seq[string] =
   ## 040:3:1: `--lang it|en` solo prima del comando, poi BCDD_LANG, poi l'inglese; LANG non si legge.
@@ -101,6 +104,7 @@ proc main() =
   of "ratify": runRatify(args[1 .. ^1])
   of "refine": runRefine(args[1 .. ^1])
   of "save": runSave(args[1 .. ^1])
+  of "rename": runRename(args[1 .. ^1])
   else: fail(testo(kUsoGenerale), 2)
 
 main()

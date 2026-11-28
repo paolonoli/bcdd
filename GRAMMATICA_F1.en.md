@@ -6,7 +6,7 @@
 **BCDD** = *Behavioural Contract-Driven Design* · **CSC** = *Capability State Contract*
 
 **Status**: version 1.0-beta. It describes the form of the `.csc` files that the program `bcdd` reads, the errors it
-reports, the report of `bcdd check` and the use of the commands `check`, `new` and `ratify`.
+reports, the report of `bcdd check` and the use of the commands `check`, `new`, `ratify` and `rename`.
 
 ## Contents of the document
 
@@ -19,7 +19,7 @@ names and types, 4.14 the use of extensions); section 8 lists the errors; sectio
 report of `bcdd check`, character by character (9.4 entities and citations, 9.5 compositions, 9.6
 concrete forms and the verification plan, 9.7 the entries to be judged and the checks not executed); sections 10, 11 and
 12 describe the commands `check`, `new` and `ratify`; section 13 describes the dialogue file; section 14 lists
-what `bcdd` does not check.
+what `bcdd` does not check; section 15 describes the command `rename`.
 
 The language, with its examples, is presented in *The BCDD manual*; this document uses its terms (the
 glossary is Appendix C of the manual). `bcdd` reads all the forms of the language described in the manual: the
@@ -2444,7 +2444,7 @@ Properties that `check` respects:
 For an unknown command and for `bcdd` without arguments: nothing on standard output, and on standard error
 
 ```
-usage: bcdd [--lang it|en] COMMAND; commands: new NAME | check [--strict] [--json] [--dir FOLDER]... FILE | refine FILE [--csc NAME] | ratify FILE [--csc NAME] [--dir FOLDER]... [ID | --all] D-number
+usage: bcdd [--lang it|en] COMMAND; commands: new NAME | check [--strict] [--json] [--dir FOLDER]... FILE | refine FILE [--csc NAME] | ratify FILE [--csc NAME] [--dir FOLDER]... [ID | --all] D-number | rename FILE [--csc NAME] [--dir FOLDER]... (--dry-run | --expect FINGERPRINT) csc|entity|part|id OLD NEW | rename --recover FOLDER
 ```
 
 on a single line, with a final LF; code 2.
@@ -2466,7 +2466,8 @@ on a single line, with a final LF; code 2.
   `without P`, in Italian `con P` and `senza P`, section 4.10). With `refine` the request to the language model is
   also in the chosen language. The following do not change: keywords, error codes, line and column numbers, the first
   line of the report (which does not show `--lang`), the structure of the report, exit codes, literal values of
-  options (`--expect nuovo`, `--modello veloce|accurato`), the markers of the dialogue file, the `STATUS RATIFIED BY`
+  options (`--expect nuovo`, `--modello veloce|accurato`, `--text default|none|all` and the values `csc`, `entity`, `part`,
+  `id` of `rename`), the markers of the dialogue file, the `STATUS RATIFIED BY`
   lines written by `ratify`.
 - With `--json` the object has, immediately after `"versione"`, the additional field `"lingua"` (`"it"` or `"en"`);
   keys and enumerated values do not change, only the text fields for the person change (among others `messaggio`,
@@ -2486,6 +2487,7 @@ on a single line, with a final LF; code 2.
 | NAME is not a Name (rule L7) | nothing | `bcdd new: invalid name: NAME` | 2 | none |
 | missing or extra arguments | nothing | `usage: bcdd new NAME` | 2 | none |
 | NAME is, in any combination of upper and lower case, a name that Windows reserves for a device (`CON`, `PRN`, `AUX`, `NUL`, `COM1`…`COM9`, `LPT1`…`LPT9`); on every system, because a folder of CSCs must be able to move from Linux to Windows | nothing | `bcdd new: the name “NAME” cannot be used: Windows reserves it (reserved names: CON, PRN, AUX, NUL, COM1-9, LPT1-9). Choose another name` | 2 | none |
+| the current folder contains the journal of an interrupted rename (section 15.6) | nothing | `bcdd new: there is an interrupted rename in .: I am not writing anything; run bcdd rename --recover .` | 1 | none |
 | the file cannot be created or written: folder without write permission, disk full, any other system error | nothing | `bcdd new: I cannot create NAME.csc: CAUSE` | 1 | none, not even a temporary file |
 
 The file is created in full or not at all: it must never remain half-written.
@@ -2578,7 +2580,8 @@ The first check that fails decides the message and the code; the file is not tou
 2. Reading of the file: the same cases as `bcdd check` (section 10), with the prefix `bcdd ratify:` in place
    of `bcdd check:`.
 3. The `--dir` folders, one at a time in the written order, with the cases and messages of section 10 and the prefix
-   `bcdd ratify:` (for example `bcdd ratify: folder not found: ARG`), code 2.
+   `bcdd ratify:` (for example `bcdd ratify: folder not found: ARG`), code 2. Then the interrupted rename: if the
+   folder of `FILE` contains the journal `.bcdd-rinomina`, code 1 (section 15.6).
 4. **The file passes `bcdd check --strict`**: no errors and no unrecognised lines, in the whole file. Only
    what `bcdd` has read in full is approved. The check searches for the citations of the entities as `check` does: in the
    same file, in its folder and in the `--dir` folders. An E14, an E04 or an unrecognised line in
@@ -2793,6 +2796,7 @@ change. `ARG`, `ID`, `NAME`, `FILE` are the arguments as they were written.
 | the ID is not a word of rule L8 | `bcdd ratify: invalid id: ARG` | 2 |
 | the name after `--csc` is not a Name | `bcdd ratify: invalid name: ARG` | 2 |
 | file not found, not a file, not readable, not UTF-8 | as in `check`, with the prefix `bcdd ratify:` | 2 |
+| the folder of `FILE` contains the journal of an interrupted rename (section 15.6) | `bcdd ratify: there is an interrupted rename in FOLDER: I am not writing anything; run bcdd rename --recover FOLDER` | 1 |
 | the file does not pass `bcdd check --strict` | `bcdd ratify: the file does not pass bcdd check --strict (errors: E, unrecognised lines: U): I am not approving` | 1 |
 | no block to approve (only `VERIFICATION`) | `bcdd ratify: the file contains no block to approve: a VERIFICATION is not approved` | 1 |
 | no CSC or entity and several blocks among `BINDING` and `PROFILE`, no `--csc` | `bcdd ratify: the file contains N blocks to approve: say which with --csc NAME` | 2 |
@@ -2855,9 +2859,9 @@ written, `CAUSE` the description of the error given by the system, as in `bcdd n
 
 ## 13. The dialogue file
 
-The file `FILE.dialogo` is located next to the CSC file. It is written only by `bcdd refine`, which keeps in it the questions of the language
-model and the answers of the person, and sends it to the model in subsequent rounds; `check` and `ratify` do not
-read it, and it is not a CSC file. Example, for the staircase light (the first lines of a file with two rounds):
+The file `FILE.dialogo` is located next to the CSC file. It is written by `bcdd refine`, which keeps in it the questions of the language
+model and the answers of the person, and sends it to the model in subsequent rounds; `bcdd rename` changes only its
+name and the name in the `GIRO` lines (section 15.2); `check` and `ratify` do not read it, and it is not a CSC file. Example, for the staircase light (the first lines of a file with two rounds):
 
 ```
 -- bcdd refine: questions from the language model and answers from the person. It can be edited or deleted by hand.
@@ -2948,3 +2952,162 @@ The list states explicitly what `bcdd` does not check, so that nobody believes i
   choice of the language, not a limitation of `bcdd`;
 - **meaning**: whether a guarantee in words is sensible, consistent with the others or verifiable is stated
   by whoever judges, not by `bcdd`.
+
+---
+
+## 15. The `bcdd rename` command
+
+`bcdd rename` changes the name of a CSC, of an entity, of a part of an entity, or the short name of a `GUARANTEE`,
+of an `ASSUME` or of a `SCENARIO`, in all the `.csc` files of the folders given. It changes only names inside forms
+that are already recognised: no line is added or removed, and the rest of every line stays identical byte for byte,
+alignment spaces included. Columns aligned after the name are not realigned.
+
+### 15.1 Form
+
+```
+bcdd rename FILE [--csc NAME] [--dir FOLDER]... --dry-run [--json] KIND OLD NEW
+bcdd rename FILE [--csc NAME] [--dir FOLDER]... --expect FINGERPRINT [--text default|none|all | --text-at tN...] [--json] KIND OLD NEW
+bcdd rename --recover FOLDER [--json]
+```
+
+- `KIND` is `csc`, `entity`, `part` or `id`. The values are not translated.
+- `FILE` contains the declaration of `OLD` (`csc`, `entity`), or the block that contains the part (`part`) or the
+  line (`id`). `--csc NAME` selects that block when the file contains more than one, as in step 5 of section 12.2 and
+  with the same messages; with `csc` and `entity` it is incorrect usage.
+- **The folders** are the folder of `FILE` and the `--dir` folders, with the rules of `check` (section 10). `rename`
+  reads the regular files whose name ends with `.csc`, directly in each folder; subfolders are not read. A file name
+  present in two folders is a refusal. Outside these folders no file changes: a file in another folder that cites the
+  old name keeps a citation that, after the rename, is not found (section 9.4).
+- The options are written in any order before the three final arguments, each one only once; `--dir` and
+  `--text-at` can be repeated.
+- `--dry-run` shows the preview and writes nothing. `--expect FINGERPRINT` writes. Without either option, or with
+  both, it is incorrect usage.
+- Usage line (code 2, standard output empty):
+
+```
+usage: bcdd rename FILE [--csc NAME] [--dir FOLDER]... (--dry-run | --expect FINGERPRINT [--text default|none|all | --text-at tN...]) [--json] csc|entity|part|id OLD NEW
+       bcdd rename --recover FOLDER [--json]
+```
+
+### 15.2 What changes
+
+| `KIND` | Positions in which the name changes |
+|---|---|
+| `csc` | the name of every header `CSC N VERSION v` (G1); `OFFERS N` and `USES N` (G32, G33); the first name of `BINDING N` (G40) and of `VERIFICATION N` (G48); the first name of every `N.y` in the scenarios and formulas of entities (G36) |
+| `entity` | the name of every header `ENTITY E VERSION v` (G31); the second name of a part `p : E` (G34) |
+| `id` | the declaration (G16, G19); every `DETAILS I` of the block; every `SCENARIO x TRANSLATES I` (G53) in the `VERIFICATION` blocks of the same CSC and the same version |
+| `part` | the first name of `P : X` (G34), in every line of the block and in every segment |
+
+- With `csc` and `entity`, the file named exactly `N.csc` that contains the declaration becomes `M.csc` in the same
+  folder; a file with another name keeps its name. The dialogue file `N.csc.dialogo`, if it exists, becomes
+  `M.csc.dialogo`, and in the `GIRO` lines the name becomes `M` (section 13). The file `N.csc.prima` does not change.
+- **Free text.** In strings and comments a word equal to the old name does not change by itself: the preview lists it
+  with a number (`t1`, `t2`, …), and the choice is stated when the rename is written. `--text default` (the value used when the
+  option is absent) selects the words in strings and comments with `csc`, `entity` and `id`, and no word with
+  `part`; `--text none` selects none; `--text all` all of them; `--text-at tN` exactly those given. The text of the
+  dialogue file is never offered.
+- Events, states, requests, types, constants, values of a list, profiles, extensions, distinguishing names (`AS`) and
+  instruments are not renamed.
+
+### 15.3 Approved lines
+
+The rename is refused, and no file changes, if a name to be changed is in a line that cannot be modified without a
+new approval:
+- a line whose effective status is approved (section 7.1), in full;
+- in a block whose header is approved, the header and every line that is not a line pending approval with its own
+  `STATUS`; in an approved profile, every line;
+- with `csc` and `entity`, the header of a block that contains at least one approved line.
+
+The lines that are never approved (`OFFERS`, `USES`, parts, entity scenarios, entity header) are changed even in an
+entity with approved guarantees. A word equal to the old name in the text of an approved line does not prevent the
+rename and stays unchanged. An approved name changes only with a new version: the lines listed by the refusal are put
+back to pending approval, the rename is made, then they are approved with a new decision.
+
+### 15.4 The new name, the preview and the write
+
+- `NEW` is a Name (rule L7) with `csc`, `entity` and `part`, an Id (rule L8) with `id`; with `csc` and `entity` it is
+  not a name that Windows reserves for a device, as in `bcdd new` (section 11).
+- `NEW` differs from `OLD`; it is not already declared in the folders (with `id` and `part`, in the block); with `csc`
+  and `entity` it is not already cited without being declared, because after the rename the citation would indicate
+  the renamed block; in the folder of a file to be renamed there is no file, folder or link named `NEW.csc` or
+  `NEW.csc.dialogo`, not even with different upper and lower case, except the file itself when only the case
+  changes. The check on case applies on every system.
+- **The preview** lists the lines that change, before and after, the renamed files and the free-text words with their
+  number, and ends with the fingerprint of the state of the folders (`fingerprint: sha256:…`). With `--expect
+  FINGERPRINT`, `bcdd` computes the fingerprint again: if a `.csc` file of the folders has changed, has been added or
+  removed, or a destination name has appeared, it writes nothing. The choice of the free-text words does not enter
+  the fingerprint.
+- **The invariance check.** Before writing, `bcdd` checks every file of the folders as `bcdd check --strict` does, on
+  the current texts and on the new texts. For every file the following must coincide: the exit code, the errors (code
+  and line), the numbers of the unrecognised lines and, for every citation, whether it is found and with which
+  version. Otherwise no file changes. A file with errors can be renamed: what matters is that the outcome does not
+  change.
+- **All or nothing.** Before changing a file, `bcdd` writes a journal `.bcdd-rinomina` in every folder in which at
+  least one file changes, with copies of the old and new texts; then it replaces the files, with the safe write of
+  section 12.6, and at the end removes copies and journals. From the moment it starts writing, Ctrl-C is deferred. If
+  a write fails, the files already written are restored to their previous state. If the process stops without being able to go
+  back, the journals remain.
+- **The recovery.** `bcdd rename --recover FOLDER` reads the journal of the folder: if all the replacements had been
+  made, it removes copies and journals; otherwise it brings every file back to the text it had before. If a file has
+  neither the previous text nor the new one, it touches nothing and leaves the journals. If restoring the previous text
+  fails on a file, the journals remain and the command can be run again once the cause of the failure has been fixed.
+
+### 15.5 Exit codes and messages
+
+| Code | Meaning |
+|---|---|
+| 0 | preview shown; rename written; recovery done or completed |
+| 1 | the command is clear, but the files do not allow it: messages in the table below |
+| 2 | the command cannot be executed as written: incorrect usage; invalid new name (`invalid name for KIND: NEW`, or, with `csc` and `entity`, the message of `bcdd new` for a name that Windows reserves for a device, section 11); `FILE` or `--dir` as in `check` (section 10); always with the prefix `bcdd rename:` |
+
+It is the same distinction as in `bcdd new` and `bcdd ratify`. Every message goes to standard error with the prefix
+`bcdd rename:` and ends with LF; standard output stays empty, except with `--json`, and no file changes.
+
+| Case | Message |
+|---|---|
+| declaration missing | `FILE does not contain CSC OLD` (`ENTITY OLD`); `no GUARANTEE, ASSUME or SCENARIO with id OLD in block B`; `no part OLD in ENTITY B` |
+| same name | `the new name is the same as the old one: I am changing nothing` |
+| approved line (section 15.3) | `OLD cannot be renamed: it appears in N approved lines:` (when N is 1: `OLD cannot be renamed: it appears in 1 approved line:`), then one line for each blocked line, `  FILE, line N: TEXT (REASON)`, with `REASON` one of `approved header, D-n`, `approved line, D-n`, `the block has approved lines: line R, D-n`, `approved profile, D-n`, then `An approved name changes only with a new version: put the listed lines back to pending approval (New version), rename, then approve with a new decision.` |
+| name already declared | `NEW is already used: FILE, line N: TEXT` |
+| name already cited | `NEW is already cited in FILE, line N, without being declared: after the rename the citation would indicate OLD` |
+| destination file exists | `FOLDER/X already exists: I am not overwriting it`, or `X.csc already exists, and on Windows it is the same name as NEW.csc` |
+| file name in two folders | `the file X.csc is in two folders (A, B): rename does not choose which one to rewrite; give only one of the two folders` |
+| link | `X.csc is a symbolic link: rename does not move it`; `X.csc has more than one hard link: I am not rewriting it` |
+| unreadable file in the folders | `I cannot read FOLDER/X.csc (not readable)`, or `(not UTF-8)`, followed by `: nothing written` |
+| journal present | `there is an interrupted rename in FOLDER (OLD -> NEW): run bcdd rename --recover FOLDER`, with the names read from the journal; `(? -> ?)` if the journal cannot be read or is not in the expected form |
+| files changed after the preview | `the files have changed since the preview: nothing written. Run the preview again` |
+| invalid free-text choice | `tN does not exist in the preview`; `tN is in an approved line: it keeps the old name` |
+| write error | `I cannot write X: CAUSE; nothing written`; `I cannot write X: CAUSE; the files already written are back as they were`; `write interrupted on X (CAUSE) and recovery failed: run bcdd rename --recover FOLDER`. `CAUSE` is `already exists`, `the written file does not match the checked text`, or the text of the system error |
+| path that cannot be written in the journal | `the path P contains a tab or a line feed: nothing written` |
+| recovery without a journal | `there is no interrupted rename in FOLDER` |
+| recovery on a file with unexpected content | `X is neither the previous text nor the new one: I am touching nothing; the previous text is in .N.rinomina-vecchio.ID`, with `X` the file that does not match and `N` the starting name |
+| recovery failed | `recovery failed on X (CAUSE): the journals remain; fix the cause and run bcdd rename --recover FOLDER again`; `CAUSE` is `copy of the previous text missing or different: .X.rinomina-vecchio.ID`, or the text of the system error |
+| unreadable journal | `I cannot read the journal PATH (not readable): I am touching nothing`; `the journal PATH is not in the expected form: I am touching nothing` |
+| internal error | `internal error: the check of X would change (before: …; after: …); nothing written`; `internal error: X does not pass the rules of bcdd save; nothing written` |
+
+With `--json` standard output contains a single object, with `"forma": "bcdd-rename"` and `"versione": 1`, also for
+refusals with code 1; the field `esito` is `anteprima`, `scritto`, `rifiutato`, `ripristinato` or `completato`. For
+incorrect usage standard output stays empty.
+
+### 15.6 Writes with an interrupted rename
+
+As long as a folder contains the journal of an interrupted rename, the commands that write do not write anything in
+that folder. `bcdd check` does not examine it: its report stays the same, byte for byte.
+
+| Command | Folder examined | Message |
+|---|---|---|
+| `bcdd new` | the current folder, written `.` | `bcdd new: there is an interrupted rename in .: I am not writing anything; run bcdd rename --recover .` |
+| `bcdd ratify` | the folder of `FILE` | `bcdd ratify: there is an interrupted rename in FOLDER: I am not writing anything; run bcdd rename --recover FOLDER` |
+| `bcdd refine`, in every form except `--show` | the folder of `FILE` | `bcdd refine: there is an interrupted rename in FOLDER: I am not writing anything; run bcdd rename --recover FOLDER` |
+| `bcdd save`, in every form that writes or removes a file | the folder of `FILE` | `bcdd save: there is an interrupted rename in FOLDER: I am not writing anything; run bcdd rename --recover FOLDER` |
+| `bcdd rename` | every folder in which a file would change | section 15.5, “journal present” |
+
+- The journal is present if the folder contains an entry named `.bcdd-rinomina`, of any type (file, folder, link,
+  including a link whose target does not exist). Its content is not read. If the system does not allow establishing
+  that the entry is missing, the command behaves as if it were present.
+- `FOLDER` is the part of `FILE` before the last separator, as written; `.` if `FILE` contains no separator. The
+  `--dir` folders of `ratify` are read and not written, so they are not examined.
+- The exit code is 1; standard output stays empty, also with `--json`; no file is created, changed or removed.
+- The check is made after the checks with code 2 on the arguments and on the file, before any other check with code
+  1 and, for `refine`, before any call to the language model. `ratify`, `refine` and `save` repeat it immediately
+  before writing: if the journal has appeared in the meantime, they write nothing, with the same message.

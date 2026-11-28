@@ -7,6 +7,7 @@ nimcache/
 tests/nimcache/
 tests/tbcdd
 tests/teditor
+tests/trinomina
 tests/bcdd_prova
 tests/bcdd-editor_prova
 tests/*.exe

@@ -1,0 +1,5 @@
+VERIFICATION Luce VERSION 0.1
+  MEANS occhio OBSERVES accesa RESOLUTION 40 ms
+  SCENARIO s1-occhio TRANSLATES s1
+    @0 s   VERBAL "la Luce è accesa"
+END

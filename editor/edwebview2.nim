@@ -172,6 +172,15 @@ proc scegliCartelle*(titolo, annulla, scegli, iniziale: string, aggiungi = false
   let (ok, c) = sceltaCartelleWin(titolo, scegli, iniziale, padre)
   Scelta(ok: ok, cartelle: c)
 
+proc shellExecuteW(h: pointer, op, file, par, dir: ptr Utf16Char, mostra: int32): pointer {.stdcall, dynlib: "shell32", importc: "ShellExecuteW".}
+
+proc apriEsterno*(bersaglio: string): bool =
+  ## : apre un file o un indirizzo http(s) con l'applicazione predefinita (ShellExecuteW, «open»).
+  ## Non provato su Windows in questa sessione. Un valore di ritorno oltre 32 è un successo.
+  let op = newWideCString("open")
+  let f = newWideCString(bersaglio)
+  cast[int](shellExecuteW(nil, addr op[0], addr f[0], nil, nil, 1)) > 32
+
 proc mostraErrore*(titolo, testo: string) = messaggioWin(titolo, testo)
 
 proc apri*(sc: Scheda, g: Gestori): string =

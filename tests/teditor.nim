@@ -11,6 +11,7 @@ import ../editor/edbcdd
 import ../editor/edazioni
 import ../editor/edtesti
 import ../editor/edlinea
+import ../editor/edrif
 import std/[math, sets]
 
 proc toHashSetLocal(l: openArray[string]): HashSet[string] = l.toHashSet
@@ -1488,7 +1489,7 @@ else:
       raccogli(s)
       let sonde = sondeP(s)
       rec("AC-220", "riga approvata: la nota dice «per cambiarla usa Nuova versione» e la casella non c'è, per STATUS e per la promessa",
-        fine and sonde.len >= 6 and sonde[0] == "scheda-nota visibile Questa riga è già approvata (è un contratto): per cambiarla usa Nuova versione." and
+        fine and sonde.len >= 6 and sonde[0] == "scheda-nota visibile Questa riga è già approvata (fa parte del contratto): per cambiarla usa Nuova versione." and
         sonde[1] == "f-testo assente" and sonde[2] == sonde[0] and sonde[3] == "f-testo assente", $sonde)
       rec("AC-220", "l'intestazione di un connettore approvato non apre la casella: stessa nota, f-testo assente (D-236)",
         sonde.len >= 6 and sonde[4] == sonde[0] and sonde[5] == "f-testo assente", $sonde)
@@ -1763,7 +1764,7 @@ block:
     rec("AC-228", "Metti dentro con il bottone: Citofono.csc ha il posto nuovo, riga per riga; gli altri file sono quelli di prima",
       readFile(d / "Citofono.csc").splitLines() == citMetti.splitLines() and readFile(d / "Cavo.csc") == alCavo and readFile(d / "Ascensore.csc") == alAscensore, readFile(d / "Citofono.csc"))
     rec("AC-228", "un solo save; la frase dice «Metto Cavo dentro Citofono, al posto:» e il nome proposto è «cavo»; l'elenco non offre Cavo (se stesso)",
-      azioniLanci(s).count("save") == 1 and q.len >= 3 and "Metto Cavo dentro Citofono, al posto:" in q[2] and "assente" in q[1], $azioniLanci(s) & " " & cut($q, 300))
+      azioniLanci(s).count("save") == 1 and q.len >= 3 and "Metto Cavo dentro Citofono, come parte con il nome:" in q[2] and "assente" in q[1], $azioniLanci(s) & " " & cut($q, 300))
     s.finisci()
   block:
     let d = cartellaAlbero()
@@ -1777,7 +1778,7 @@ block:
     var s = sessAlbero(d, "#alb:Cavo|@b-metti|@f-dove-Ascensore|=f-posto:su|?e-f-posto|!f-ok|#alb:Ascensore|@b-metti|?f-dove-Pulsante|?f-dove-Motore|?f-dove-Ascensore|?f-dove-Cavo", "sonda Q:f-dove-Cavo")
     let q = sondeDi(s)
     rec("AC-228", "nome già usato: il modulo lo dice prima di scrivere e «Sì» è spento",
-      q.len >= 2 and "Ascensore ha già un posto che si chiama su." in q[0] and "spento" in q[1], cut($q, 300))
+      q.len >= 2 and "Ascensore ha già una parte che si chiama su." in q[0] and "spento" in q[1], cut($q, 300))
     rec("AC-228", "Ascensore non si mette dentro se stessa né dentro ciò che contiene (Pulsante, Motore): l'elenco non li offre; Cavo sì",
       q.len >= 6 and "assente" in q[2] and "assente" in q[3] and "assente" in q[4] and "visibile" in q[5], cut($q, 400))
     rec("AC-228", "nessuna scrittura", fotografia(d) == prima and azioniLanci(s).count("save") == 0, $azioniLanci(s))
@@ -1790,9 +1791,9 @@ block:
     sleep(700)
     let q = sondeDi(s)
     let ok = q.len >= 7
-    rec("AC-228", "il trascinamento: Cavo su Ascensore è accettato e apre «Metto Cavo dentro Ascensore»", ok and "accettato" in q[0] and "Metto Cavo dentro Ascensore, al posto:" in q[1], cut($q, 400))
+    rec("AC-228", "il trascinamento: Cavo su Ascensore è accettato e apre «Metto Cavo dentro Ascensore»", ok and "accettato" in q[0] and "Metto Cavo dentro Ascensore, come parte con il nome:" in q[1], cut($q, 400))
     rec("AC-228", "Ascensore su un posto di ciò che contiene farebbe un giro: rifiutato", ok and "rifiutato" in q[2], cut($q, 400))
-    rec("AC-228", "un posto (pulsante di Citofono) su Cavo apre «Sposto il posto pulsante (Pulsante) da Citofono a Cavo»", ok and "accettato" in q[3] and "Sposto il posto pulsante (Pulsante) da Citofono a Cavo, al posto:" in q[4], cut($q, 400))
+    rec("AC-228", "un posto (pulsante di Citofono) su Cavo apre «Sposto la parte pulsante (Pulsante) da Citofono a Cavo»", ok and "accettato" in q[3] and "Sposto la parte pulsante (Pulsante) da Citofono a Cavo, con il nome:" in q[4], cut($q, 400))
     rec("AC-228", "un'entità su se stessa non è un bersaglio", ok and "rifiutato" in q[5], cut($q, 400))
     rec("AC-228", "il trascinamento da solo non scrive: file uguali", fotografia(d) == prima and azioniLanci(s).count("save") == 0, $azioniLanci(s))
     s.finisci()
@@ -1805,7 +1806,7 @@ block:
     rec("AC-228", "Sposta in: il posto è tolto da Citofono.csc e scritto in Ascensore.csc, riga per riga",
       readFile(d / "Citofono.csc").splitLines() == alCitofono.replace("    pulsante : Pulsante\n", "").splitLines() and
       readFile(d / "Ascensore.csc").splitLines() == alAscensore.replace("    motore : Motore\n", "    motore : Motore\n    pulsanteC : Pulsante\n").splitLines(), readFile(d / "Citofono.csc") & readFile(d / "Ascensore.csc"))
-    rec("AC-228", "due save, nessun altro file toccato; la frase dice da dove a dove", azioniLanci(s).count("save") == 2 and q.len >= 1 and "Sposto il posto pulsante (Pulsante) da Citofono a Ascensore, al posto:" in q[0] and
+    rec("AC-228", "due save, nessun altro file toccato; la frase dice da dove a dove", azioniLanci(s).count("save") == 2 and q.len >= 1 and "Sposto la parte pulsante (Pulsante) da Citofono a Ascensore, con il nome:" in q[0] and
       readFile(d / "Cavo.csc") == alCavo, $azioniLanci(s) & cut($q, 200))
     s.finisci()
     let d2 = cartellaAlbero()
@@ -1828,8 +1829,8 @@ block:
     let clic = "#alb:Ascensore/su|@b-togli-entita|?f-frase|@f-ok|^"
     var s = sessAlbero(d, clic, "sonda Q:^albero")
     let q = sondeDi(s)
-    rec("AC-229", "la conferma elenca i posti: «Pulsante occupa 3 posti: su e giu in Ascensore, pulsante in Citofono. Tolgo anche questi posti.»",
-      q.len >= 1 and "Pulsante occupa 3 posti: su e giu in Ascensore, pulsante in Citofono. Tolgo anche questi posti." in q[0], cut($q, 400))
+    rec("AC-229", "la conferma elenca i posti: «L'entità Pulsante è usata come 3 parti: su e giu in Ascensore, pulsante in Citofono. Tolgo anche queste parti.»",
+      q.len >= 1 and "L'entità Pulsante è usata come 3 parti: su e giu in Ascensore, pulsante in Citofono. Tolgo anche queste parti." in q[0], cut($q, 400))
     rec("AC-229", "i file attesi: Ascensore.csc senza su e giu, Citofono.csc senza pulsante, Pulsante.csc tolto (con Pulsante.csc.prima «tolto»)",
       readFile(d / "Ascensore.csc").splitLines() == alAscensore.replace("    su    : Pulsante\n    giu   : Pulsante\n", "").splitLines() and
       readFile(d / "Citofono.csc").splitLines() == alCitofono.replace("    pulsante : Pulsante\n", "").splitLines() and not fileExists(d / "Pulsante.csc") and
@@ -1864,8 +1865,8 @@ block:
     let ok = q.len >= 6
     rec("AC-229", "entità con righe approvate: «Saldata ha righe approvate: non si toglie» e niente «Sì»", ok and "Saldata ha righe approvate: non si toglie." in q[0] and "assente" in q[1], cut($q, 500))
     rec("AC-229", "posto in un'entità con righe approvate: il rifiuto dice il posto e il motivo",
-      ok and "Padre ha righe approvate: il posto figlia non si toglie, quindi non tolgo Figlia." in q[2] and "assente" in q[3], cut($q, 500))
-    rec("AC-229", "«Sposta in…» dallo stesso posto: «Padre ha righe approvate: il posto figlia non si toglie.»", ok and "Padre ha righe approvate: il posto figlia non si toglie." in q[4] and "assente" in q[5], cut($q, 500))
+      ok and "Padre ha righe approvate: la parte figlia non si toglie, quindi non tolgo Figlia." in q[2] and "assente" in q[3], cut($q, 500))
+    rec("AC-229", "«Sposta in…» dallo stesso posto: «Padre ha righe approvate: la parte figlia non si toglie.»", ok and "Padre ha righe approvate: la parte figlia non si toglie." in q[4] and "assente" in q[5], cut($q, 500))
     rec("AC-229", "nessun file scritto, nessun save", fotografia(d) == prima and azioniLanci(s).count("save") == 0, $azioniLanci(s))
     s.finisci()
   block:
@@ -1902,8 +1903,8 @@ block:
     let clic = "#alb:Ascensore/motore|@b-porta-fuori|?f-frase|@f-ok|^"
     var s = sessAlbero(d, clic, "sonda Q:^albero")
     let q = sondeDi(s)
-    rec("AC-231", "la conferma di un'entità in un solo posto: «Porto fuori Motore da Ascensore? Tolgo il posto motore da Ascensore; il file Motore.csc resta.», senza «resta in»",
-      q.len >= 1 and "Porto fuori Motore da Ascensore? Tolgo il posto motore da Ascensore; il file Motore.csc resta." in q[0] and "resta in" notin q[0], cut($q, 400))
+    rec("AC-231", "la conferma di un'entità in un solo posto: «Porto fuori Motore da Ascensore? Tolgo la parte motore da Ascensore; il file Motore.csc resta.», senza «resta in»",
+      q.len >= 1 and "Porto fuori Motore da Ascensore? Tolgo la parte motore da Ascensore; il file Motore.csc resta." in q[0] and "resta in" notin q[0], cut($q, 400))
     rec("AC-231", "Ascensore.csc senza la riga motore, riga per riga; un solo save; gli altri file uguali",
       readFile(d / "Ascensore.csc").splitLines() == alAscensore.replace("    motore : Motore\n", "").splitLines() and azioniLanci(s).count("save") == 1 and
       readFile(d / "Motore.csc") == alMotore and readFile(d / "Citofono.csc") == alCitofono, $azioniLanci(s) & readFile(d / "Ascensore.csc"))
@@ -1919,7 +1920,7 @@ block:
     var s = sessAlbero(d, "#alb:Citofono/pulsante|@b-porta-fuori|?f-frase|@f-ok|^", "sonda Q:^albero")
     let q = sondeDi(s)
     rec("AC-231", "«Pulsante resta in: Ascensore.» nella conferma",
-      q.len >= 1 and "Porto fuori Pulsante da Citofono? Tolgo il posto pulsante da Citofono; il file Pulsante.csc resta. Pulsante resta in: Ascensore." in q[0], cut($q, 400))
+      q.len >= 1 and "Porto fuori Pulsante da Citofono? Tolgo la parte pulsante da Citofono; il file Pulsante.csc resta. Pulsante resta in: Ascensore." in q[0], cut($q, 400))
     rec("AC-231", "Citofono.csc senza pulsante; Pulsante non è al primo livello", readFile(d / "Citofono.csc").splitLines() == alCitofono.replace("    pulsante : Pulsante\n", "").splitLines() and
       q.len >= 2 and "1:Pulsante" notin q[1] and azioniLanci(s).count("save") == 1, cut($q, 600))
     s.finisci()
@@ -1929,8 +1930,8 @@ block:
     let prima = fotografia(d)
     var s = sessAlbero(d, "#alb:Padre/figlia|@b-porta-fuori|?f-frase|?f-ok", "sonda Q:f-ok assente")
     let q = sondeDi(s)
-    rec("AC-231", "Padre ha righe approvate: «Padre ha righe approvate: il posto figlia non si toglie.» e niente «Sì»; nessun file scritto",
-      q.len >= 2 and "Padre ha righe approvate: il posto figlia non si toglie." in q[0] and "assente" in q[1] and fotografia(d) == prima and azioniLanci(s).count("save") == 0, cut($q, 400))
+    rec("AC-231", "Padre ha righe approvate: «Padre ha righe approvate: la parte figlia non si toglie.» e niente «Sì»; nessun file scritto",
+      q.len >= 2 and "Padre ha righe approvate: la parte figlia non si toglie." in q[0] and "assente" in q[1] and fotografia(d) == prima and azioniLanci(s).count("save") == 0, cut($q, 400))
     s.finisci()
   block:
     # la fascia: a riposo nascosta; un posto trascinato la raggiunge e apre la stessa conferma; un'entità del primo livello no; il trascinamento da solo non scrive
@@ -1940,7 +1941,7 @@ block:
     sleep(500)
     let q = sondeDi(s)
     rec("AC-231", "la fascia «Fuori da tutte» è nascosta a riposo", q.len >= 1 and "nascosto" in q[0] and "Fuori da tutte" in q[0], cut($q, 300))
-    rec("AC-231", "un posto lasciato sulla fascia: accettato, apre «Porto fuori Pulsante da Ascensore? …»", q.len >= 3 and "accettato" in q[1] and "Porto fuori Pulsante da Ascensore? Tolgo il posto su da Ascensore;" in q[2], cut($q, 500))
+    rec("AC-231", "un posto lasciato sulla fascia: accettato, apre «Porto fuori Pulsante da Ascensore? …»", q.len >= 3 and "accettato" in q[1] and "Porto fuori Pulsante da Ascensore? Tolgo la parte su da Ascensore;" in q[2], cut($q, 500))
     rec("AC-231", "la fascia compare nel dragstart di un posto e non sposta il layout (overlay): albero e riga trascinata restano dove sono", q.len >= 2 and "fascia=visibile layout=fermo" in q[1], cut($q, 500))
     rec("AC-231", "un'entità del primo livello sulla fascia: rifiutato, la fascia non compare; nessun file scritto", q.len >= 4 and "rifiutato fascia=nascosta" in q[3] and fotografia(d) == prima and azioniLanci(s).count("save") == 0, cut($q, 500))
     s.finisci()
@@ -3098,6 +3099,747 @@ else:
     "fosPickFolders" in pw and "fosForceFileSystem" in pw and "fosAllowMultiSelect" in pw and "27)(d" in pw and "sigdnFileSysPath" in pw and "SHBrowseForFolderW" notin pw, "")
   rec("AC-250", "GTK: scelta multipla e local-only spento; il percorso locale con g_file_get_path, la cartella senza percorso è rifiutata",
     "gtk_file_chooser_set_select_multiple(d, 1)" in gt and "gtk_file_chooser_set_local_only(d, 0)" in gt and "g_file_get_path" in gt and "rifiutate.add" in gt, "")
+
+block:
+  # AC-417: il comando «Ricarica»
+  if not xvfbOk: senzaXvfb("AC-417", "sessione con Xvfb")
+  else:
+    block:
+      # (a) senza modifiche: ricarica SEMPRE, anche se la firma della cartella è uguale (il ritorno del fuoco l'ha già aggiornata), e ridisegna; nessuna scrittura
+      let d = copiaCartella(root / "prove" / "f3" / "luce")
+      let f = d / "LuceScale.csc"
+      var s = nuovaSessione()
+      s.avviaEditor(@["--lang", "it", "--dir", d, "LuceScale"], root, @[("BCDD_EDITOR_PROVA_CLIC", "~|!b-ricarica|~b-ricarica|@b-ricarica|?esito")])
+      let pronto = attendi(s.trace, "attesa_fuoco", 40)
+      rec("AC-417", "la finestra si apre e il comando aspetta il ritorno del fuoco", pronto, cut(leggiSe(s.dir / "errori")))
+      if pronto:
+        let w = trovaFinestra(display, "bcdd-editor")
+        let lanciPrima = nLanci(s)
+        writeFile(f, leggiSe(f).replace("La luce delle scale", "La luce delle scalo"))   # stessa lunghezza
+        let dopo = fotografia(d)
+        focusAltrove(display, w)
+        let fine = attendi(s.trace, "pagina 3", 20)
+        sleep(300)
+        raccogli(s)
+        rec("AC-417", "il ritorno del fuoco ridisegna (file cambiato) e il clic su Ricarica ridisegna ancora, con la firma già uguale: tre disegni", fine and nDisegni(s) == 3 and "controllato" notin leggiSe(s.trace), $nDisegni(s) & " " & righe(s.trace).filterIt(not it.contains("lancio")).join(" / "))
+        rec("AC-417", "il disegno di Ricarica ha il testo cambiato fuori", "La luce delle scalo" in paginaN(s, 3), cut(paginaN(s, 3)))
+        rec("AC-417", "bcdd è stato rilanciato da Ricarica: tre giri di check su tutti i file (apertura, ritorno del fuoco, Ricarica)", lanciPrima > 0 and nLanci(s) >= 3 * lanciPrima and azioniLanci(s).allIt(it == "check"), $azioniLanci(s))
+        rec("AC-417", "Ricarica non scrive niente", fotografia(d) == dopo, "cartella cambiata")
+        let q = sondeDi(s)
+        rec("AC-417", "il comando è acceso, con la dicitura «Ricarica» e il suggerimento in italiano", q.len >= 2 and "acceso" in q[0] and "titolo=Rilegge i file dal disco e rifà il controllo" in q[1], $q)
+        rec("AC-417", "lo Stato dice «ricaricato dal disco»", q.len >= 3 and "ricaricato dal disco" in q[2], $q)
+      s.finisci()
+    block:
+      # (b) con una modifica non salvata: compare la scelta; «annulla» tiene la modifica (nessun disegno, nessun lancio); «ricarica» la perde
+      let d = copiaCartella(root / "prove" / "f3" / "luce")
+      var s = nuovaSessione()
+      s.avviaEditor(@["--lang", "it", "--dir", d, "LuceScale"], root,
+        @[("BCDD_EDITOR_PROVA_CLIC", "@b-nuova|=f-nome:Zeta|@b-ricarica|?avviso|@f-ricarica-no|!f-nome|?avviso|@b-ricarica|@f-ricarica-si|?f-nome|?avviso")])
+      let fine = attendi(s.trace, "pagina 2", 40)
+      sleep(400)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-417", "la sessione risponde a tutte le sonde e disegna due volte (apertura e ricarica)", fine and q.len >= 5 and nDisegni(s) == 2, $nDisegni(s) & " " & $q)
+      if q.len >= 5:
+        rec("AC-417", "con la modifica non salvata compare la scelta con le due uscite", "visibile" in q[0] and "C'è una modifica non salvata" in q[0] and "Ricarica e perdi la modifica" in q[0] and "Annulla e tieni la modifica" in q[0], cut(q[0]))
+        rec("AC-417", "«Annulla» tiene la modifica: il campo ha ancora il valore e la scelta sparisce", "valore=Zeta" in q[1] and "nascosto" in q[2], $q)
+        rec("AC-417", "«Ricarica e perdi la modifica» chiude il modulo: la modifica è persa", "assente" in q[3] and "nascosto" in q[4], $q)
+      rec("AC-417", "niente è scritto: nessun save, nessun new, Zeta.csc non esiste", azioniLanci(s).allIt(it == "check") and not fileExists(d / "Zeta.csc"), $azioniLanci(s))
+      s.finisci()
+    # nessun timer né osservatore di file nel comando (e-8)
+    let fin = readFile(root / "editor" / "edfinestra.nim")
+    let i0 = fin.find("if az == \"ricarica\":")
+    rec("AC-417", "il comando non introduce timer né osservatori: nessun g_timeout né monitor nella sua parte", i0 > 0 and "timeout" notin fin[i0 ..< i0 + 600] and "monitor" notin fin[i0 ..< i0 + 600].toLowerAscii, "")
+    rec("AC-417", "nel ramo comune: l'azione sta in edfinestra.nim, che serve sia GTK sia WebView2 (il ponte passa da alMessaggio), la pagina è la stessa", i0 > 0 and "edfinestra" in readFile(root / "editor" / "bcddeditor.nim") and "alMessaggio" in fin, "")
+
+block:
+  # AC-418: i riferimenti interni nei testi. Fonte dei nomi: `check --json` (blocchi, dichiarazioni, garanzie), niente dal testo.
+  let d = newWd0()
+  writeFile(d / "TrasportoLicenza.csc", "CSC TrasportoLicenza VERSION 0.2\n  STATUS HYPOTHESIS\n  PURPOSE \"Il trasporto dei documenti\"\n" &
+    "  TYPE DocumentoLicenza := VERBAL \"un documento di licenza\"\n  EVENT IN  consegna(documento: DocumentoLicenza)\n" &
+    "  GUARANTEE tl2: VERBAL \"Ogni consegna completa riceve esattamente un esito\"\n                 VERIFY BY INSPECTION \"le consegne e gli esiti registrati\"\n" &
+    "  ASSUME tl-a1: VERBAL \"Il telefono risponde\"\n                VERIFY BY JUDGEMENT \"l'operatore\"\nEND\n")
+  writeFile(d / "Sessione.csc", "CSC Sessione VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"Per la consegna vale quanto promesso da tl2 di TrasportoLicenza, e il presupposto tl-a1 resta valido\"\n" &
+    "  EVENT OUT apri_sessione()\n  GUARANTEE tl2: VERBAL \"La sessione non si chiude senza tl-a1 e tl2bis, ne' per un tipo DocumentoLicenza\"\n" &
+    "                 VERIFY BY INSPECTION \"il registro della sessione, con Sessione e senza\"\nEND\n")
+  writeFile(d / "Impianto.csc", "ENTITY Impianto VERSION 0.1\n  PURPOSE \"L'impianto\"\n  OFFERS Sessione\n  USES   TrasportoLicenza\nEND\n")
+  var caricati: seq[(string, JsonNode)]
+  for f in ["Sessione.csc", "TrasportoLicenza.csc"]: caricati.add (f, jsonDi(@["--dir", ".", f], d))
+  let nomi = buildBanco("w20", caricati)["nomi"]
+  proc trova(nome, blocco: string): JsonNode =
+    for o in nomi:
+      if o["nome"].getStr == nome and o["blocco"].getStr == blocco: return o
+  let t2 = trova("tl2", "TrasportoLicenza")
+  rec("AC-418", "il modello ha i nomi dichiarati con tipo, file, riga e testo: promessa tl2 col suo VERBAL e il suo VERIFY",
+    t2 != nil and t2["genere"].getStr == "GUARANTEE" and t2["file"].getStr == "TrasportoLicenza.csc" and t2["riga"].getInt == 6 and
+    "VERBAL \"Ogni consegna" in t2["testo"].getStr and "\nVERIFY BY INSPECTION" in t2["testo"].getStr, $t2)
+  rec("AC-418", "il presupposto con il trattino (tl-a1), il tipo, l'evento, il connettore sono nomi dichiarati",
+    trova("tl-a1", "TrasportoLicenza") != nil and trova("tl-a1", "TrasportoLicenza")["genere"].getStr == "ASSUME" and
+    trova("DocumentoLicenza", "TrasportoLicenza")["genere"].getStr == "TYPE" and trova("consegna", "TrasportoLicenza")["genere"].getStr == "EVENT" and
+    trova("Sessione", "Sessione")["genere"].getStr == "CSC", "")
+  rec("AC-418", "lo stesso nome in due connettori dà due voci (tl2 in Sessione e in TrasportoLicenza); una parola non dichiarata non c'è",
+    trova("tl2", "Sessione") != nil and trova("tl2bis", "Sessione") == nil and nomi.getElems.allIt(it["nome"].getStr != "senza"), "")
+  rec("AC-418", "lo stesso input dà lo stesso modello dei nomi, byte per byte", $nomi == $buildBanco("w20", caricati)["nomi"], "")
+  block:
+    if not xvfbOk: senzaXvfb("AC-418", "sessione con Xvfb")
+    else:
+      var s = nuovaSessione()
+      s.avviaEditor(@["--lang", "it", "--dir", d, "Impianto"], root,
+        @[("BCDD_EDITOR_PROVA_CLIC", "#c-Sessione|(tl2|(tl-a1|(tl2bis|(DocumentoLicenza|(Sessione|(senza|)tl2|)tl-a1|?scheda-nome")])
+      let pronto = attendi(s.trace, "pagina 1", 40)
+      sleep(800)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-418", "la sessione risponde a tutte le sonde", pronto and q.len >= 9, $q.len & " " & cut(leggiSe(s.trace)))
+      if q.len >= 9:
+        rec("AC-418", "al passaggio su tl2 la finestrella c'è, dentro la finestra; prima la promessa della stessa CSC (Sessione), poi quella di TrasportoLicenza, ognuna col VERBAL e il VERIFY",
+          "(tl2 visibile dentro=true" in q[0] and q[0].find("Promessa tl2, in Sessione") > 0 and q[0].find("Promessa tl2, in Sessione") < q[0].find("Promessa tl2, in TrasportoLicenza") and
+          "ne' per un tipo" in q[0] and "VERIFY BY INSPECTION" in q[0] and "Ogni consegna completa" in q[0] and "\u00b6" in q[0], cut(q[0], 600))
+        rec("AC-418", "tl-a1 (nome con trattino) è riconosciuto intero e dice presupposto, connettore e file",
+          "visibile" in q[1] and "Presupposto tl-a1, in TrasportoLicenza (TrasportoLicenza.csc)" in q[1] and "Il telefono risponde" in q[1], cut(q[1]))
+        rec("AC-418", "tl2bis non è un nome: nessun riferimento (la parola intera, non il prefisso tl2)", "assente" in q[2], q[2])
+        rec("AC-418", "il tipo e il nome della CSC hanno la finestrella; «senza» (parola comune) no",
+          "Tipo DocumentoLicenza" in q[3] and "Connettore Sessione, in Sessione" in q[4] and "assente" in q[5], cut(q[3] & " / " & q[4] & " / " & q[5]))
+        rec("AC-418", "il clic su tl2 resta nella scheda di Sessione e evidenzia la sua promessa (riga 5, la più vicina)", "riga=r-5" in q[6] and "scheda=Sessione" in q[6], q[6])
+        rec("AC-418", "il clic su tl-a1 porta alla scheda di TrasportoLicenza, alla riga della dichiarazione (8, la scheda la evidenzia)",
+          "riga=r-8" in q[7] and "scheda=TrasportoLicenza" in q[7] and "TrasportoLicenza" in q[8], q[7] & " / " & q[8])
+      s.finisci()
+  let js = readFile(root / "editor" / "pagina" / "pagina.js")
+  let i1 = js.find("// ---- i riferimenti interni:")
+  let i2 = js.find("function creaRiga(")
+  let parte = if i1 > 0 and i2 > i1: js[i1 ..< i2] else: ""
+  rec("AC-418", "il codice dei riferimenti non usa innerHTML, né timer, né rete, né il menu del tasto destro", parte.len > 1000 and "innerHTML" notin parte and "setTimeout" notin parte and
+    "setInterval" notin parte and "fetch" notin parte and "contextmenu" notin parte, "")
+  let tj = readFile(root / "editor" / "pagina" / "testi.js")
+  rec("AC-418", "i testi nuovi ci sono nelle due lingue", tj.count("\"rif_testa\"") == 2 and tj.count("\"rif_altre\"") == 2 and tj.count("\"rif_altra\"") == 2 and tj.count("\"rif_tipo_GUARANTEE\"") == 2, "")
+
+  # ==== AC-403..AC-416, AC-419..AC-422 (e W-22): riferimenti a documenti esterni, decisioni, primo D-nnn libero ====
+  # Il modello (edrif) si prova senza finestra; la finestra, il clic e il ponte sotto Xvfb. Mai i documenti vivi: copia congelata in editor/prove/w21/Progetto.
+  block w21:
+    proc scrivi(f, testo: string) =
+      createDir(f.parentDir)
+      writeFile(f, testo)
+    proc cscCon(intest, corpo: string): string =
+      intest & "CSC Prova VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"" & corpo & "\"\nEND\n"
+    proc extFiles(dirCsc: string, files: seq[string]): JsonNode =
+      var fin: seq[FileIn]
+      for f in files: fin.add (f, dirCsc, jsonDi(@["--dir", ".", f], dirCsc))
+      analisiRiferimenti(fin, paroleRiservate)[0]
+    proc extDi(dirCsc, file: string): JsonNode = extFiles(dirCsc, @[file])[file]
+    proc voce(x: JsonNode, k: string): JsonNode = (if k in x["voci"]: x["voci"][k] else: newJNull())
+    proc cod(x: JsonNode, k: string): string = (let v = voce(x, k); if v.kind == JObject and not v["ok"].getBool: v["cod"].getStr else: "")
+    proc nRighe(v: JsonNode): int = (if v.kind == JObject and v.hasKey("testo"): v["testo"].getStr.splitLines.len else: -1)
+    proc nelle(x: JsonNode, riga: int): int = (if $riga in x["linee"]: x["linee"][$riga].len else: 0)
+
+    # -- il documento con una riga per ogni forma (AC-404, 405, 419, 420, 421, 422)
+    let docMd = [
+      "# Documento", "", "## <a id=\"sez\"></a>5.2 Sezione", "testo sezione", "### Sotto", "testo sotto", "## Altra sezione", "testo altra", "",
+      "| Col | Val |", "|---|---|", "| a | 1 |", "| <a id=\"rigab\"></a>b | 2 |", "| c | 3 |", "",
+      "Paragrafo <a id=\"par\"></a>con ancora", "seconda riga", "",
+      "**B1id** paragrafo dopo riga vuota", "- **B2a** elemento con trattino", "  continua b2a", "* **B2b** con asterisco", "3. **B2c** numerato",
+      "    - **B2d** annidato di quattro spazi", "", "| **B3id** | seconda |", "", "## **B4id** titolo con id", "sotto b4", "",
+      "testo **Y** a metà riga", "**Y2** è la seconda riga di un paragrafo", "", "| a | **Y3** |", "", "```", "**Y4** dentro il codice", "```", "",
+      "`**Y5**` in codice in linea", "", "**caso Y6** con spazi", "", "***Y7*** triplo", "", "- **Q-1** domanda", "- **Q-1** risposta", "",
+      "<a id=\"Z\"></a>paragrafo con l'ancora Z", "", "**Z** blocco con lo stesso id", "", "**W** maiuscolo", "", "**w** minuscolo", "",
+      "<a id=\"Dup\"></a>uno", "", "<a id=\"dup\"></a>due", "", "<a id=\"vuota\"></a>", "", "## Fine"]
+    proc riga1(marc: string): int = docMd.find(docMd.filterIt(marc in it)[0]) + 1
+    let dA = newWd0()
+    scrivi(dA / "docs" / "doc.md", docMd.join("\n") & "\n")
+    scrivi(dA / "docs" / "doc2.md", "- **Q-1** domanda\n- <a id=\"Q-1\"></a>**Q-1** risposta\n")
+    scrivi(dA / "docs" / "html.md", "<a id=\"html\"></a>testo <b>x</b> e <script>alert(1)</script> fine\n")
+    var lungo: seq[string]
+    for i in 1 .. 60: lungo.add "riga " & $i
+    lungo[0] = "<a id=\"lungo\"></a>riga 1"
+    scrivi(dA / "docs" / "lungo.md", lungo.join("\n") & "\n")
+    var defs = ""
+    for (e, d) in [("Sez", "sez"), ("RigaB", "rigab"), ("Par", "par"), ("B1", "B1id"), ("B2a", "B2a"), ("B2b", "B2b"), ("B2c", "B2c"), ("B2d", "B2d"), ("B3", "B3id"),
+        ("B4", "B4id"), ("YY", "Y"), ("Y2", "Y2"), ("Y3", "Y3"), ("Y4", "Y4"), ("Y5", "Y5"), ("Y6", "Y6"), ("Y7", "Y7"), ("QQ", "Q-1"), ("ZZ", "Z"), ("WW", "W"), ("Ww", "w"),
+        ("Dup", "Dup"), ("Vuota", "vuota"), ("NoId", "nonce")]:
+      defs.add "-- [" & e & "]: ../docs/doc.md#" & d & "\n"
+    defs.add "-- [Q2]: ../docs/doc2.md#Q-1\n-- [Html]: ../docs/html.md#html\n-- [Lungo]: ../docs/lungo.md#lungo\n-- [File]: ../docs/doc.md\n"
+    var usi: seq[string]
+    for e in ["Sez", "RigaB", "Par", "B1", "B2a", "B2b", "B2c", "B2d", "B3", "B4", "YY", "Y2", "Y3", "Y4", "Y5", "Y6", "Y7", "QQ", "ZZ", "WW", "Ww", "Dup", "Vuota", "NoId", "Q2", "Html", "Lungo", "File"]:
+      usi.add "[" & e & "]"
+    scrivi(dA / "csc" / "Prova.csc", cscCon(defs, usi.join(" ")))
+    let xa = extDi(dA / "csc", "Prova.csc")
+    rec("AC-404", "ancora su un titolo `##` con un `###` dentro: dal titolo alla riga prima del `##` successivo (T1)",
+      nRighe(voce(xa, "e:Sez")) == 4 and voce(xa, "e:Sez")["testo"].getStr.contains("testo sotto") and not voce(xa, "e:Sez")["testo"].getStr.contains("testo altra") and
+      voce(xa, "e:Sez")["riga"].getInt == riga1("5.2 Sezione"), $voce(xa, "e:Sez"))
+    rec("AC-405", "ancora su una riga di tabella: l'intestazione e quella riga, senza `|---|` (T2)",
+      voce(xa, "e:RigaB")["testo"].getStr == "| Col | Val |\n| b | 2 |", $voce(xa, "e:RigaB"))
+    rec("AC-419", "B1: il paragrafo dopo la riga vuota è un blocco `**ID**`; il blocco è il paragrafo con l'elenco attaccato (T4)",
+      voce(xa, "e:B1")["riga"].getInt == riga1("**B1id**") and nRighe(voce(xa, "e:B1")) == 6 and "B2d" in voce(xa, "e:B1")["testo"].getStr, $voce(xa, "e:B1"))
+    rec("AC-419", "B2: elemento di elenco con `- `, `* `, `3. ` e rientro di 4 spazi; l'elemento con la sua continuazione e i figli (T3)",
+      voce(xa, "e:B2a")["riga"].getInt == riga1("**B2a**") and nRighe(voce(xa, "e:B2a")) == 2 and nRighe(voce(xa, "e:B2b")) == 1 and
+      nRighe(voce(xa, "e:B2c")) == 2 and nRighe(voce(xa, "e:B2d")) == 1 and voce(xa, "e:B2d")["riga"].getInt == riga1("**B2d**"),
+      $voce(xa, "e:B2a") & $voce(xa, "e:B2b") & $voce(xa, "e:B2c") & $voce(xa, "e:B2d"))
+    rec("AC-419", "B3: prima cella di una tabella (la tabella intera, T2); B4: titolo `## **X** …` (T1 fino alla riga prima di `## Fine`)",
+      voce(xa, "e:B3")["riga"].getInt == riga1("**B3id**") and nRighe(voce(xa, "e:B3")) == 1 and voce(xa, "e:B4")["riga"].getInt == riga1("## **B4id**") and
+      voce(xa, "e:B4")["testo"].getStr.startsWith("## **B4id**") and not voce(xa, "e:B4")["testo"].getStr.contains("Fine"), $voce(xa, "e:B3") & $voce(xa, "e:B4"))
+    var tutteRF2 = true
+    for e in ["YY", "Y2", "Y3", "Y4", "Y5", "Y6", "Y7"]: tutteRF2 = tutteRF2 and cod(xa, "e:" & e) == "RF-2"
+    rec("AC-420", "le non-forme di B5 (a metà riga, seconda riga di paragrafo, seconda cella, codice delimitato, codice in linea, grassetto con spazi, triplo): RF-2",
+      tutteRF2, $(["YY", "Y2", "Y3", "Y4", "Y5", "Y6", "Y7"].mapIt(cod(xa, "e:" & it))))
+    rec("AC-420", "il motivo di RF-2 dice «né un blocco che comincia con **Y**»", voce(xa, "e:YY")["cod"].getStr == "RF-2" and voce(xa, "e:YY")["a"].getStr == "Y", $voce(xa, "e:YY"))
+    rec("AC-421", "due elementi `- **Q-1** …` nello stesso file: RF-10 con le due righe", cod(xa, "e:QQ") == "RF-10" and voce(xa, "e:QQ")["b"].getStr == $riga1("**Q-1** domanda") & ", " & $(riga1("**Q-1** domanda") + 1), $voce(xa, "e:QQ"))
+    rec("AC-421", "con `<a id=\"Q-1\"></a>` sul secondo l'ancora vince (X1): risolto sulla riga della risposta",
+      voce(xa, "e:Q2")["ok"].getBool and voce(xa, "e:Q2")["riga"].getInt == 2 and "risposta" in voce(xa, "e:Q2")["testo"].getStr, $voce(xa, "e:Q2"))
+    rec("AC-422", "`<a id=\"Z\"></a>` su un paragrafo e un blocco `**Z**` altrove: vale l'ancora (X1)",
+      voce(xa, "e:ZZ")["riga"].getInt == riga1("<a id=\"Z\"></a>") and "l'ancora Z" in voce(xa, "e:ZZ")["testo"].getStr, $voce(xa, "e:ZZ"))
+    rec("AC-422", "`**W**` e `**w**`: ognuno sul proprio blocco, nessun RF-10 (confronto esatto)",
+      voce(xa, "e:WW")["riga"].getInt == riga1("**W** maiuscolo") and voce(xa, "e:Ww")["riga"].getInt == riga1("**w** minuscolo"), $voce(xa, "e:WW") & $voce(xa, "e:Ww"))
+    rec("AC-406", "RF-5 per due ancore che differiscono solo per le maiuscole (con le due righe); RF-9 per l'ancora con il blocco vuoto; RF-2 per un id che non c'è",
+      cod(xa, "e:Dup") == "RF-5" and voce(xa, "e:Dup")["b"].getStr == $riga1("id=\"Dup\"") & ", " & $riga1("id=\"dup\"") and cod(xa, "e:Vuota") == "RF-9" and cod(xa, "e:NoId") == "RF-2", $voce(xa, "e:Dup") & $voce(xa, "e:Vuota"))
+    rec("AC-406", "destinazione `percorso.md` senza `#`: l'intestazione e il primo titolo del file (D5 b)", voce(xa, "e:File")["ok"].getBool and voce(xa, "e:File")["testo"].getStr == "# Documento" and voce(xa, "e:File")["riga"].getInt == 1, $voce(xa, "e:File"))
+    let marcaAnc = voce(xa, "e:Html")
+    rec("AC-410", "il blocco con `<b>x</b>` e `<script>` è testo nel modello (resa e pagina verificate sotto)", marcaAnc["ok"].getBool and "<b>x</b>" in marcaAnc["testo"].getStr and "<script>alert(1)</script>" in marcaAnc["testo"].getStr, $marcaAnc)
+    let vl = voce(xa, "e:Lungo")
+    rec("AC-411", "un blocco di 60 righe: 40 righe e «continua in FILE, riga N» con N = 41 (T5)", nRighe(vl) == 40 and vl["oltre"].getInt == 41 and vl["nomefile"].getStr == "lungo.md", $nRighe(vl) & " " & $vl["oltre"])
+    # T5 sui caratteri: righe lunghe, meno di 40 righe ma più di 4000 caratteri
+    scrivi(dA / "docs" / "larga.md", "<a id=\"larga\"></a>" & "x".repeat(1500) & "\n" & "y".repeat(1500) & "\n" & "z".repeat(1500) & "\n")
+    scrivi(dA / "csc" / "Larga.csc", cscCon("-- [Larga]: ../docs/larga.md#larga\n", "[Larga]"))
+    let vg = voce(extDi(dA / "csc", "Larga.csc"), "e:Larga")
+    rec("AC-411", "oltre 4000 caratteri il testo si ferma all'ultima riga intera (2 righe) e dice da dove continua", vg["testo"].getStr.len == 3001 and vg["oltre"].getInt == 3, $vg["testo"].getStr.len & " " & $vg["oltre"])
+
+    # -- i codici RF-1 … RF-9 e le forme non valide (AC-406), il testo che non è un riferimento (AC-407), definizioni (AC-408, AC-409)
+    scrivi(dA / "docs" / "grande.md", "<a id=\"g\"></a>x\n" & "a".repeat(4 * 1024 * 1024))
+    scrivi(dA / "docs" / "nonutf.md", "<a id=\"u\"></a>\xff\xfe non utf8\n")
+    var d6 = ""
+    for (e, d) in [("Manca", "../docs/manca.md#x"), ("Dop", "../docs/doc.md#sez"), ("Dop", "../docs/doc.md#par"), ("Abs", "/etc/x.md#a"), ("Bar", "..\\docs\\doc.md#a"),
+        ("NonMd", "../docs/doc.txt#a"), ("Sch", "ftp:x.md#a"), ("Idx", "../docs/doc.md#a b"), ("Maiu", "../Docs/doc.md#sez"), ("Gr", "../docs/grande.md#g"), ("Ut", "../docs/nonutf.md#u")]:
+      d6.add "-- [" & e & "]: " & d & "\n"
+    scrivi(dA / "csc" / "Rotti.csc", cscCon(d6, "[Manca] [Indef] [Dop] [Abs] [Bar] [NonMd] [Sch] [Idx] [Maiu] [Gr] [Ut] e D-77"))
+    let xr = extDi(dA / "csc", "Rotti.csc")
+    rec("AC-406", "RF-1: il file non esiste", cod(xr, "e:Manca") == "RF-1" and voce(xr, "e:Manca")["a"].getStr == "../docs/manca.md", $voce(xr, "e:Manca"))
+    rec("AC-406", "RF-3: etichetta senza definizione; RF-4: due definizioni diverse, con le due righe",
+      cod(xr, "e:Indef") == "RF-3" and cod(xr, "e:Dop") == "RF-4" and voce(xr, "e:Dop")["a"].getStr == "2" and voce(xr, "e:Dop")["b"].getStr == "3", $voce(xr, "e:Indef") & $voce(xr, "e:Dop"))
+    rec("AC-406", "RF-6: percorso assoluto, `\\`, non `.md`, schema, id non valido, maiuscole diverse dal disco, file oltre 4 MB, file non UTF-8",
+      [cod(xr, "e:Abs"), cod(xr, "e:Bar"), cod(xr, "e:NonMd"), cod(xr, "e:Sch"), cod(xr, "e:Idx"), cod(xr, "e:Maiu"), cod(xr, "e:Gr"), cod(xr, "e:Ut")].allIt(it == "RF-6") and
+      @[voce(xr, "e:Abs")["a"].getStr, voce(xr, "e:Bar")["a"].getStr, voce(xr, "e:NonMd")["a"].getStr, voce(xr, "e:Sch")["a"].getStr, voce(xr, "e:Idx")["a"].getStr, voce(xr, "e:Maiu")["a"].getStr,
+        voce(xr, "e:Gr")["a"].getStr, voce(xr, "e:Ut")["a"].getStr] == @["assoluto", "barra", "non_md", "schema", "id", "maiuscole", "grande", "utf8"] and voce(xr, "e:Maiu")["b"].getStr == "docs", $xr["voci"])
+    rec("AC-406", "RF-8: nessun registro delle decisioni (un solo avviso per file nel contatore); i link rotti contati e in ordine di riga",
+      cod(xr, "d:77") == "RF-8" and xr["rotti"].len == 11 + 1 and xr["rotti"].getElems.mapIt(it.getInt) == xr["rotti"].getElems.mapIt(it.getInt).sorted, $xr["rotti"])
+    let dReg = newWd0()
+    scrivi(dReg / "WORK_REGISTER.md", "| ID | tipo |\n|---|---|\n| D-5 | decisione | cinque |\n| D-419 | decisione | quattrocento |\n| D-419 | decisione | ripetuta |\n")
+    scrivi(dReg / "csc" / "Prova.csc", cscCon("", "come D-5 e D-9999 e D-419"))
+    let xd = extDi(dReg / "csc", "Prova.csc")
+    rec("AC-406", "RF-7: la decisione non è nel registro, con il percorso del registro; le altre sono risolte; D-419 compare due volte (avviso, non errore)",
+      cod(xd, "d:9999") == "RF-7" and voce(xd, "d:9999")["a"].getStr == "../WORK_REGISTER.md" and voce(xd, "d:5")["ok"].getBool and voce(xd, "d:419")["volte"].getInt == 2 and
+      voce(xd, "d:419")["testo"].getStr.contains("quattrocento"), $xd["voci"])
+    var tuttiTesti = true
+    block:
+      let tj = readFile(root / "editor" / "pagina" / "testi.js")
+      for k in ["rf1", "rf2", "rf3", "rf4", "rf5", "rf6", "rf7", "rf8", "rf9", "rf10", "rf6_assoluto", "rf6_barra", "rf6_non_md", "rf6_schema", "rf6_id", "rf6_percorso", "rf6_maiuscole", "rf6_grande", "rf6_utf8",
+          "rife_testa", "rife_continua", "rife_apri_file", "rife_apri_browser", "rotti_n", "ap_libero", "ap_gia_nel_registro"]:
+        if tj.count("\"" & k & "\":") != 2: tuttiTesti = false
+    rec("AC-406", "RF-1 … RF-10 e i testi della finestrella: ogni chiave nelle due lingue", tuttiTesti, "")
+    scrivi(dA / "csc" / "Testo.csc", cscCon("-- [C8-OP-4]: ../docs/doc.md#sez\n", "[A] e [0 .. 100] e [DA VERIFICARE: x] e [ C5 I11 ] e [[x]] e `[C8-OP-4]` e `[Sez]` e [x]"))
+    let xt = extDi(dA / "csc", "Testo.csc")
+    rec("AC-407", "`[A]`, `[0 .. 100]`, `[DA VERIFICARE: x]`, `[ C5 I11 ]`, `[[x]]` e le quadre fra apici non sono riferimenti né errori; `[x]` (un carattere) neppure",
+      xt["linee"].len == 0 and xt["voci"].len == 0 and xt["rotti"].len == 0, $xt["linee"])
+    scrivi(dA / "csc" / "Coda.csc", "CSC Coda VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"usa [Yy] qui\"\n  EVENT IN y() -- [Yy]: ../docs/doc.md#sez\nEND\n")
+    let xc = extDi(dA / "csc", "Coda.csc")
+    rec("AC-408", "una definizione in coda a una dichiarazione non vale (D1): `[Yy]` è RF-3", cod(xc, "e:Yy") == "RF-3", $xc["voci"])
+    scrivi(dA / "csc" / "Uno.csc", cscCon("-- [Solo]: ../docs/doc.md#sez\n", "[Solo]"))
+    scrivi(dA / "csc" / "Due.csc", "CSC Due VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"usa [Solo]\"\nEND\n")
+    let xm = extFiles(dA / "csc", @["Uno.csc", "Due.csc"])
+    scrivi(dA / "csc" / "Inl.csc", cscCon("", "vedi [testo](../docs/doc.md#sez) e [altro](nonesiste.md) e [vuoto](a b.md) e [nulla]()"))
+    let xi = extDi(dA / "csc", "Inl.csc")
+    rec("AC-407", "riferimento in linea `[testo](destinazione)` (§4.4): risolto sulla destinazione; rotto se non si risolve; senza chiusura, con spazi o vuoto non è un riferimento",
+      voce(xi, "i:testo=../docs/doc.md#sez")["ok"].getBool and voce(xi, "i:testo=../docs/doc.md#sez")["riga"].getInt == 3 and cod(xi, "i:altro=nonesiste.md") == "RF-1" and xi["voci"].len == 2, $xi["voci"])
+    rec("AC-409", "definizione solo nel primo file, uso nel secondo: RF-3 nel secondo, risolto nel primo (D3)", voce(xm["Uno.csc"], "e:Solo")["ok"].getBool and cod(xm["Due.csc"], "e:Solo") == "RF-3", "")
+
+    # -- decisioni e registro (AC-412, AC-413), D-nnn libero (AC-415)
+    let dS = newWd0()
+    let radice = dS / "ProgettoBase"
+    scrivi(radice / "WORK_REGISTER.md", "| ID | tipo |\n|---|---|\n| D-378 | decisione | ratificata |\n| D-413 | decisione | ratifica TrasportoLicenza |\n")
+    scrivi(radice / "sub" / "WORK_REGISTER.md", "# registro locale senza decisioni\n")
+    scrivi(radice / "sub" / "csc" / "D.csc", "-- Con D-413 e ProgettoBase D-378 e ServizioAlfa D-02 e RATIFIED BY D-378 (nel commento)\nCSC D VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"vedi ProgettoBase D-378, D-413 e TerzoBeta D-5\"\nEND\n")
+    let xs = extDi(radice / "sub" / "csc", "D.csc")
+    rec("AC-412", "il registro intermedio senza decisioni si salta (G2): D-413 e D-378 sono risolti sul registro della radice, indicato con il percorso relativo",
+      voce(xs, "d:413")["ok"].getBool and voce(xs, "d:378")["ok"].getBool and voce(xs, "d:413")["reg"].getStr == "../../WORK_REGISTER.md" and xs["reg"].getStr == "../../WORK_REGISTER.md", $xs["voci"])
+    rec("AC-412", "`Con D-413` (una sola maiuscola) è un riferimento; `ProgettoBase D-378` (nome del registro) lo è; `ServizioAlfa D-02` e `TerzoBeta D-5` (altro registro) sono testo, senza errore",
+      nelle(xs, 1) >= 3 and "d:2" notin xs["voci"] and "d:5" notin xs["voci"] and xs["rotti"].len == 0, $xs["linee"])
+    var n378 = 0
+    for x in xs["linee"]["1"]:
+      if x[2].getStr == "d:378": inc n378
+    rec("AC-412", "`RATIFIED BY D-378` in un commento: la parola BY non è un qualificatore (K2, scelta sulle parole del linguaggio)", n378 == 2, $xs["linee"]["1"])
+    let fz = root / "editor" / "prove" / "w21" / "Progetto" / "subprojects" / "GruppoLicenze" / "csc"
+    let xf = extDi(fz, "TrasportoLicenza.csc")
+    rec("AC-403", "copia congelata di TrasportoLicenza.csc e dei due contract non modificati: i sei riferimenti mostrano i blocchi di §8 (11, 1, 10, 6, ·, 7 righe; RC-LI-8 è 10 righe ma 4208 caratteri: T5 ne mostra 9)",
+      [nRighe(voce(xf, "e:C8-OP-4")), nRighe(voce(xf, "e:C8-RC-3")), nRighe(voce(xf, "e:RC-LI-6")), nRighe(voce(xf, "e:RC-LI-7")), nRighe(voce(xf, "e:RC-LI-9"))] == @[11, 1, 10, 6, 7] and
+      nRighe(voce(xf, "e:RC-LI-8")) == 9 and voce(xf, "e:RC-LI-8")["oltre"].getInt == 36, $xf["voci"].getFields.keys.toSeq)
+    rec("AC-403", "`[RC-LI-9]` mostra le righe 40-46 (riga di partenza 40, punti 1-6) e `[C8-OP-4]` parte dalla riga 11", voce(xf, "e:RC-LI-9")["riga"].getInt == 40 and voce(xf, "e:RC-LI-9")["testo"].getStr.contains("6. esito della libreria") and
+      voce(xf, "e:C8-OP-4")["riga"].getInt == 11 and voce(xf, "e:RC-LI-9")["dest"].getStr.endsWith("PROTOCOL_CONTRACT_1.2.md#RC-LI-9"), $voce(xf, "e:RC-LI-9"))
+    rec("AC-412", "`STATUS RATIFIED BY D-413` nella copia congelata mostra la riga D-413 del registro del progetto, saltando quello del gruppo",
+      voce(xf, "d:413")["ok"].getBool and "TrasportoLicenza 0.2" in voce(xf, "d:413")["testo"].getStr and xf["reg"].getStr == "../../../WORK_REGISTER.md", $voce(xf, "d:413"))
+    let dG = newWd0()
+    scrivi(dG / "csc" / "G.csc", "-- [Registro delle decisioni]: altro/REG.md\nCSC G VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"vedi D-7\"\nEND\n")
+    scrivi(dG / "csc" / "altro" / "REG.md", "| D-7 | decisione | nel registro scelto |\n")
+    scrivi(dG / "WORK_REGISTER.md", "| D-7 | decisione | nel registro sbagliato |\n")
+    let xg = extDi(dG / "csc", "G.csc")
+    rec("AC-413", "`[Registro delle decisioni]: altro/REG.md` fissa il registro (G1): D-7 si risolve lì e non nel WORK_REGISTER.md salendo",
+      voce(xg, "d:7")["ok"].getBool and "scelto" in voce(xg, "d:7")["testo"].getStr and xg["reg"].getStr == "altro/REG.md", $xg["voci"])
+    scrivi(dA / "csc" / "Url.csc", cscCon("-- [Sito]: https://example.org/x\n", "vedi [Sito]"))
+    let xu = extDi(dA / "csc", "Url.csc")
+    rec("AC-414", "una destinazione `https://example.org/x`: la voce è un URL, non letta, apribile dal solo clic; nessun codice di rete in edrif",
+      voce(xu, "e:Sito")["t"].getStr == "url" and apribili.getOrDefault("Url.csc\0e:Sito") == "https://example.org/x" and
+      not readFile(root / "editor" / "edrif.nim").contains("httpclient") and not readFile(root / "editor" / "edrif.nim").contains("nativesockets") and
+      not readFile(root / "editor" / "edrif.nim").contains("std/net"), $xu["voci"])
+    # P2 (AC-415): il primo libero è 1 + il massimo fra le righe del registro e i RATIFIED BY dei file che usano quel registro
+    let dP = newWd0()
+    scrivi(dP / "WORK_REGISTER.md", "| D-419 | decisione | ultima |\n| D-3 | decisione | tre |\n")
+    scrivi(dP / "csc" / "A.csc", cscCon("", "uno"))
+    scrivi(dP / "csc" / "B.csc", "CSC B VERSION 0.1\n  STATUS RATIFIED BY D-425\n  PURPOSE \"due\"\nEND\n")
+    let xp = extFiles(dP / "csc", @["A.csc", "B.csc"])
+    rec("AC-415", "registro con massimo D-419 e una CSC con `RATIFIED BY D-425`: primo libero D-426, per tutti i file di quel registro", xp["A.csc"]["libero"].getInt == 426 and xp["B.csc"]["libero"].getInt == 426, $xp["A.csc"]["libero"])
+    let dQ = newWd0()
+    scrivi(dQ / "csc" / "A.csc", cscCon("", "senza registro né numeri"))
+    rec("AC-415", "senza alcun numero: D-1", extDi(dQ / "csc", "A.csc")["libero"].getInt == 1, "")
+    # E4 (AC-416): un file `.md` si legge una volta per caricamento; Ricarica (azzeraRif) lo rilegge
+    let dE = newWd0()
+    scrivi(dE / "docs" / "m.md", "<a id=\"m\"></a>testo vecchio\n")
+    scrivi(dE / "csc" / "E.csc", cscCon("-- [Mm]: ../docs/m.md#m\n", "[Mm]"))
+    azzeraRif()
+    let e1 = voce(extDi(dE / "csc", "E.csc"), "e:Mm")["testo"].getStr
+    scrivi(dE / "docs" / "m.md", "<a id=\"m\"></a>testo nuovo\n")
+    let e2 = voce(extDi(dE / "csc", "E.csc"), "e:Mm")["testo"].getStr
+    azzeraRif()
+    let e3 = voce(extDi(dE / "csc", "E.csc"), "e:Mm")["testo"].getStr
+    rec("AC-416", "dopo la modifica del `.md`, senza Ricarica il testo è quello vecchio; dopo Ricarica (azzeraRif) è quello nuovo", e1 == "testo vecchio" and e2 == "testo vecchio" and e3 == "testo nuovo", e1 & "/" & e2 & "/" & e3)
+    let fin = readFile(root / "editor" / "edfinestra.nim")
+    let iR = fin.find("if az == \"ricarica\":")
+    rec("AC-416", "il comando Ricarica azzera la memoria dei `.md` e del registro; lo stesso fa il cambio di cartelle; nessun timer né osservatore", iR > 0 and "azzeraRif()" in fin[iR ..< iR + 400] and
+      "azzeraRif()" in fin[fin.find("proc gestisciCartelle") ..< fin.find("proc gestisciCartelle") + 900] and not readFile(root / "editor" / "edrif.nim").contains("timeout") and
+      not readFile(root / "editor" / "edrif.nim").contains("monitor"), "")
+    # E6: il controllo dei link non blocca niente: i contatori non entrano in nessuna condizione di blocco della pagina
+    let js6 = readFile(root / "editor" / "pagina" / "pagina.js")
+    var rottiBlocca = false
+    for r in js6.splitLines:
+      if ("fx.rotti" in r or ".rotti" in r) and "disabled" in r: rottiBlocca = true
+    rec("AC-406", "i link rotti non bloccano salvataggio, Completa, Approva né bcdd: `rotti` serve solo al contatore e nessun `disabled` ne dipende (E6)",
+      js6.count("rotti") >= 3 and not rottiBlocca, "")
+    let jsr = readFile(root / "editor" / "pagina" / "pagina.js")
+    let r1 = jsr.find("// ---- i riferimenti a documenti esterni:")
+    let r2 = jsr.find("function creaRiga(")
+    let parteR = if r1 > 0 and r2 > r1: jsr[r1 ..< r2] else: ""
+    rec("AC-410", "il codice dei riferimenti esterni non usa innerHTML, né timer, né rete, né il menu del tasto destro; il testo mostrato entra con textContent o nodi di testo",
+      parteR.len > 1500 and "innerHTML" notin parteR and "setTimeout" notin parteR and "setInterval" notin parteR and "fetch" notin parteR and "contextmenu" notin parteR and "XMLHttpRequest" notin parteR, $parteR.len)
+
+    # -- la finestra: il passaggio del mouse, il clic con la finestrella fissa, il pulsante, il contatore e il modulo Approva (sotto Xvfb)
+    scrivi(dA / "csc" / "Fin.csc", "-- [Sez]: ../docs/doc.md#sez\n-- [Html]: ../docs/html.md#html\n-- [Sito]: https://example.org/x\n-- [NoId]: ../docs/doc.md#nonce\n" &
+      "CSC Fin VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"Vedi [Sez] e [Html] e [Sito] e [NoId] e [Manca]\"\nEND\n")
+    scrivi(dA / "csc" / "Radice.csc", "ENTITY Radice VERSION 0.1\n  PURPOSE \"La radice\"\n  OFFERS Fin\nEND\n")
+    block:
+      if not xvfbOk: senzaXvfb("AC-403", "sessione con Xvfb")
+      else:
+        var s = nuovaSessione()
+        s.avviaEditor(@["--lang", "it", "--dir", dA / "csc", "Radice"], root,
+          @[("BCDD_EDITOR_PROVA_CLIC", "#c-Fin|(e:Sez|(e:Html|(e:Sito|(e:NoId|(e:Manca|)e:Sito|>rife-apri|?scheda-rotti|)e:Sez|?rif-tip")])
+        let pronto = attendi(s.trace, "pagina 1", 40)
+        sleep(900)
+        raccogli(s)
+        let q = sondeDi(s)
+        rec("AC-403", "la sessione risponde a tutte le sonde", pronto and q.len >= 9, $q.len & " " & cut($q, 1500))
+        if q.len >= 9:
+          rec("AC-403", "al passaggio del mouse la finestrella mostra l'intestazione (etichetta, percorso, #ID, riga) e il blocco dell'ancora, dentro la finestra",
+            "(e:Sez visibile dentro=true" in q[0] and "Sez · ../docs/doc.md#sez · riga 3" in q[0] and "testo sotto" in q[0] and "testo altra" notin q[0], cut(q[0], 500))
+          rec("AC-410", "il blocco con `<b>x</b>` e `<script>` si mostra come testo: nessun elemento creato nella pagina",
+            "<b>x</b>" in q[1] and "<script>alert(1)</script>" in q[1] and "[elementi=0]" in q[1], cut(q[1], 500))
+          rec("AC-414", "l'URL: la finestrella mostra l'indirizzo, senza leggerlo", "https://example.org/x" in q[2] and "visibile" in q[2], cut(q[2]))
+          rec("AC-406", "un riferimento rotto ha il motivo con il suo codice nella finestrella (RF-2 e RF-3)",
+            "Riferimento non risolto (RF-2)" in q[3] and "né un blocco che comincia con **nonce**" in q[3] and "Riferimento non risolto (RF-3)" in q[4] and "l'etichetta [Manca] non ha una definizione" in q[4], cut(q[3] & " / " & q[4], 600))
+          rec("AC-414", "il clic su un URL lascia la finestrella fissa con «Apri nel browser»; il pulsante manda `apri_rif` e la versione di prova non lancia niente",
+            "fissa=true" in q[5] and "pulsante=Apri nel browser" in q[5] and "apri_rif https://example.org/x" in leggiSe(s.trace), q[5] & " " & cut(leggiSe(s.trace), 300))
+          rec("AC-406", "il contatore «riferimenti non risolti: N» conta i due riferimenti non risolti del file (RF-2 e RF-3)", "visibile riferimenti non risolti: 2" in q[6], q[6])
+          rec("AC-403", "il clic su un riferimento a un file lascia la finestrella fissa con «Apri il file»", "fissa=true" in q[7] and "pulsante=Apri il file" in q[7], q[7])
+        s.finisci()
+        # la copia congelata del gruppo di licenze nella finestra: le righe che l'operatore proverà
+        var s2 = nuovaSessione()
+        s2.avviaEditor(@["--lang", "it", "--dir", fz, "Impianto"], root,
+          @[("BCDD_EDITOR_PROVA_CLIC", "#c-TrasportoLicenza|(e:RC-LI-9|(d:413|(e:C8-OP-4|)e:RC-LI-9|>rife-apri")])
+        let pronto2 = attendi(s2.trace, "pagina 1", 40)
+        sleep(900)
+        raccogli(s2)
+        let q2 = sondeDi(s2)
+        rec("AC-403", "la copia congelata del gruppo di licenze nella finestra: la sessione risponde", pronto2 and q2.len >= 4, $q2.len & " " & cut(leggiSe(s2.trace)))
+        if q2.len >= 4:
+          rec("AC-403", "passaggio su `[RC-LI-9]` (nel commento iniziale della scheda): intestazione con riga 40 e punti 1-6; su `[C8-OP-4]` la riga 11",
+            "riga 40" in q2[0] and "6. esito della libreria" in q2[0] and "riga 11C8-OP-4" in q2[2], cut(q2[0], 400))
+          rec("AC-412", "passaggio su D-413 (STATUS RATIFIED BY D-413): la riga del registro del progetto, con il percorso del registro", "D-413 · registro delle decisioni: ../../../WORK_REGISTER.md" in q2[1] and "TrasportoLicenza 0.2" in q2[1], cut(q2[1], 400))
+          rec("AC-403", "«Apri il file» manda `apri_rif` col percorso del documento letto (mai uno scelto dalla pagina)",
+            leggiSe(s2.trace).contains("apri_rif " & fz.parentDir.parentDir.parentDir / "docs" / "contracts" / "protocollo" / "PROTOCOL_CONTRACT_1.2.md"), cut(leggiSe(s2.trace), 400))
+        s2.finisci()
+        # W-22: il primo D-nnn libero accanto al campo, non scritto nel campo, e la riga del registro se il numero c'è già
+        let dW = newWd0()
+        scrivi(dW / "WORK_REGISTER.md", "| D-419 | decisione | quattrocentodiciannove |\n")
+        scrivi(dW / "Luce.csc", "CSC Luce VERSION 0.1\n  STATUS HYPOTHESIS\n  PURPOSE \"La luce\"\n  EVENT IN accendi()\n  GUARANTEE g1: VERBAL \"La luce si accende\"\n                VERIFY BY INSPECTION \"il registro\"\nEND\n")
+        scrivi(dW / "Altra.csc", "CSC Altra VERSION 0.1\n  STATUS RATIFIED BY D-425\n  PURPOSE \"altro\"\nEND\n")
+        scrivi(dW / "Lampada.csc", "ENTITY Lampada VERSION 0.1\n  PURPOSE \"La lampada\"\n  OFFERS Luce\nEND\n")
+        var s3 = nuovaSessione()
+        s3.avviaEditor(@["--lang", "it", "--dir", dW, "Lampada"], root,
+          @[("BCDD_EDITOR_PROVA_CLIC", "#c-Luce|@b-approva-intero|?a-num-libero|!a-num|=a-num:D-419|?a-num-reg|=a-num:D-500|?a-num-reg|!a-ok")])
+        let pronto3 = attendi(s3.trace, "pagina 1", 40)
+        sleep(900)
+        raccogli(s3)
+        let q3 = sondeDi(s3)
+        rec("AC-415", "il modulo Approva risponde a tutte le sonde", pronto3 and q3.len >= 5, $q3.len & " " & cut(leggiSe(s3.trace)))
+        if q3.len >= 5:
+          rec("AC-415", "il modulo mostra «Primo numero libero: D-426» accanto al campo e il campo resta vuoto (P3, D-185)", "Primo numero libero: D-426" in q3[0] and "Non è prenotato" in q3[0] and "valore=" in q3[1] and "valore=D" notin q3[1], q3[0] & " / " & q3[1])
+          rec("AC-415", "un numero già nel registro (D-419): se ne mostra la riga, come informazione; un numero che non c'è: niente; Approva non è bloccato",
+            "D-419 è già nel registro" in q3[2] and "quattrocentodiciannove" in q3[2] and "già nel registro" notin q3[3] and "a-ok" in q3[4], q3[2] & " / " & q3[3] & " / " & q3[4])
+        s3.finisci()
+
+# 080:9:1 AC-443..AC-451: «Rinomina…» in bcdd-editor, sulla cartella sintetica di prove/rinomina (copia, mai i file vivi).
+# Il motore è `bcdd rename` (provato da tests/trinomina.nim); qui si prova la finestra: il modulo, l'anteprima, la conferma, i casi di rifiuto, il giornale.
+block:
+  let sint = root / "prove" / "rinomina" / "sintetica"
+  let fintoLlm9 = root / "prove" / "f2" / "ULlmFinto.sh"
+  let rf9 = root / "prove" / "f2" / "refine"
+  proc copiaSint(): string =
+    result = newWd0()
+    copyDir(sint, result)
+  proc tuttoSint(d: string): Table[string, string] =
+    for sub in ["luce", "comuni"]:
+      for f in walkDirRec(d / sub, yieldFilter = {pcFile}, relative = true): result[sub / f] = readFile(d / sub / f)
+  proc nomiSint(d: string): seq[string] =
+    for k in tuttoSint(d).keys: result.add k
+    result.sort()
+  proc anteprimaRef(d: string, args: seq[string]): JsonNode =
+    ## L'anteprima di `bcdd rename` lanciata direttamente, con le stesse cartelle dell'editor (`luce` poi `comuni`)
+    let r = runExe(bcddProva, @["rename", "Luce.csc", "--dir", ".", "--dir", d / "comuni", "--dry-run", "--json"] & args, d / "luce", envPulito())
+    try: result = parseJson(r.output)
+    except CatchableError: result = nil
+  proc lanciRen(s: Sess): seq[string] = righe(s.lanci).filterIt(it.startsWith("rename "))
+  proc argsEditor(d: string, nome: string): seq[string] = @["--lang", "it", "--dir", d / "luce", "--dir", d / "comuni", nome]
+  if not xvfbOk: senzaXvfb("AC-443", "sessione con Xvfb")
+  else:
+    # ---- AC-443, AC-444, AC-445: la scheda di Luce, il modulo, l'anteprima, la conferma con un testo tolto
+    block:
+      let d = copiaSint()
+      let ref0 = anteprimaRef(d, @["csc", "Luce", "Lampadina"])
+      var nr0, nf0 = 0
+      if ref0 != nil and ref0.kind == JObject and ref0.hasKey("file"):
+        for f in ref0["file"]:
+          nr0 += f["modifiche"].len
+          if f["modifiche"].len > 0 or f["nome_nuovo"].kind == JString: inc nf0
+      let sintesi = "Cambiano " & $nr0 & " righe in " & $nf0 & " file."
+      var s = nuovaSessione()
+      let clic = "@b-nuova|=f-nome:Zeta|=f-scopo:una prova|@f-ok|!b-annulla|#alb:LuceScale|#c-Luce|?scheda-nome|@b-rinomina|?f-rin-nome|!f-rin-nome|!rin-mostra|" &
+        "=f-rin-nome:END|?e-f-rin-nome|!rin-mostra|=f-rin-nome:Luce-2|?e-f-rin-nome|!rin-mostra|=f-rin-nome:Luce|?e-f-rin-nome|!rin-mostra|" &
+        "=f-rin-nome:Lampadina|?e-f-rin-nome|!rin-mostra|@rin-mostra|?rin-sintesi|?rin-righe|?rin-testi|?rin-b-t5|?rin-cartelle|?rin-controllo|!rin-ok|" &
+        "@rin-t-t1|!rin-t-t1|@rin-ok|?scheda-nome|!b-annulla|?esito"
+      s.avviaEditor(argsEditor(d, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC", clic)])
+      let fine = attendi(s.trace, "pagina 4", 60)
+      sleep(500)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-443", "la sessione risponde a tutte le sonde e disegna quattro volte (apertura, Zeta, anteprima, scrittura con Ricarica)", fine and q.len >= 24 and ref0 != nil,
+        $q.len & " " & cut(leggiSe(s.dir / "errori")) & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 24:
+        rec("AC-443", "prima di cominciare «Torna indietro» è acceso (la creazione di Zeta), la scheda è quella di Luce", "acceso" in q[0] and "Luce" in q[1], q[0] & " / " & q[1])
+        rec("AC-443", "il modulo ha il campo «Nome nuovo» già riempito con «Luce»; «Mostra che cosa cambia» è spento (nome uguale)", "valore=Luce" in q[3] and "spento" in q[4] and "visibile" in q[2], q[2] & " / " & q[3] & " / " & q[4])
+        rec("AC-443", "«END»: sotto il campo il motivo (parola riservata) e il bottone spento", "riservata" in q[5] and "spento" in q[6], q[5] & " / " & q[6])
+        rec("AC-443", "«Luce-2»: il nome non è valido, bottone spento", "non è valido" in q[7] and "spento" in q[8], q[7] & " / " & q[8])
+        rec("AC-443", "«Luce»: è uguale a quello di adesso, bottone spento", "uguale" in q[9] and "spento" in q[10], q[9] & " / " & q[10])
+        rec("AC-443", "«Lampadina»: nessun motivo e «Mostra che cosa cambia» acceso", q[11].endsWith("visibile ") and "acceso" in q[12], q[11] & " / " & q[12])
+        rec("AC-444", "la sintesi dice quante righe e quanti file cambiano (come li conta bcdd rename)", sintesi in q[13], q[13] & " vs " & sintesi)
+        rec("AC-444", "le righe per file con prima e dopo: «CSC Luce VERSION 0.1» diventa «CSC Lampadina VERSION 0.1», anche in comuni/Corridoio.csc",
+          "luce/Luce.csc" in q[14] and "CSC Luce VERSION 0.1" in q[14] and "CSC Lampadina VERSION 0.1" in q[14] and "comuni/Corridoio.csc" in q[14], cut(q[14], 400))
+        rec("AC-444", "i testi: t1, t2, t3, t4, t6 con la casella; t5 (riga approvata) senza casella, in grigio, «resta Luce: riga approvata»",
+          "t1 " in q[15] and "t2 " in q[15] and "t3 " in q[15] and "t4 " in q[15] and "t6 " in q[15] and "visibile" in q[16] and "t5 [=]" in q[16] and "resta Luce: riga approvata" in q[16], cut(q[15], 300) & " / " & q[16])
+        rec("AC-444", "la riga fissa sulle cartelle aperte e «il controllo di bcdd resta uguale»", "Solo le cartelle aperte" in q[17] and "resta uguale su" in q[18], q[17] & " / " & q[18])
+        rec("AC-445", "il bottone Rinomina c'è; t1 era scelto e dopo il clic non lo è più", "acceso" in q[19] and "scelto=false" in q[20], q[19] & " / " & q[20])
+        let lr = lanciRen(s)
+        rec("AC-444", "il primo comando è l'anteprima: --dry-run --json, con la cartella corrente (.) e l'altra per intero (le --dir di check)",
+          lr.len >= 2 and ("--dir . --dir " & d / "comuni") in lr[0] and "--dry-run --json csc Luce Lampadina" in lr[0] and lr[0].startsWith("rename Luce.csc"), $lr)
+        rec("AC-445", "il secondo comando ha --expect, i testi scelti uno per uno (t2 t3 t4 t6, non t1 né t5) e nessun --text default",
+          lr.len >= 2 and "--expect sha256:" in lr[1] and "--text-at t2 --text-at t3 --text-at t4 --text-at t6" in lr[1] and "t1" notin lr[1] and "--text default" notin lr[1] and "--dry-run" notin lr[1], $lr)
+        rec("AC-445", "Ricarica fatta: la scheda è quella di Lampadina; «Torna indietro» svuotato; lo Stato dice come tornare indietro",
+          "Lampadina" in q[21] and "spento" in q[22] and "Rinominato Luce in Lampadina" in q[23] and "Per tornare indietro rinomina Lampadina in Luce." in q[23], q[21] & " / " & q[22] & " / " & q[23])
+      let dopo = tuttoSint(d)
+      rec("AC-445", "i file: Lampadina.csc c'è, Luce.csc no; la riga 1 di Lampadina.csc ha ancora «Luce» (t1 tolto), la 4 ha «Lampadina» (t2)",
+        "luce/Lampadina.csc" in dopo and "luce/Luce.csc" notin dopo and dopo.getOrDefault("luce/Lampadina.csc").splitLines()[0].contains("-- Luce:") and
+        dopo.getOrDefault("luce/Lampadina.csc").splitLines()[3].contains("La Lampadina si accende"), $nomiSint(d))
+      rec("AC-445", "nessun file di lavoro né giornale rimasti, nessun save oltre alla creazione di Zeta", nomiSint(d).allIt(not it.contains(".bcdd-rinomina") and not it.contains(".rinomina-")) and
+        azioniLanci(s).count("save") == 1 and azioniLanci(s).count("rename") == 2, $azioniLanci(s))
+      s.finisci()
+    # ---- AC-446: un elemento approvato: la spiegazione e «Nuova versione…», nessuna scrittura
+    block:
+      let d = copiaSint()
+      let prima = tuttoSint(d)
+      var s = nuovaSessione()
+      s.avviaEditor(argsEditor(d, "Pulsante"), root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "#c-Comando|?scheda-nome|@b-rinomina|=f-rin-nome:Interruttore|@rin-mostra|?rin-approvato|?rin-bloccanti|?rin-versione|!rin-ok|!f-rin-nome|!rin-mostra")])
+      let fine = attendi(s.trace, "pagina 2", 60)
+      sleep(400)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-446", "la sessione risponde a tutte le sonde", fine and q.len >= 7, $q.len & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 7:
+        rec("AC-446", "il riquadro dice che il nome è contratto e serve una versione nuova con una decisione nuova",
+          "Il nome fa parte del contratto approvato: non si cambia con un clic. Serve una versione nuova, con una decisione nuova." in q[1], q[1])
+        rec("AC-446", "l'elenco dei bloccanti ha la riga 1 di Comando.csc e D-5", "Comando.csc, riga 1: CSC Comando VERSION 0.1" in q[2] and "D-5" in q[2], q[2])
+        rec("AC-446", "c'è «Nuova versione…»; non c'è il bottone Rinomina; il campo e «Mostra» sono spenti", "visibile Nuova versione…" in q[3] and "assente" in q[4] and "spento" in q[5] and "spento" in q[6], $q)
+      rec("AC-446", "nessuna scrittura: solo l'anteprima, file identici", lanciRen(s).len == 1 and "--dry-run" in lanciRen(s)[0] and azioniLanci(s).count("save") == 0 and tuttoSint(d) == prima, $lanciRen(s))
+      s.finisci()
+    # ---- AC-447: una modifica non salvata, poi «Rinomina…»
+    block:
+      let d = copiaSint()
+      var s = nuovaSessione()
+      s.avviaEditor(argsEditor(d, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "#c-Luce|@b-promessa|=f-frase:Una promessa non salvata|@b-rinomina|?avviso|@f-rinomina-no|!f-frase|?avviso|@b-rinomina|@f-rinomina-si|!f-frase|?f-rin-nome|!f-rin-nome|?avviso")])
+      let fine = attendi(s.trace, "pagina 2", 60)
+      sleep(500)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-447", "la sessione risponde a tutte le sonde e disegna due volte (apertura e Ricarica)", fine and q.len >= 7 and nDisegni(s) == 2, $q.len & " " & $nDisegni(s) & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 7:
+        rec("AC-447", "con la modifica non salvata la striscia ha le due scelte", "visibile" in q[0] and "C'è una modifica non salvata: rinominando la perdi." in q[0] and
+          "Rinomina e perdi la modifica" in q[0] and "Annulla e tieni la modifica" in q[0], cut(q[0]))
+        rec("AC-447", "«Annulla e tieni la modifica» lascia il testo e chiude la striscia", "Una promessa non salvata" in q[1] and "nascosto" in q[2] and nDisegni(s) >= 1, q[1] & " / " & q[2])
+        rec("AC-447", "«Rinomina e perdi la modifica»: la modifica è scartata (il campo non c'è più), il modulo di rinomina è aperto con il nome di adesso",
+          "assente" in q[3] and "visibile" in q[4] and "valore=Luce" in q[5] and "nascosto" in q[6], q[3] & " / " & q[4] & " / " & q[5] & " / " & q[6])
+      rec("AC-447", "bcdd è stato rilanciato dalla Ricarica; niente è scritto", azioniLanci(s).count("save") == 0 and azioniLanci(s).count("rename") == 0, $azioniLanci(s))
+      s.finisci()
+    # ---- AC-448: l'anteprima, un file cambiato da fuori, la conferma
+    block:
+      let d = copiaSint()
+      var s = nuovaSessione()
+      s.avviaEditor(argsEditor(d, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "~|#c-Luce|@b-rinomina|=f-rin-nome:Lampadina|@rin-mostra|~|@rin-ok|?rin-esito|?rin-ricarica|!rin-ok|!f-rin-nome")])
+      let pronto = attendi(s.trace, "attesa_fuoco", 40)
+      rec("AC-448", "la finestra si apre e aspetta il ritorno del fuoco", pronto, cut(leggiSe(s.dir / "errori")))
+      if pronto:
+        let w = trovaFinestra(display, "bcdd-editor")
+        focusAltrove(display, w)                       # il primo ritorno del fuoco: niente è cambiato
+        let seconda = attendi(s.trace, "pagina 2", 40)
+        var att2 = false
+        let fineAtt = epochTime() + 40.0
+        while epochTime() < fineAtt and not att2:
+          att2 = righe(s.trace).countIt("attesa_fuoco" in it) >= 2
+          sleep(50)
+        rec("AC-448", "l'anteprima è mostrata e la finestra aspetta il secondo ritorno del fuoco", seconda and att2, cut(leggiSe(s.trace), 600))
+        if att2:
+          writeFile(d / "luce" / "Pressione.csc", readFile(d / "luce" / "Pressione.csc") & "-- cambiato da fuori\n")
+          let dopo = tuttoSint(d)
+          focusAltrove(display, w)
+          let fine = attendi(s.trace, "pagina 3", 40)      # il ritorno del fuoco rilegge (un commento in fondo non cambia il modello: nessun ridisegno)
+          sleep(400)
+          raccogli(s)
+          let q = sondeDi(s)
+          rec("AC-448", "la sessione risponde a tutte le sonde (apertura, anteprima, esito)", fine and q.len >= 4, $q.len & " " & cut(leggiSe(s.trace), 600))
+          if q.len >= 4:
+            rec("AC-448", "il riquadro dice che i file sono cambiati dopo l'anteprima e offre «Ricarica»", "sono cambiati dopo l'anteprima" in q[0] and "visibile" in q[1] and "Ricarica" in q[1], q[0] & " / " & q[1])
+            rec("AC-448", "il bottone Rinomina non c'è più e il campo è spento", "assente" in q[2] and "spento" in q[3], q[2] & " / " & q[3])
+          rec("AC-448", "nessun file scritto: i file sono quelli di prima della conferma, nessun giornale", tuttoSint(d) == dopo and azioniLanci(s).count("rename") == 2, $azioniLanci(s))
+      s.finisci()
+    # ---- AC-449: un giornale lasciato da una rinomina interrotta (bcdd_prova ferma dopo 3 operazioni): la striscia, le azioni spente, Ripristina
+    block:
+      let d = copiaSint()
+      let prima = tuttoSint(d)
+      let p0 = anteprimaRef(d, @["csc", "Luce", "Lampadina"])
+      let imp = if p0 != nil and p0.hasKey("impronta"): p0["impronta"].getStr else: ""
+      let rI = runExe(bcddProva, @["rename", "Luce.csc", "--dir", ".", "--dir", d / "comuni", "--expect", imp, "--json", "csc", "Luce", "Lampadina"], d / "luce",
+        envPulito([("BCDD_RINOMINA_PROVA_FERMA", "3")]))
+      rec("AC-449", "la rinomina di prova si ferma dopo tre operazioni (codice 99) e lascia i giornali in luce/ e in comuni/",
+        rI.code == 99 and fileExists(d / "luce" / ".bcdd-rinomina") and fileExists(d / "comuni" / ".bcdd-rinomina"), $rI.code & " " & cut(rI.errout))
+      let interrotto = tuttoSint(d)
+      var s = nuovaSessione()
+      s.avviaEditor(argsEditor(d, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "?avviso|!b-nuova|!b-pubblico|!b-versione|!b-rinomina|!b-promessa|!b-ricarica|@f-ripristina|?avviso|!b-nuova|!b-rinomina")])
+      let fine = attendi(s.trace, "pagina 2", 60)
+      sleep(500)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-449", "la sessione risponde a tutte le sonde e disegna due volte (apertura, Ripristina)", fine and q.len >= 10 and nDisegni(s) == 2, $q.len & " " & $nDisegni(s) & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 10:
+        rec("AC-449", "all'apertura la striscia dice quale rinomina si è fermata (Luce → Lampadina) e che non si scrive nulla; c'è «Ripristina»",
+          "visibile" in q[0] and "Una rinomina si è fermata a metà (Luce → Lampadina): finché non la ripristini non si scrive nulla." in q[0] and "Ripristina" in q[0], cut(q[0]))
+        rec("AC-449", "le azioni che scrivono sono spente (Nuova entità, connettore pubblico, Promessa, Rinomina…); Ricarica resta accesa",
+          "spento" in q[1] and "spento" in q[2] and "spento" in q[4] and "spento" in q[5] and "acceso" in q[6], $q[1 .. 6])
+        rec("AC-449", "Ripristina: la striscia sparisce e le azioni tornano accese", "nascosto" in q[7] and "acceso" in q[8] and "acceso" in q[9], q[7] & " / " & q[8] & " / " & q[9])
+      rec("AC-449", "i file sono com'erano prima della rinomina; nessun giornale né file di lavoro", tuttoSint(d) == prima and interrotto != prima and not fileExists(d / "luce" / ".bcdd-rinomina") and
+        not fileExists(d / "comuni" / ".bcdd-rinomina"), $nomiSint(d))
+      rec("AC-449", "il ripristino è `bcdd rename --recover CARTELLA` (e nessuna scrittura dell'editor)", righe(s.lanci).anyIt(it.startsWith("rename --recover ")) and azioniLanci(s).count("save") == 0, $azioniLanci(s))
+      s.finisci()
+    # ---- AC-450: il posto dal Banco, l'identificativo dal modulo di una promessa e dalla casella di una storia
+    block:
+      # il posto
+      let d = copiaSint()
+      var s = nuovaSessione()
+      s.avviaEditor(argsEditor(d, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "@t-dentro|#p-lampada|!b-rinomina-posto|@b-rinomina-posto|=f-rin-nome:plafoniera|@rin-mostra|@rin-ok")])
+      let fine = attendi(s.trace, "pagina 3", 60)
+      sleep(500)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-450", "il posto: la sessione risponde e disegna tre volte (apertura, anteprima, scrittura); «Rinomina il posto…» c'è accanto a «Togli»", fine and q.len >= 1 and "acceso" in q[0], $q.len & " " & $nDisegni(s) & " " & cut(leggiSe(s.trace), 600))
+      let lr = lanciRen(s)
+      rec("AC-450", "il comando è `part lampada plafoniera` con --csc LuceScale (anteprima e scrittura)", lr.len == 2 and lr.allIt(" --csc LuceScale " in it and it.endsWith("part lampada plafoniera")), $lr)
+      let dopo = tuttoSint(d)
+      let ls = dopo.getOrDefault("luce/LuceScale.csc").splitLines()
+      rec("AC-450", "come AC-429: solo la riga 7 di LuceScale.csc (`plafoniera  : Lampada`); Corridoio.csc invariato",
+        ls.len >= 7 and ls[6] == "    plafoniera  : Lampada" and dopo["comuni/Corridoio.csc"] == tuttoSint(sint)["comuni/Corridoio.csc"], cut(ls.join("|")))
+      s.finisci()
+      # l'identificativo dal modulo di la1
+      let d2 = copiaSint()
+      var s2 = nuovaSessione()
+      s2.avviaEditor(argsEditor(d2, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC", "#c-Luce|#r-6|@f-rinomina-id|=f-rin-nome:la-base|@rin-mostra|@rin-ok")])
+      let fine2 = attendi(s2.trace, "pagina 3", 60)
+      sleep(500)
+      raccogli(s2)
+      let lr2 = lanciRen(s2)
+      rec("AC-450", "l'identificativo dal modulo: il comando è `id la1 la-base` con --csc Luce", fine2 and lr2.len == 2 and lr2.allIt(" --csc Luce " in it and it.endsWith("id la1 la-base")), $lr2 & " " & cut(leggiSe(s2.trace), 600))
+      let l2 = tuttoSint(d2).getOrDefault("luce/Luce.csc").splitLines()
+      rec("AC-450", "come AC-428: righe 6 e 8 di Luce.csc", l2.len >= 8 and l2[5].contains("GUARANTEE la-base:") and l2[7].contains("DETAILS la-base:"), cut(l2.join("|")))
+      s2.finisci()
+      # l'identificativo dalla casella di una storia (s1)
+      let d3 = copiaSint()
+      var s3 = nuovaSessione()
+      s3.avviaEditor(argsEditor(d3, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC", "#c-Luce|#r-10|@f-rinomina-id|=f-rin-nome:s-spenta|@rin-mostra|@rin-ok")])
+      let fine3 = attendi(s3.trace, "pagina 3", 60)
+      sleep(500)
+      raccogli(s3)
+      let lr3 = lanciRen(s3)
+      rec("AC-450", "l'identificativo dalla casella di una storia: il comando è `id s1 s-spenta` con --csc Luce", fine3 and lr3.len == 2 and lr3.allIt(" --csc Luce " in it and it.endsWith("id s1 s-spenta")), $lr3 & " " & cut(leggiSe(s3.trace), 600))
+      let l3 = tuttoSint(d3)
+      rec("AC-450", "come AC-428: riga 10 di Luce.csc e riga 3 di LuceProva.csc", l3.getOrDefault("luce/Luce.csc").splitLines()[9].contains("SCENARIO s-spenta") and
+        l3.getOrDefault("luce/LuceProva.csc").splitLines()[2].contains("TRANSLATES s-spenta"), "")
+      s3.finisci()
+    # ---- AC-451: un giro di Completa aperto: i bottoni di rinomina spenti (l'LLM finto, lento, e «Ferma»)
+    block:
+      let d = newWd0()
+      copyFile(rf9 / "Luce.csc", d / "Luce.csc")
+      writeFile(d / "Lampada.csc", "ENTITY Lampada VERSION 0.1\n  PURPOSE \"La lampada\"\n  OFFERS Luce\nEND\n")
+      var s = nuovaSessione()
+      createDir s.dir / "aux"
+      let amb = @[("BCDD_LLM", fintoLlm9), ("BCDD_ATTESA_LLM", "30"), ("BCDD_ORA", "2026-10-16T18:00:00+02:00"), ("BCDD_REGISTRO", s.dir / "chiamate.tsv"),
+        ("BCDD_FINTO_CONTA", s.dir / "aux" / "conta"), ("BCDD_FINTO_RISPOSTA", rf9 / "risposte" / "buona.json"), ("BCDD_FINTO_RISPOSTA_2", rf9 / "risposte" / "buona_seconda.json"),
+        ("BCDD_FINTO_ATTESA", "25")]
+      s.avviaEditor(@["--lang", "it", "--dir", d, "Lampada"], root, amb & @[("BCDD_EDITOR_PROVA_CLIC", "#c-Luce|!b-rinomina|>b-completa|!b-rinomina|>c-ferma")])
+      let fine = attendi(s.trace, "pagina 2", 40)
+      sleep(400)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-451", "la sessione risponde a tutte le sonde", fine and q.len >= 2, $q.len & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 2:
+        rec("AC-451", "prima di Completa «Rinomina…» è acceso; con il giro aperto è spento", "acceso" in q[0] and "spento" in q[1], $q)
+      s.finisci()
+    # ---- AC-473: «scrittura» con ripristino riuscito (R2): il messaggio nel riquadro e «Ricarica», nessuna Ricarica automatica
+    block:
+      let d = copiaSint()
+      let prima = tuttoSint(d)
+      var s = nuovaSessione()
+      s.avviaEditor(argsEditor(d, "LuceScale"), root, @[("BCDD_RINOMINA_PROVA_ERRORE", "3"), ("BCDD_EDITOR_PROVA_CLIC",
+        "#c-Luce|@b-rinomina|=f-rin-nome:Lampadina|@rin-mostra|@rin-ok|?rin-esito|!f-rin-nome|!rin-mostra|?rin-ricarica|!rin-ok")])
+      let fine = attendi(s.trace, "pagina 3", 60)
+      sleep(700)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-473", "la sessione risponde a tutte le sonde: tre disegni (apertura, anteprima, esito) e nessuno in più, cioè nessuna Ricarica automatica",
+        fine and q.len >= 5 and nDisegni(s) == 3, $q.len & " " & $nDisegni(s) & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 5:
+        rec("AC-473", "il riquadro ha il messaggio di bcdd senza il prefisso «bcdd rename: »: «non riesco a scrivere …; i file già scritti sono tornati com'erano»",
+          "non riesco a scrivere" in q[0] and "i file già scritti sono tornati com'erano" in q[0] and "bcdd rename: " notin q[0], q[0])
+        rec("AC-473", "campo e «Mostra che cosa cambia» spenti, il bottone «Ricarica» c'è, «Rinomina» non c'è più", "spento" in q[1] and "spento" in q[2] and "visibile Ricarica" in q[3] and "assente" in q[4], $q)
+      rec("AC-473", "tutti i file della cartella sintetica sono identici a prima; nessun giornale né file di lavoro", tuttoSint(d) == prima and
+        not fileExists(d / "luce" / ".bcdd-rinomina") and not fileExists(d / "comuni" / ".bcdd-rinomina") and nomiSint(d).allIt(not it.contains(".rinomina-")), $nomiSint(d))
+      s.finisci()
+      # il clic su «Ricarica»: un disegno in più, il modulo chiuso, la scheda di Luce
+      let d2 = copiaSint()
+      var s2 = nuovaSessione()
+      s2.avviaEditor(argsEditor(d2, "LuceScale"), root, @[("BCDD_RINOMINA_PROVA_ERRORE", "3"), ("BCDD_EDITOR_PROVA_CLIC",
+        "#c-Luce|@b-rinomina|=f-rin-nome:Lampadina|@rin-mostra|@rin-ok|@rin-ricarica|?scheda-modulo|?scheda-nome")])
+      let fine2 = attendi(s2.trace, "pagina 4", 60)
+      sleep(500)
+      raccogli(s2)
+      let q2 = sondeDi(s2)
+      rec("AC-473", "dopo il clic su «Ricarica»: un disegno in più (quattro), il modulo chiuso, la scheda di Luce",
+        fine2 and q2.len >= 2 and nDisegni(s2) == 4 and "nascosto" in q2[0] and "Luce" in q2[1], $q2.len & " " & $nDisegni(s2) & " " & $q2 & " " & cut(leggiSe(s2.trace), 400))
+      s2.finisci()
+    # ---- AC-474: cartelle omonime: le etichette del riquadro; con una sola cartella sintetica come in AC-444
+    block:
+      let d = copiaSint()
+      let altro = d / "altro" / "luce"
+      createDir(altro)
+      writeFile(altro / "Atrio.csc", readFile(d / "comuni" / "Corridoio.csc").replace("Corridoio", "Atrio"))
+      let eL = lastPathPart(d) & "/luce"                  # d/luce e d/altro/luce: l'ultimo segmento è uguale, il penultimo no
+      var s = nuovaSessione()
+      s.avviaEditor(@["--lang", "it", "--dir", d / "luce", "--dir", d / "comuni", "--dir", altro, "LuceScale"], root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "#c-Luce|@b-rinomina|=f-rin-nome:Lampadina|@rin-mostra|*#rin-righe .rin-file|*#rin-pannello .rin-file-nuovo|?rin-testi")])
+      let fine = attendi(s.trace, "pagina 2", 60)
+      sleep(500)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-474", "la sessione risponde a tutte le sonde", fine and q.len >= 3, $q.len & " " & cut(leggiSe(s.dir / "errori")) & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 3:
+        rec("AC-474", "le due cartelle `luce` hanno etichette diverse, il più breve tratto che le distingue: «" & eL & "» e «altro/luce»; `comuni` resta «comuni»",
+          (eL & "/Luce.csc => " & d / "luce") in q[0] and ("comuni/Corridoio.csc => " & d / "comuni") in q[0] and ("altro/luce/Atrio.csc => " & altro) in q[0], q[0])
+        rec("AC-474", "nessuna etichetta è il solo ultimo segmento ambiguo (`luce/…`)", not q[0].contains(" | luce/") and not q[0].startsWith("Q:") and q[0].find("] luce/") < 0, q[0])
+        rec("AC-474", "anche il file rinominato (Luce.csc → Lampadina.csc) porta l'etichetta e il percorso assoluto nel titolo", (eL & "/Luce.csc") in q[1] and ("=> " & d / "luce") in q[1], q[1])
+        rec("AC-474", "le righe dei testi portano la stessa etichetta", eL & "/" in q[2] or "luce/" in q[2], cut(q[2]))
+      s.finisci()
+    # ---- AC-475: il modulo di rinomina non è una modifica non salvata
+    block:
+      let d = copiaSint()
+      let prima = tuttoSint(d)
+      var s = nuovaSessione()
+      s.avviaEditor(argsEditor(d, "LuceScale"), root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "#c-Luce|@b-rinomina|=f-rin-nome:Lampadina|!l-en|@rin-mostra|@rin-t-t1|!rin-t-t1|!l-en|@b-ricarica|?avviso|?scheda-modulo|" &
+        "#c-Luce|@b-rinomina|=f-rin-nome:Lampadina|!l-en|#c-Pressione|@b-rinomina|?avviso|!f-rin-nome|=f-rin-nome:Interruttore|!l-en|@l-en|?scheda-modulo|!f-rin-nome|?avviso")])
+      let fine = attendi(s.trace, "pagina 4", 60)
+      sleep(600)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-475", "la sessione risponde a tutte le sonde e disegna quattro volte (apertura, anteprima, Ricarica, cambio di lingua)", fine and q.len >= 12 and nDisegni(s) == 4,
+        $q.len & " " & $nDisegni(s) & " " & cut(leggiSe(s.trace), 600))
+      if q.len >= 12:
+        rec("AC-475", "scrivendo il nome la lingua resta cambiabile; anche dopo l'anteprima e dopo il clic sulla casella di t1",
+          "acceso" in q[0] and "scelto=false" in q[1] and "acceso" in q[2], q[0] & " / " & q[1] & " / " & q[2])
+        rec("AC-475", "(a) Ricarica: nessuna striscia di conferma, il modulo è chiuso", "nascosto" in q[3] and "nascosto" in q[4], q[3] & " / " & q[4])
+        rec("AC-475", "(b) «Rinomina…» di un altro connettore con il modulo scritto: la lingua restava cambiabile, nessuna striscia di E1, si apre il modulo di Pressione",
+          "acceso" in q[5] and "nascosto" in q[6] and "acceso" in q[7] and "valore=Pressione" in q[7], q[5] & " / " & q[6] & " / " & q[7])
+        rec("AC-475", "(c) cambio di lingua con il nome scritto: nessun rifiuto, modulo chiuso, campo assente, nessuna striscia",
+          "acceso" in q[8] and "nascosto" in q[9] and "assente" in q[10] and "nascosto" in q[11], $q[8 .. 11])
+      rec("AC-475", "nessuna scrittura lanciata (solo l'anteprima) e file identici", lanciRen(s).len == 1 and "--dry-run" in lanciRen(s)[0] and azioniLanci(s).count("save") == 0 and tuttoSint(d) == prima, $lanciRen(s))
+      s.finisci()
+    # ---- AC-476: l'elenco delle cartelle e il riferimento interno mostrano le cartelle come il riquadro di rinomina
+    block:
+      let d = copiaSint()
+      let altro = d / "altro" / "luce"
+      createDir(altro)
+      writeFile(altro / "Atrio.csc", readFile(d / "comuni" / "Corridoio.csc").replace("Corridoio", "Atrio"))
+      let eL = lastPathPart(d) & "/luce"
+      var s = nuovaSessione()
+      s.avviaEditor(@["--lang", "it", "--dir", d / "luce", "--dir", d / "comuni", "--dir", altro, "LuceScale"], root, @[("BCDD_EDITOR_PROVA_CLIC",
+        "@b-cartelle|*#cartelle-elenco .car-testa")])
+      let fine = attendi(s.trace, "pagina 1", 60)
+      sleep(500)
+      raccogli(s)
+      let q = sondeDi(s)
+      rec("AC-476", "la sessione risponde", fine and q.len >= 1, $q.len & " " & cut(leggiSe(s.trace), 400))
+      if q.len >= 1:
+        rec("AC-476", "l'elenco delle cartelle ha le etichette «" & eL & "», «comuni» e «altro/luce», ciascuna con il percorso assoluto nel titolo",
+          (eL & " => " & d / "luce") in q[0] and ("comuni => " & d / "comuni") in q[0] and ("altro/luce => " & altro) in q[0], q[0])
+      s.finisci()
+    # ---- il codice: nessun timer, nessuna rete, nessun innerHTML nella parte nuova; i testi nelle due lingue; la rinomina non entra in Torna indietro
+    block:
+      let js = readFile(root / "editor" / "pagina" / "pagina.js")
+      let i0 = js.find("// ---- : «Rinomina")
+      let i1 = js.find("// ---- l'ultima cosa")
+      let parte = if i0 >= 0 and i1 > i0: js[i0 ..< i1] else: ""
+      rec("AC-450", "la parte della pagina per la rinomina non usa innerHTML, timer, rete né il menu del tasto destro", parte.len > 3000 and "innerHTML" notin parte and "setTimeout" notin parte and
+        "setInterval" notin parte and "fetch(" notin parte and "XMLHttpRequest" notin parte and "contextmenu" notin parte, $parte.len)
+      let tj = readFile(root / "editor" / "pagina" / "testi.js")
+      rec("AC-450", "i testi nuovi ci sono nelle due lingue", tj.count("\"rinom_approvato\"") == 2 and tj.count("\"giornale_avviso\"") == 2 and tj.count("\"b_rinomina_posto\"") == 2 and
+        tj.count("\"rinom_sporco_si\"") == 2, "")
+      let fin = readFile(root / "editor" / "edfinestra.nim")
+      let k0 = fin.find("proc eseguiRinomina(")
+      let k1 = fin.find("proc alCambioFuoco(")
+      let blocchi = if k0 >= 0 and k1 > k0: fin[k0 ..< k1] else: ""
+      rec("AC-445", "la rinomina non entra in «Torna indietro» (ultima e descrUltima si svuotano), non lancia save, né timer né osservatori", blocchi.len > 1500 and "ultima = @[]" in blocchi and
+        "\"save\"" notin blocchi and "timeout" notin blocchi and "monitor" notin blocchi.toLowerAscii and "\"rename\"" in blocchi, $blocchi.len)
 
 spegni(xvfb)
 removeDir(tmpBase)

@@ -4,8 +4,7 @@
 # con GSubprocess. Il codice è quello che prima stava in `edfinestra`, spostato qui senza cambiare comportamento; l'interfaccia
 # (`apri`, `valuta`, `lanciaSincrono`, `avviaAsincrono`, `fermaAsincrono`, `asincronoInCorso`, `remoto`) è la stessa di `edwebview2`.
 # Le procedure `cdecl` non catturano niente: lo stato sta in variabili globali del modulo.
-import std/os
-when defined(bcddEditorProva): import std/strutils
+import std/[os, strutils]
 import edgtk, edbcdd, edtesti, edtraccia, edfintipi
 export edfintipi
 
@@ -256,6 +255,21 @@ proc scegliCartelle*(titolo, annulla, scegli, iniziale: string, aggiungi = false
     g_slist_free(lista)
   gtk_widget_destroy(d)
   while gtk_events_pending() != 0: discard gtk_main_iteration()    # la finestra sparisce prima che l'editor ne apra un'altra
+
+proc apriEsterno*(bersaglio: string): bool =
+  ## : apre un file (percorso locale) o un indirizzo http(s) con l'applicazione predefinita del sistema.
+  ## Nessun accesso alla rete da parte dell'editor: lo fa l'applicazione scelta dal sistema. Falso se il sistema non sa aprirlo.
+  var err: ptr GError = nil
+  var uri = bersaglio
+  if not (bersaglio.startsWith("http://") or bersaglio.startsWith("https://")):
+    let u = g_filename_to_uri(cstring(bersaglio), nil, addr err)
+    if u == nil:
+      if err != nil: g_error_free(err)
+      return false
+    uri = $u
+    g_free(u)
+  result = g_app_info_launch_default_for_uri(cstring(uri), nil, addr err) != 0
+  if err != nil: g_error_free(err)
 
 proc mostraErrore*(titolo, testo: string) =
   ## su Linux gli errori d'avvio vanno solo sullo standard error (già scritti da chi chiama); su Windows anche in una finestra.

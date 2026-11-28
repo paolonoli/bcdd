@@ -50,6 +50,7 @@ header { display: flex; flex-wrap: nowrap; align-items: center; justify-content:
 .nome-app { flex: 0 0 auto; }
 .nome-app { font-size: var(--t-xl); font-weight: 700; white-space: nowrap; }
 #percorso button.pc { background: none; border: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline dotted; }
+#b-ricarica { flex: 0 0 auto; white-space: nowrap; }
 #percorso .pc-ora { color: var(--text); }
 #percorso { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .colonne { display: flex; flex-wrap: nowrap; gap: var(--sp-3); align-items: stretch; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
@@ -300,3 +301,42 @@ body:not(.remoto) .riq-clic:hover { text-decoration: underline; }
 .car-file { text-align: left; font-size: var(--t-s); padding: 1px var(--sp-2) 1px var(--sp-4); border: none; background: transparent; color: var(--text); cursor: pointer; overflow-wrap: anywhere; }
 .car-file.fuori { color: var(--dis-t); cursor: not-allowed; text-decoration: line-through; }
 .car-vuoto { padding: 0 var(--sp-4); }
+
+/* : i riferimenti interni nei testi e la loro finestrella */
+.codice .rif { text-decoration: underline dotted; text-underline-offset: 2px; cursor: pointer; }
+.codice .rif:hover { text-decoration-style: solid; }
+.rif-tip { position: fixed; z-index: 50; max-width: min(520px, 90vw); padding: var(--sp-2) var(--sp-3); background: var(--surface); color: var(--text);
+  border: 1px solid var(--border2); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.35); font-family: var(--font); font-size: var(--t-s); pointer-events: none; }
+.rif-tip[hidden] { display: none; }
+.rif-voce + .rif-voce { margin-top: var(--sp-2); padding-top: var(--sp-2); border-top: 1px solid var(--border); }
+.rif-testa { font-weight: 600; }
+.rif-testo { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 2px; }
+
+/* : i riferimenti a documenti esterni, la finestrella fissa dal clic, il contatore dei link rotti */
+.codice .rife { text-decoration: underline dotted; text-underline-offset: 2px; cursor: pointer; }
+.codice .rife:hover { text-decoration-style: solid; }
+.codice .rife.rotto { text-decoration: underline wavy var(--badt); text-underline-offset: 2px; }
+.rif-tip { max-height: 92vh; overflow: hidden; }
+.rif-tip.fissa { pointer-events: auto; overflow: auto; }
+.rif-tip .btn { margin-top: var(--sp-2); }
+.rif-rotto { color: var(--badt); }
+.rif-riga { white-space: pre-wrap; overflow-wrap: anywhere; }
+.rif-tab { font-family: var(--mono, monospace); }
+.rif-tip code { font-family: var(--mono, monospace); }
+.rotti { background: transparent; border: none; padding: 0; color: var(--badt); cursor: pointer; text-decoration: underline; text-align: left; }
+.rotti[hidden] { display: none; }
+
+/* : «Rinomina…», l'anteprima di bcdd rename e la striscia della rinomina interrotta */
+.modulo.rinomina .rin-pannello { display: flex; flex-direction: column; gap: var(--sp-2); }
+.rin-pannello:empty { display: none; }
+.rin-sintesi { font-weight: 600; }
+.rin-esito { white-space: pre-wrap; overflow-wrap: anywhere; }
+.rin-esito.no { color: var(--badt); }
+.rin-righe { max-height: 16rem; overflow-y: auto; padding: var(--sp-1) var(--sp-3); }
+.rin-file { font-weight: 600; margin-top: var(--sp-1); }
+.rin-riga { white-space: pre-wrap; overflow-wrap: anywhere; }
+.rin-n { color: var(--muted); }
+mark.rin-nome { background: var(--ipo); color: inherit; padding: 0 2px; border-radius: 2px; }
+.rin-bloccato { color: var(--muted); }
+.rin-bloccanti { display: flex; flex-direction: column; gap: var(--sp-1); }
+.rin-giornale { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }

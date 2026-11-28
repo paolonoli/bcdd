@@ -324,6 +324,35 @@ proc scheda(j, b: JsonNode, errori: seq[(int, string, string)], segs: seq[seq[Se
         inStoria = false
         dopoRepeat = false
   var righe = newJArray()
+  # 002:4:5 I commenti in testa al file stanno nella scheda del suo primo blocco (connettore o entità): sono il posto dei
+  # riferimenti a documenti esterni e delle decisioni citate nel file. Righe inerti (senza colore né casella); le righe vuote in coda no.
+  if str(b, "tipo") in ["ENTITY", "CSC"]:
+    var primo = true
+    for x in j["blocchi"]:
+      if num(x, "da") < da: primo = false
+    if primo:
+      var testa: seq[(int, string)]
+      for r in j["righe"]:
+        let n = num(r, "n")
+        if n >= da: break
+        let tt = str(r, "testo")
+        if tt.strip.len > 0 and not tt.strip.startsWith("--"):
+          testa.setLen(0)
+          break
+        testa.add (n, tt)
+      while testa.len > 0 and testa[^1][1].strip.len == 0: testa.setLen(testa.len - 1)
+      for (n, tt) in testa:
+        var v = newJObject()
+        v["n"] = %n
+        v["testo"] = %tt
+        v["colore"] = %""
+        v["g"] = %(-1)
+        v["nota"] = %""
+        if n - 1 < segs.len and segs[n - 1].anyIt(it.classe.len > 0):
+          var sj = newJArray()
+          for (t, c) in segs[n - 1]: sj.add %[t, c]
+          v["seg"] = sj
+        righe.add v
   for r in j["righe"]:
     let n = num(r, "n")
     if n < da or n > a: continue
@@ -681,6 +710,32 @@ proc esteseDi(j: JsonNode, profili: seq[(string, string, seq[string])]): seq[(in
         if pn == str(c, "nome") and pv == str(c, "versione_citata"): nomiE.add ne
     if nomiE.len > 0: result.add (num(b, "da"), num(b, "a"), nomiE)
 
+proc nomiDichiarati*(caricati: seq[(string, JsonNode)]): JsonNode =
+  ## 002:8:1 I nomi dichiarati nelle cartelle aperte, per i riferimenti interni dei testi: connettori, entità, tipi, eventi,
+  ## promesse e presupposti (gli id). Tutto dai dati di `check --json` (`blocchi`: `da`, `dichiarazioni`, `garanzie`), niente dal testo.
+  ## Il testo di una voce è quello delle sue righe, senza il rientro, perché la finestrella lo mostri com'è scritto.
+  result = newJArray()
+  proc voce(file, bt, bn, nome, genere: string, riga: int, testo: string): JsonNode =
+    result = newJObject()
+    result["nome"] = %nome
+    result["genere"] = %genere
+    result["blocco_tipo"] = %bt
+    result["blocco"] = %bn
+    result["file"] = %file
+    result["riga"] = %riga
+    result["testo"] = %testo.splitLines().mapIt(it.strip).join("\n")
+  for (file, j) in caricati:
+    for b in j["blocchi"]:
+      let bt = str(b, "tipo")
+      if bt notin ["ENTITY", "CSC"] or not b["intestazione_valida"].getBool: continue
+      let bn = str(b, "nome")
+      result.add voce(file, bt, bn, bn, bt, num(b, "da"), if b.hasKey("scopo") and b["scopo"].kind == JObject: str(b["scopo"], "testo") else: "")
+      for c in b["dichiarazioni"]:
+        if str(c, "tipo") in ["TYPE", "EVENT"] and str(c, "nome").len > 0:
+          result.add voce(file, bt, bn, str(c, "nome"), str(c, "tipo"), num(c, "riga"), str(c, "testo"))
+      for g in b["garanzie"]:
+        if str(g, "id").len > 0: result.add voce(file, bt, bn, str(g, "id"), str(g, "tipo"), num(g, "da"), str(g, "testo"))
+
 proc buildBanco*(cartella: string, caricati: seq[(string, JsonNode)]): JsonNode =
   ## 002:2:2 `caricati` è l'elenco (nome del file, JSON di check) in ordine di nome di file.
   result = newJObject()
@@ -689,6 +744,7 @@ proc buildBanco*(cartella: string, caricati: seq[(string, JsonNode)]): JsonNode 
   result["cartella"] = %cartella
   result["lingua"] = %($lingua)          # la pagina prende da qui la lingua (M.lingua)
   result["riservate"] = %paroleRiservate
+  result["nomi"] = nomiDichiarati(caricati)          # : i nomi dichiarati, per i riferimenti interni dei testi
   # prima passata: le entità, per sapere che cosa espone ogni parte
   var nomiEntita: seq[string]
   var offreDi, usaDi: seq[seq[string]]

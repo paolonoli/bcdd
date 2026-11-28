@@ -131,6 +131,7 @@ proc runRemove(file, expect: string) =
   ## (stessa nozione della save: blocco con STATUS RATIFIED o righe contratto). Prima scrive FILE.prima con `tolto`.
   if expect == "nuovo": die(usoSave(), 2)
   let cur = loadSource("bcdd save", file)
+  armGiornale("save", file)      # 113:3:2 K6: dopo i controlli con codice 2
   if fingerprint(cur) != expect:
     refuse(testo(kEStatoModificatoDaUn, file))
   let rep = analyze(cur)
@@ -148,6 +149,7 @@ proc runRemove(file, expect: string) =
     except IOError, OSError: pw = "illeggibile"
   if pw.len > 0 or safeReplace(prima, TagTolto & "\n" & cur, vecchioPrima, esiste, pw) != wrOk:
     refuse(testo(kNonRiescoAScrivereNon, prima))
+  if giornaleRicontrolla(): die(journalRefusal("save", giornaleFolder), 1)
   try:
     removeFile(file)
   except OSError:
@@ -162,6 +164,7 @@ proc runRemove(file, expect: string) =
 proc runUndo(file, expect: string) =
   ## 113:2:1 `--undo`: rimette il testo di FILE.prima se nessuno ha toccato il file dopo la save.
   ## Niente regole del contratto: è un testo che c'era. Scrive con la scrittura sicura, poi toglie FILE.prima.
+  armGiornale("save", file)      # 113:2:3 K6
   let prima = file & ".prima"
   let dopoRemove = expect == "nuovo"
   if dopoRemove and (fileExists(file) or dirExists(file)):
@@ -204,6 +207,50 @@ proc runUndo(file, expect: string) =
   resolveCitations(rep, file, @[])
   esito(file, vecchio, changedLines(cur.splitLines(), vecchio.splitLines()), rep)
 
+proc saveRulesViolation*(oldRaw, newText: string): string =
+  ## 112:2:1: le regole 2 e 3 della sezione 7.3 sul passaggio da `oldRaw` a `newText`, come le applica `save`.
+  ## Restituisce il messaggio del rifiuto (senza il prefisso `bcdd save: `), "" se il testo nuovo passa. `oldRaw` vuoto: file nuovo.
+  # 112:1:1 Le regole 2 e 3 della sezione 7.3: niente contratto senza Ratify
+  let oldRep = analyze(oldRaw)
+  let newRep = analyze(newText)
+  let oldRows = contractRows(oldRep)
+  let newRows = contractRows(newRep)
+  let oldPieces = contractPieces(oldRep)
+  let newPieces = contractPieces(newRep)
+  for k, v in newRows:
+    if k notin oldRows:
+      let p = k.split('|')
+      return (testo(kLaRigaDiDiventerebbeContratto, p[1], p[2].split('#')[0], blockLabel(p[0])))
+    if oldRows[k] != v:
+      let p = k.split('|')
+      return (testo(kLaRigaDiEContratto, p[1], p[2].split('#')[0], blockLabel(p[0])))
+    # 112:1:7 una promessa approvata non cambia dove vale: né pezzo VARIANT, né il nome della sua dimensione o scelta
+    if k in oldPieces and k in newPieces and oldPieces[k][0] != newPieces[k][0]:
+      let p = k.split('|')
+      return (testo(kLaRigaEContrattoNon, $newPieces[k][1], p[1], p[2], v.split('\x01')[0]))
+  for nb in newRep.blocks:
+    if not nb.headerOk or nb.status != skRat: continue
+    let ob = findBlock(oldRep, blockKey(nb))
+    if ob < 0 or oldRep.blocks[ob].status != skRat or statusOf(oldRep.blocks[ob]) != statusOf(nb):
+      return (testo(kDiventerebbeContrattoSenzaUnaRatifica, nb.name))
+    # 112:1:5 Versione bloccata: approvata prima e dopo con la stessa decisione, il numero non cambia
+    if oldRep.blocks[ob].version != nb.version:
+      return (testo(kEApprovataIlNumeroDella, nb.name))
+    # 112:1:8 (1.0-beta, B-1) l'intestazione di un BINDING o di un profilo approvati è bloccata; di un profilo approvato nessuna riga cambia
+    if nb.bk in ["BINDING", "PROFILE"]:
+      let nbi0 = findBlock(newRep, blockKey(nb))
+      if declText(oldRep, oldRep.blocks[ob].line, oldRep.blocks[ob].line) != declText(newRep, nb.line, nb.line):
+        return (testo(kEApprovatoLIntestazioneNon, nb.name))
+      if nb.bk == "PROFILE" and declText(oldRep, oldRep.blocks[ob].line, oldRep.blocks[ob].endLine) !=
+          declText(newRep, newRep.blocks[nbi0].line, newRep.blocks[nbi0].endLine):
+        return (testo(kIlProfiloEApprovatoLe, nb.name))
+      continue
+    # 112:1:2 Il blocco resta ratificato: le dichiarazioni dopo l'intestazione restano uguali e nello stesso ordine
+    let nbi = findBlock(newRep, blockKey(nb))
+    if fixedDecls(oldRep, ob) != fixedDecls(newRep, nbi):
+      return (testo(kERatificataLeDichiarazioniDopo, nb.name))
+  ""
+
 proc runSave*(args: seq[string]) =
   var file, expect: string
   var haveFile, haveExpect, undo, remove = false
@@ -242,57 +289,24 @@ proc runSave*(args: seq[string]) =
   var oldRaw = ""
   let isNew = expect == "nuovo"
   if isNew:
+    armGiornale("save", file)      # 112:0:1 K6: prima di ogni controllo con codice 1
     if fileExists(file) or dirExists(file):
       refuse(testo(kEsisteGiaNonScrivoNiente, file))
   else:
     oldRaw = loadSource("bcdd save", file)
+    armGiornale("save", file)
     if fingerprint(oldRaw) != expect:
       refuse(testo(kEStatoModificatoDaUn2, file))
-  # 112:1:1 Le regole 2 e 3 della sezione 7.3: niente contratto senza Ratify
-  let oldRep = analyze(oldRaw)
+  let violation = saveRulesViolation(oldRaw, newText)
+  if violation.len > 0: refuse(violation)
   var newRep = analyze(newText)
-  let oldRows = contractRows(oldRep)
-  let newRows = contractRows(newRep)
-  let oldPieces = contractPieces(oldRep)
-  let newPieces = contractPieces(newRep)
-  for k, v in newRows:
-    if k notin oldRows:
-      let p = k.split('|')
-      refuse(testo(kLaRigaDiDiventerebbeContratto, p[1], p[2].split('#')[0], blockLabel(p[0])))
-    if oldRows[k] != v:
-      let p = k.split('|')
-      refuse(testo(kLaRigaDiEContratto, p[1], p[2].split('#')[0], blockLabel(p[0])))
-    # 112:1:7 una promessa approvata non cambia dove vale: né pezzo VARIANT, né il nome della sua dimensione o scelta
-    if k in oldPieces and k in newPieces and oldPieces[k][0] != newPieces[k][0]:
-      let p = k.split('|')
-      refuse(testo(kLaRigaEContrattoNon, $newPieces[k][1], p[1], p[2], v.split('\x01')[0]))
-  for nb in newRep.blocks:
-    if not nb.headerOk or nb.status != skRat: continue
-    let ob = findBlock(oldRep, blockKey(nb))
-    if ob < 0 or oldRep.blocks[ob].status != skRat or statusOf(oldRep.blocks[ob]) != statusOf(nb):
-      refuse(testo(kDiventerebbeContrattoSenzaUnaRatifica, nb.name))
-    # 112:1:5 Versione bloccata: approvata prima e dopo con la stessa decisione, il numero non cambia
-    if oldRep.blocks[ob].version != nb.version:
-      refuse(testo(kEApprovataIlNumeroDella, nb.name))
-    # 112:1:8 (1.0-beta, B-1) l'intestazione di un BINDING o di un profilo approvati è bloccata; di un profilo approvato nessuna riga cambia
-    if nb.bk in ["BINDING", "PROFILE"]:
-      let nbi0 = findBlock(newRep, blockKey(nb))
-      if declText(oldRep, oldRep.blocks[ob].line, oldRep.blocks[ob].line) != declText(newRep, nb.line, nb.line):
-        refuse(testo(kEApprovatoLIntestazioneNon, nb.name))
-      if nb.bk == "PROFILE" and declText(oldRep, oldRep.blocks[ob].line, oldRep.blocks[ob].endLine) !=
-          declText(newRep, newRep.blocks[nbi0].line, newRep.blocks[nbi0].endLine):
-        refuse(testo(kIlProfiloEApprovatoLe, nb.name))
-      continue
-    # 112:1:2 Il blocco resta ratificato: le dichiarazioni dopo l'intestazione restano uguali e nello stesso ordine
-    let nbi = findBlock(newRep, blockKey(nb))
-    if fixedDecls(oldRep, ob) != fixedDecls(newRep, nbi):
-      refuse(testo(kERatificataLeDichiarazioniDopo, nb.name))
   # 112:1:3 Scrittura
   var why = ""
   if isNew:
     case createExclusive(file, newText, why)
     of crCreated: discard
     of crExists: refuse(testo(kEsisteGiaNonScrivoNiente, file))
+    of crJournal: die(journalRefusal("save", giornaleFolder), 1)
     of crFailed: refuse(testo(kNonRiescoACreare, file, why))
   else:
     let r = safeReplace(file, newText, oldRaw, true, why)

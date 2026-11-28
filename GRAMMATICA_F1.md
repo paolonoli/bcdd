@@ -6,7 +6,7 @@
 **BCDD** = *Behavioural Contract-Driven Design* · **CSC** = *Capability State Contract*
 
 **Stato**: versione 1.0-beta. Il documento descrive la sintassi dei file `.csc` letti dal programma `bcdd`, gli
-errori segnalati, il rapporto di `bcdd check` e l'uso dei comandi `check`, `new` e `ratify`.
+errori segnalati, il rapporto di `bcdd check` e l'uso dei comandi `check`, `new`, `ratify` e `rename`.
 
 ## Contenuto del documento
 
@@ -29,7 +29,7 @@ voce:
 - la sezione 9.7: le voci da giudicare e i controlli non eseguiti.
 
 Le sezioni 10, 11 e 12 descrivono i comandi `check`, `new` e `ratify`. La sezione 13 descrive il file del dialogo
-di `refine`. La sezione 14 elenca ciò che `bcdd` non controlla.
+di `refine`. La sezione 14 elenca ciò che `bcdd` non controlla. La sezione 15 descrive il comando `rename`.
 
 Il linguaggio, con i suoi esempi, è presentato nel *Manuale del BCDD*. Questo documento ne usa i termini; il
 glossario è l'appendice C del manuale. `bcdd` riconosce tutte le forme del linguaggio descritte nel manuale: le
@@ -2633,7 +2633,7 @@ Con un comando sconosciuto, o con `bcdd` senza argomenti, lo standard output res
 compare il testo seguente, su una sola riga terminata da LF; il codice d'uscita è 2:
 
 ```
-uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero
+uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero | rename FILE [--csc NOME] [--dir CARTELLA]... (--dry-run | --expect IMPRONTA) csc|entity|part|id VECCHIO NUOVO | rename --recover CARTELLA
 ```
 
 
@@ -2657,7 +2657,8 @@ uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] 
   - con `refine`, anche il testo inviato al modello linguistico.
 - Non cambiano: parole chiave, codici d'errore, numeri di riga e di colonna, prima riga del rapporto (che non
   riporta `--lang`), struttura del rapporto, codici d'uscita, valori letterali delle opzioni (`--expect nuovo`,
-  `--modello veloce|accurato`), marcatori del file del dialogo, righe `STATUS RATIFIED BY` scritte da `ratify`.
+  `--modello veloce|accurato`, `--text default|none|all` e i valori `csc`, `entity`, `part`, `id` di `rename`),
+  marcatori del file del dialogo, righe `STATUS RATIFIED BY` scritte da `ratify`.
 - Con `--json` l'oggetto contiene in più, subito dopo `"versione"`, il campo `"lingua"` (`"it"` o `"en"`). Chiavi e
   valori enumerati non cambiano; cambiano soltanto i campi di testo destinati a chi legge (fra gli altri
   `messaggio`, `testo`, `motivo`, `esito.riga`). La versione della forma resta 5.
@@ -2677,6 +2678,7 @@ uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] 
 | NOME non è un Nome (regola L7) | niente | `bcdd new: nome non valido: NOME` | 2 | nessuno |
 | argomenti mancanti o in più | niente | `uso: bcdd new NOME` | 2 | nessuno |
 | NOME coincide, a prescindere da maiuscole e minuscole, con un nome che Windows riserva a un dispositivo (`CON`, `PRN`, `AUX`, `NUL`, `COM1`…`COM9`, `LPT1`…`LPT9`). Il controllo vale su ogni sistema, perché una cartella di CSC deve poter essere trasferita da Linux a Windows | niente | `bcdd new: il nome «NOME» non si può usare: Windows lo riserva per sé (nomi riservati: CON, PRN, AUX, NUL, COM1-9, LPT1-9). Scegline un altro` | 2 | nessuno |
+| nella cartella corrente c'è il giornale di una rinomina interrotta (sezione 15.6) | niente | `bcdd new: in . c'è una rinomina interrotta: non scrivo nulla; esegui bcdd rename --recover .` | 1 | nessuno |
 | il file non si può creare o scrivere: cartella senza permesso di scrittura, disco pieno, ogni altro errore del sistema | niente | `bcdd new: non riesco a creare NOME.csc: CAUSA` | 1 | nessuno, nemmeno un file temporaneo |
 
 Il file viene creato per intero oppure non viene creato affatto: non deve mai restare scritto solo in parte.
@@ -2770,7 +2772,8 @@ Il primo controllo che fallisce determina il messaggio e il codice d'uscita; il 
 2. Lettura del file: gli stessi casi di `bcdd check` (sezione 10), con il prefisso `bcdd ratify:` al posto
    di `bcdd check:`.
 3. Le cartelle `--dir`, una alla volta nell'ordine scritto, con i casi e i messaggi della sezione 10 e il prefisso
-   `bcdd ratify:` (per esempio `bcdd ratify: cartella non trovata: ARG`), codice 2.
+   `bcdd ratify:` (per esempio `bcdd ratify: cartella non trovata: ARG`), codice 2. Poi la rinomina interrotta:
+   se nella cartella di `FILE` c'è il giornale `.bcdd-rinomina`, codice 1 (sezione 15.6).
 4. **Il file supera `bcdd check --strict`**: nessun errore e nessuna riga non riconosciuta in tutto il file. Si
    approva solo ciò che `bcdd` ha letto per intero. Il controllo cerca le citazioni delle entità come `check`: nello
    stesso file, nella sua cartella e nelle cartelle `--dir`. Un E14, un E04 o una riga non riconosciuta in
@@ -3005,6 +3008,7 @@ Ogni messaggio va sullo standard error e termina con LF; lo standard output rest
 | l'ID non rispetta la regola L8 | `bcdd ratify: id non valido: ARG` | 2 |
 | il nome dopo `--csc` non è un Nome | `bcdd ratify: nome non valido: ARG` | 2 |
 | file non trovato, non è un file, non leggibile, non UTF-8 | come in `check`, con il prefisso `bcdd ratify:` | 2 |
+| nella cartella di `FILE` c'è il giornale di una rinomina interrotta (sezione 15.6) | `bcdd ratify: in CARTELLA c'è una rinomina interrotta: non scrivo nulla; esegui bcdd rename --recover CARTELLA` | 1 |
 | il file non supera `bcdd check --strict` | `bcdd ratify: il file non passa bcdd check --strict (errori: E, righe non riconosciute: U): non approvo` | 1 |
 | nessun blocco da approvare (solo `VERIFICATION`) | `bcdd ratify: il file non contiene nessun blocco da approvare: una VERIFICATION non si approva` | 1 |
 | nessuna CSC né entità e più blocchi fra `BINDING` e `PROFILE`, nessun `--csc` | `bcdd ratify: il file contiene N blocchi da approvare: indica quale con --csc NOME` | 2 |
@@ -3068,9 +3072,10 @@ I messaggi vanno sullo standard error, con codice d'uscita 1; il file resta inva
 
 ## 13. Il file del dialogo
 
-Il file `FILE.dialogo` sta accanto al file CSC. Lo scrive solo `bcdd refine`, che vi conserva le domande del modello
-linguistico e le risposte di chi scrive e ne invia il contenuto al modello nei giri successivi. `check` e `ratify`
-non lo leggono, e non è un file CSC. Esempio, per la luce delle scale (le prime righe di un file con due giri):
+Il file `FILE.dialogo` sta accanto al file CSC. Lo scrive `bcdd refine`, che vi conserva le domande del modello
+linguistico e le risposte di chi scrive e ne invia il contenuto al modello nei giri successivi. `bcdd rename` ne cambia
+soltanto il nome e il nome nelle righe `GIRO` (sezione 15.2). `check` e `ratify` non lo leggono, e non è un file
+CSC. Esempio, per la luce delle scale (le prime righe di un file con due giri):
 
 ```
 -- bcdd refine: domande dell'LLM e risposte della persona. Si può modificare o cancellare a mano.
@@ -3164,3 +3169,162 @@ controllato:
   una scelta del linguaggio, non un limite di `bcdd`;
 - **il significato**: spetta a chi giudica, non a `bcdd`, stabilire se una promessa a parole è sensata, coerente con
   le altre o verificabile.
+
+---
+
+## 15. Il comando `bcdd rename`
+
+`bcdd rename` cambia il nome di una CSC, di un'entità, di una parte di un'entità, oppure il nome breve di una
+`GUARANTEE`, di un'`ASSUME` o di una `SCENARIO`, in tutti i file `.csc` delle cartelle indicate. Cambia soltanto
+nomi dentro forme già riconosciute: nessuna riga si aggiunge o si toglie, e il resto di ogni riga resta identico byte
+per byte, spazi d'allineamento compresi. Le colonne allineate dopo il nome non si riallineano.
+
+### 15.1 Forma
+
+```
+bcdd rename FILE [--csc NOME] [--dir CARTELLA]... --dry-run [--json] KIND VECCHIO NUOVO
+bcdd rename FILE [--csc NOME] [--dir CARTELLA]... --expect IMPRONTA [--text default|none|all | --text-at tN...] [--json] KIND VECCHIO NUOVO
+bcdd rename --recover CARTELLA [--json]
+```
+
+- `KIND` è `csc`, `entity`, `part` oppure `id`. I valori non si traducono.
+- `FILE` contiene la dichiarazione di `VECCHIO` (`csc`, `entity`), oppure il blocco in cui stanno la parte (`part`) o
+  la riga (`id`). `--csc NOME` sceglie quel blocco quando il file ne contiene più d'uno, come nel passo 5 della
+  sezione 12.2 e con gli stessi messaggi; con `csc` ed `entity` è un errore d'uso.
+- **Le cartelle** sono la cartella di `FILE` e le cartelle `--dir`, con le regole di `check` (sezione 10). `rename`
+  legge i file normali il cui nome termina con `.csc`, direttamente in ciascuna cartella; le sottocartelle non si
+  leggono. Un nome di file presente in due cartelle è un rifiuto. Fuori da queste cartelle nessun file cambia: un file
+  di un'altra cartella che cita il nome vecchio conserva una citazione che, dopo la rinomina, non è trovata (sezione
+  9.4).
+- Le opzioni si scrivono in qualunque ordine prima dei tre argomenti finali, ciascuna una volta sola; `--dir` e
+  `--text-at` si possono ripetere.
+- `--dry-run` mostra l'anteprima e non scrive nulla. `--expect IMPRONTA` scrive. Senza nessuna delle due opzioni, o
+  con entrambe, è un errore d'uso.
+- Riga d'uso (codice 2, standard output vuoto):
+
+```
+uso: bcdd rename FILE [--csc NOME] [--dir CARTELLA]... (--dry-run | --expect IMPRONTA [--text default|none|all | --text-at tN...]) [--json] csc|entity|part|id VECCHIO NUOVO
+     bcdd rename --recover CARTELLA [--json]
+```
+
+### 15.2 Che cosa cambia
+
+| `KIND` | Posizioni in cui il nome cambia |
+|---|---|
+| `csc` | il nome di ogni intestazione `CSC N VERSION v` (G1); `OFFERS N` e `USES N` (G32, G33); il primo nome di `BINDING N` (G40) e di `VERIFICATION N` (G48); il primo nome di ogni `N.y` nelle storie e nelle formule delle entità (G36) |
+| `entity` | il nome di ogni intestazione `ENTITY E VERSION v` (G31); il secondo nome di una parte `p : E` (G34) |
+| `id` | la dichiarazione (G16, G19); ogni `DETAILS I` del blocco; ogni `SCENARIO x TRANSLATES I` (G53) nelle `VERIFICATION` della stessa CSC e della stessa versione |
+| `part` | il primo nome di `P : X` (G34), in ogni riga del blocco e in ogni segmento |
+
+- Con `csc` ed `entity`, il file di nome esattamente `N.csc` che contiene la dichiarazione diventa `M.csc` nella
+  stessa cartella; un file con un altro nome mantiene il suo nome. Il file del dialogo `N.csc.dialogo`, se esiste,
+  diventa `M.csc.dialogo`, e nelle righe `GIRO` il nome diventa `M` (sezione 13). Il file `N.csc.prima` non cambia.
+- **I testi liberi.** Nelle stringhe e nei commenti una parola uguale al nome vecchio non cambia da sola:
+  l'anteprima la elenca con un numero (`t1`, `t2`, …), e la scelta si indica alla scrittura. `--text default` (il
+  valore usato se l'opzione manca) sceglie le parole nelle stringhe e nei commenti con `csc`, `entity` e `id`, e
+  nessuna parola con `part`; `--text none` nessuna; `--text all` tutte; `--text-at tN` esattamente quelle indicate.
+  Il testo del file del dialogo non si propone mai.
+- Non si rinominano eventi, stati, richieste, tipi, costanti, valori di un elenco, profili, estensioni, nomi
+  distintivi (`AS`) e mezzi.
+
+### 15.3 Le righe approvate
+
+La rinomina si rifiuta, e nessun file cambia, se un nome da cambiare sta in una riga che non si può modificare senza
+una nuova approvazione:
+- una riga con stato effettivo approvato (sezione 7.1), per intero;
+- in un blocco con l'intestazione approvata, l'intestazione e ogni riga che non sia una riga da approvare con un
+  proprio `STATUS`; in un profilo approvato, ogni riga;
+- con `csc` ed `entity`, l'intestazione di un blocco che contiene almeno una riga approvata.
+
+Le righe che non si approvano mai (`OFFERS`, `USES`, parti, storie d'entità, intestazione d'entità) si cambiano anche
+in un'entità con promesse approvate. Una parola uguale al nome vecchio nel testo di una riga approvata non impedisce
+la rinomina e resta invariata. Un nome approvato si cambia soltanto con una versione nuova: si rimettono da approvare
+le righe elencate dal rifiuto, si rinomina, poi si approva con una decisione nuova.
+
+### 15.4 Il nome nuovo, l'anteprima e la scrittura
+
+- `NUOVO` è un Nome (regola L7) con `csc`, `entity` e `part`, un Id (regola L8) con `id`; con `csc` ed `entity` non
+  è un nome che Windows riserva a un dispositivo, come in `bcdd new` (sezione 11).
+- `NUOVO` è diverso da `VECCHIO`; non è già dichiarato nelle cartelle (con `id` e `part`, nel blocco); con `csc` ed
+  `entity` non è già citato senza essere dichiarato, perché la citazione indicherebbe, dopo la rinomina, il blocco
+  rinominato; nella cartella di un file da rinominare non esiste un file, una cartella o un collegamento di nome
+  `NUOVO.csc` o `NUOVO.csc.dialogo`, nemmeno con maiuscole e minuscole diverse, salvo il file stesso quando cambiano
+  solo maiuscole e minuscole. Il controllo sulle maiuscole vale su ogni sistema.
+- **L'anteprima** elenca le righe che cambiano, prima e dopo, i file rinominati e i testi liberi con il loro numero,
+  e termina con l'impronta dello stato delle cartelle (`impronta: sha256:…`). Con `--expect IMPRONTA`, `bcdd`
+  ricalcola l'impronta: se un file `.csc` delle cartelle è cambiato, è stato aggiunto o tolto, o è comparso un nome
+  di destinazione, non scrive nulla. La scelta dei testi non entra nell'impronta.
+- **Il controllo invariato.** Prima di scrivere, `bcdd` controlla ogni file delle cartelle come `bcdd check
+  --strict`, sui testi attuali e sui testi nuovi. Per ogni file devono coincidere il codice d'uscita, gli errori
+  (codice e riga), i numeri delle righe non riconosciute e, per ogni citazione, se è trovata e con quale versione.
+  Altrimenti nessun file cambia. Un file con errori si può rinominare: conta che l'esito non cambi.
+- **Tutto o niente.** Prima di cambiare un file, `bcdd` scrive in ogni cartella in cui cambia almeno un file un
+  giornale `.bcdd-rinomina`, con le copie dei testi vecchi e nuovi; poi sostituisce i file, con la scrittura sicura
+  della sezione 12.6, e alla fine toglie copie e giornali. Da quando comincia a scrivere, Ctrl-C è rinviato. Se una
+  scrittura fallisce, i file già scritti tornano com'erano. Se il processo si interrompe senza poter tornare
+  indietro, i giornali restano.
+- **Il ripristino.** `bcdd rename --recover CARTELLA` legge il giornale della cartella: se tutte le sostituzioni
+  erano già fatte, toglie copie e giornali; altrimenti riporta tutti i file al testo di prima. Se un file non ha né
+  il testo di prima né quello nuovo, non tocca nulla e lascia i giornali. Se il ritorno al testo di prima non riesce su
+  un file, i giornali restano e il comando si può rieseguire dopo averne eliminato la causa.
+
+### 15.5 Codici d'uscita e messaggi
+
+| Codice | Significato |
+|---|---|
+| 0 | anteprima mostrata; rinomina scritta; ripristino fatto o completato |
+| 1 | il comando è chiaro, ma i file non lo permettono: messaggi nella tabella qui sotto |
+| 2 | il comando non si può eseguire così come è scritto: errore d'uso; nome nuovo non valido (`nome non valido per KIND: NUOVO`, oppure, con `csc` ed `entity`, il messaggio di `bcdd new` per un nome che Windows riserva a un dispositivo, sezione 11); `FILE` o `--dir` come in `check` (sezione 10); sempre con il prefisso `bcdd rename:` |
+
+È la stessa distinzione di `bcdd new` e `bcdd ratify`. Ogni messaggio va sullo standard error con il prefisso
+`bcdd rename:` e termina con LF; lo standard output resta vuoto, salvo con `--json`, e nessun file cambia.
+
+| Caso | Messaggio |
+|---|---|
+| dichiarazione assente | `FILE non contiene CSC VECCHIO` (`ENTITY VECCHIO`); `nessuna GUARANTEE, ASSUME né SCENARIO con id VECCHIO nel blocco B`; `nessuna parte VECCHIO nella ENTITY B` |
+| nome uguale | `il nome nuovo è uguale al vecchio: non cambio nulla` |
+| riga approvata (sezione 15.3) | `VECCHIO non si rinomina: compare in N righe approvate:` (con N uguale a 1: `VECCHIO non si rinomina: compare in 1 riga approvata:`), poi una riga per ogni riga bloccata, `  FILE, riga N: TESTO (MOTIVO)`, con `MOTIVO` uno di `intestazione approvata, D-n`, `riga approvata, D-n`, `il blocco ha righe approvate: riga R, D-n`, `profilo approvato, D-n`, poi `Un nome approvato cambia solo con una versione nuova: rimetti da approvare le righe elencate (Nuova versione), rinomina, poi approva con una decisione nuova.` |
+| nome già dichiarato | `NUOVO è già usato: FILE, riga N: TESTO` |
+| nome già citato | `NUOVO è già citato in FILE, riga N, senza essere dichiarato: dopo la rinomina la citazione indicherebbe VECCHIO` |
+| file di destinazione esistente | `esiste già CARTELLA/X: non lo sovrascrivo`, oppure `esiste già X.csc, che su Windows è lo stesso nome di NUOVO.csc` |
+| nome di file in due cartelle | `il file X.csc è in due cartelle (A, B): rename non sceglie quale riscrivere; indica una sola delle due cartelle` |
+| collegamento | `X.csc è un collegamento simbolico: rename non lo sposta`; `X.csc ha più collegamenti fisici: non lo riscrivo` |
+| file delle cartelle illeggibile | `non riesco a leggere CARTELLA/X.csc (non leggibile)`, oppure `(non UTF-8)`, seguito da `: niente scritto` |
+| giornale presente | `in CARTELLA c'è una rinomina interrotta (VECCHIO -> NUOVO): esegui bcdd rename --recover CARTELLA`, con i nomi letti dal giornale; `(? -> ?)` se il giornale non si legge o non ha la forma attesa |
+| file cambiati dopo l'anteprima | `i file sono cambiati dopo l'anteprima: niente scritto. Rifai l'anteprima` |
+| testo scelto non valido | `tN non esiste nell'anteprima`; `tN è in una riga approvata: resta con il nome vecchio` |
+| errore della scrittura | `non riesco a scrivere X: CAUSA; niente scritto`; `non riesco a scrivere X: CAUSA; i file già scritti sono tornati com'erano`; `scrittura interrotta su X (CAUSA) e ripristino non riuscito: esegui bcdd rename --recover CARTELLA`. `CAUSA` è `esiste già`, `il file scritto non coincide con il testo controllato`, oppure il testo dell'errore del sistema |
+| percorso non scrivibile nel giornale | `il percorso P contiene un tabulatore o un a capo: niente scritto` |
+| ripristino senza giornale | `in CARTELLA non c'è una rinomina interrotta` |
+| ripristino su un file estraneo | `X non è né il testo di prima né quello nuovo: non tocco niente; il testo di prima è in .N.rinomina-vecchio.ID`, con `X` il file che non corrisponde e `N` il nome di partenza |
+| ripristino non riuscito | `ripristino non riuscito su X (CAUSA): i giornali restano; elimina la causa e riesegui bcdd rename --recover CARTELLA`; `CAUSA` è `copia del testo di prima mancante o diversa: .X.rinomina-vecchio.ID`, oppure il testo dell'errore del sistema |
+| giornale illeggibile | `non riesco a leggere il giornale PERCORSO (non leggibile): non tocco niente`; `il giornale PERCORSO non è nella forma attesa: non tocco niente` |
+| errore interno | `errore interno: il controllo di X cambierebbe (prima: …; dopo: …); niente scritto`; `errore interno: X non passa le regole di bcdd save; niente scritto` |
+
+Con `--json` lo standard output contiene un solo oggetto, con `"forma": "bcdd-rename"` e `"versione": 1`, anche per
+i rifiuti con codice 1; il campo `esito` vale `anteprima`, `scritto`, `rifiutato`, `ripristinato` o `completato`.
+Per gli errori d'uso lo standard output resta vuoto.
+
+### 15.6 Le scritture con una rinomina interrotta
+
+Finché in una cartella c'è il giornale di una rinomina interrotta, i comandi che scrivono non scrivono nulla in quella
+cartella. `bcdd check` non lo guarda: il suo rapporto resta lo stesso, byte per byte.
+
+| Comando | Cartella guardata | Messaggio |
+|---|---|---|
+| `bcdd new` | la cartella corrente, scritta `.` | `bcdd new: in . c'è una rinomina interrotta: non scrivo nulla; esegui bcdd rename --recover .` |
+| `bcdd ratify` | la cartella di `FILE` | `bcdd ratify: in CARTELLA c'è una rinomina interrotta: non scrivo nulla; esegui bcdd rename --recover CARTELLA` |
+| `bcdd refine`, in ogni forma salvo `--show` | la cartella di `FILE` | `bcdd refine: in CARTELLA c'è una rinomina interrotta: non scrivo nulla; esegui bcdd rename --recover CARTELLA` |
+| `bcdd save`, in ogni forma che scrive o toglie un file | la cartella di `FILE` | `bcdd save: in CARTELLA c'è una rinomina interrotta: non scrivo nulla; esegui bcdd rename --recover CARTELLA` |
+| `bcdd rename` | ogni cartella in cui cambierebbe un file | sezione 15.5, «giornale presente» |
+
+- Il giornale c'è se nella cartella esiste una voce di nome `.bcdd-rinomina`, di qualunque tipo (file, cartella,
+  collegamento, anche un collegamento il cui bersaglio non esiste). Il contenuto non si legge. Se il sistema non
+  permette di stabilire che la voce manca, il comando si comporta come se ci fosse.
+- `CARTELLA` è la parte di `FILE` prima dell'ultimo separatore, così come è scritta; `.` se `FILE` non contiene un
+  separatore. Le cartelle `--dir` di `ratify` si leggono e non si scrivono, quindi non si guardano.
+- Il codice d'uscita è 1; lo standard output resta vuoto, anche con `--json`; nessun file viene creato, cambiato o
+  tolto.
+- Il controllo si esegue dopo i controlli con codice 2 sugli argomenti e sul file, prima di ogni altro controllo con
+  codice 1 e, per `refine`, prima di ogni chiamata al modello linguistico. `ratify`, `refine` e `save` lo ripetono
+  subito prima di scrivere: se il giornale è comparso nel frattempo, non scrivono nulla, con lo stesso messaggio.

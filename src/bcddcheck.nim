@@ -3,8 +3,7 @@
 # 010:1:1 Analisi e controllo di una CSC: parser delle dichiarazioni (GRAMMATICA_F1 sezioni 3-8)
 # 010:1:2 e rapporto di `bcdd check` (sezione 9). Il modulo non scrive nulla: legge soltanto (g-c1).
 import std/[strutils, tables, algorithm, sets]
-when defined(windows):
-  import std/os
+import std/os
 import bcddlex, bcddwords, bcddformula, bcddtesti, bcddsys
 export bcddwords.isReservedWord
 
@@ -2479,8 +2478,27 @@ proc symGenreOf(s: Sym): string =
   of sState: "STATE"
   else: "?"
 
+var
+  vfsOn*: bool                       ## 021:2:1a : la rinomina controlla i testi «come se fossero già scritti»
+  vfsFiles*: Table[string, string]   ## percorso (assoluto, normalizzato) -> testo che ha, al posto del disco
+  vfsGone*: HashSet[string]          ## percorsi che per il controllo non esistono
+
+proc vfsKey*(path: string): string = normalizedPath(absolutePath(path))
+
 proc loadCandidate(path: string): Loaded =
   ## 021:2:2 Un candidato `N.csc`: lo si legge soltanto, mai lo si scrive (g-c1).
+  if vfsOn:
+    # 021:2:2c: i file della rinomina stanno in memoria; gli altri nomi si cercano sul disco come sempre
+    let k = vfsKey(path)
+    if k in vfsFiles:
+      result.state = lsOk
+      result.raw = vfsFiles[k]
+      result.rep = analyze(result.raw)
+      finishAll(result.rep, "", @[], false)
+      return
+    if k in vfsGone:
+      result.state = lsMissing
+      return
   # 021:2:2a W-R7: su Windows un nome di dispositivo non si apre mai (leggerebbe il dispositivo): vale «non esiste»
   when defined(windows):
     if isDeviceName(extractFilename(path)):

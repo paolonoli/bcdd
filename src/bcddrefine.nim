@@ -1458,6 +1458,9 @@ proc runRefineJson(args: seq[string]) =
   let file = pos[0]
   let fileName = extractFilename(file)
   let giroPath = file & ".giro"
+  if mode != "show":
+    discard loadSource(P, file)
+    armGiornale("refine", file)      # 120:5:1 K1, K6: ogni forma salvo --show
   gGiroLingua = lingua        # 120:6:0 il tempo 1 fissa la lingua del giro; gli altri tempi la rileggono da FILE.giro (readGiro)
   case mode
   of "":
@@ -1693,6 +1696,8 @@ proc runRefine*(args: seq[string]) =
   if pos.len != 1: die(usoRefine(), 2)
   let file = pos[0]
   if haveCsc and not validName(cscName): die(testo(kNomeNonValido, P, cscName), 2)
+  discard loadSource(P, file)
+  armGiornale("refine", file)      # 119:1:2 K1, K6: prima di ogni chiamata al modello
   let (limit, limitSrc) = envLimit()
   let cx = prepare(file, haveCsc, cscName)
   let raw = cx.raw

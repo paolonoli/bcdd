@@ -149,7 +149,7 @@ block:
 block:
   let f = "prove/01_minima.csc"
   proc usoErr(r: Res, msg: string): bool = r.code == 2 and r.output.len == 0 and r.errout == msg & "\n"
-  let usoEn = "usage: bcdd [--lang it|en] COMMAND; commands: new NAME | check [--strict] [--json] [--dir FOLDER]... FILE | refine FILE [--csc NAME] | ratify FILE [--csc NAME] [--dir FOLDER]... [ID | --all] D-number"
+  let usoEn = "usage: bcdd [--lang it|en] COMMAND; commands: new NAME | check [--strict] [--json] [--dir FOLDER]... FILE | refine FILE [--csc NAME] | ratify FILE [--csc NAME] [--dir FOLDER]... [ID | --all] D-number | rename FILE [--csc NAME] [--dir FOLDER]... (--dry-run | --expect FINGERPRINT) csc|entity|part|id OLD NEW | rename --recover FOLDER"
   let r1 = runL(@["--lang"])
   rec("L-B3", "--lang senza valore", r1.code == 2 and r1.output.len == 0 and r1.errout == usoEn & "\n", r1.errout)
   let r2 = runL(@["--lang", "fr", "check", f])

@@ -6,7 +6,7 @@
 # I lanci di bcdd sono sincroni (GSubprocess, argomenti uno per uno, senza shell): sono brevi e ogni azione è una sequenza.
 import std/[json, os, strutils, times, algorithm, sequtils, tables]
 import checksums/sha2
-import edfin, edbcdd, edmodello, edazioni, edtesti, edtraccia, edlinea
+import edfin, edbcdd, edmodello, edazioni, edtesti, edtraccia, edlinea, edrif
 
 const
   paginaHtmlBase = staticRead("pagina/pagina.html").replace("/*STILE*/", staticRead("pagina/pagina.css"))
@@ -56,6 +56,11 @@ function bcddProvaClic(tok) {
     if (!q) return 'Q:' + tok.substring(1) + ' assente';
     return 'Q:' + tok.substring(1) + ' ' + (q.hidden ? 'nascosto' : 'visibile') + ' ' + q.textContent;
   }
+  if (tok.charAt(0) === '*') {
+    // i titoli (tooltip) di tutti gli elementi di un selettore, con il loro testo: `*SELETTORE`
+    var ql = document.querySelectorAll(tok.substring(1));
+    return 'Q:*' + tok.substring(1) + ' ' + ql.length + ' | ' + Array.prototype.map.call(ql, function (x) { return x.textContent + ' => ' + x.title; }).join(' | ');
+  }
   if (tok.charAt(0) === '~') {
     // il titolo (tooltip) di un elemento: perché un comando è spento
     var tq = document.getElementById(tok.substring(1)) || document.querySelector('[data-id="' + tok.substring(1) + '"]');
@@ -97,6 +102,33 @@ function bcddProvaClic(tok) {
     tops = {x: nfasce};
     var sz = Array.prototype.map.call(document.querySelectorAll('.sez-testa'), function (x) { return x.offsetHeight; });
     return rr + ' righe_testo=' + righe + ' tops=' + nfasce + ' sez_testa=' + sz.join(',') + azioniMisura();
+  }
+  if (tok.charAt(0) === '(') {
+    // : il passaggio del mouse su un riferimento interno, `(NOME` o `(NOME#n` (l'n-esimo, da 0); dice la finestrella
+    var hv = tok.substring(1).split('#');
+    var hl = document.querySelectorAll('#scheda-righe .rif[data-rif="' + hv[0] + '"], #scheda-righe .rife[data-ext="' + hv[0] + '"]');
+    var he = hl[hv.length > 1 ? parseInt(hv[1], 10) : 0];
+    if (!he) return 'Q:(' + tok.substring(1) + ' assente';
+    var hb = he.getBoundingClientRect();
+    he.dispatchEvent(new MouseEvent('mouseover', {bubbles: true, clientX: Math.round(hb.left + 2), clientY: Math.round(hb.top + 2)}));
+    var ht = document.getElementById('rif-tip');
+    var hr = ht.getBoundingClientRect();
+    return 'Q:(' + hv[0] + ' ' + (ht.hidden ? 'nascosta' : 'visibile') + ' dentro=' + (hr.left >= 0 && hr.top >= 0 && hr.right <= window.innerWidth && hr.bottom <= window.innerHeight) + ' | ' + ht.textContent.replace(/\n/g, '\u00b6') + ' [elementi=' + ht.querySelectorAll('script,iframe,img,a,b').length + ']';
+  }
+  if (tok.charAt(0) === ')') {
+    // il clic su un riferimento interno, `)NOME` o `)NOME#n`; dice dove si è finiti (la scheda scelta e la riga evidenziata)
+    var cv = tok.substring(1).split('#');
+    var cl = document.querySelectorAll('#scheda-righe .rif[data-rif="' + cv[0] + '"], #scheda-righe .rife[data-ext="' + cv[0] + '"]');
+    var ce = cl[cv.length > 1 ? parseInt(cv[1], 10) : 0];
+    if (!ce) return 'Q:)' + tok.substring(1) + ' assente';
+    ce.click();
+    if (ce.classList.contains('rife')) {
+      // il clic su un riferimento esterno lascia la finestrella fissa, con il suo pulsante
+      var ft = document.getElementById('rif-tip');
+      return 'Q:)' + cv[0] + ' ' + (ft.hidden ? 'nascosta' : 'visibile') + ' fissa=' + ft.classList.contains('fissa') + ' pulsante=' + (document.getElementById('rife-apri') ? document.getElementById('rife-apri').textContent : 'no');
+    }
+    var ev2 = document.querySelector('#scheda-righe .evidenza');
+    return 'Q:)' + cv[0] + ' riga=' + (ev2 ? ev2.getAttribute('data-id') : 'nessuna') + ' scheda=' + document.getElementById('scheda-nome').textContent;
   }
   if (tok.charAt(0) === ':') {
     // un tasto su un elemento: :ID:Enter, :ID:Escape (la ricerca nell'albero)
@@ -301,6 +333,20 @@ proc leggiFile(file: string, digest = digestCartella()): (JsonNode, string) =
 
 var ultimaFirma = ""
 
+# 005:2:9 Il giornale di una rinomina interrotta: una voce `.bcdd-rinomina` in una cartella aperta.
+# La regola di presenza è quella di bcdd (K2): una voce di qualunque tipo, anche un collegamento rotto, senza seguire i collegamenti; se
+# l'interrogazione fallisce per un motivo diverso da «non esiste» si fa come se ci fosse. Il contenuto serve solo a dire quale rinomina era.
+const nomeGiornale = ".bcdd-rinomina"
+
+proc giornaleInCartella(i: int): bool =
+  if not dirExists(cartelle[i]): return false
+  try:
+    discard getFileInfo(cartelle[i] / nomeGiornale, followSymlink = false)
+    result = true
+  except OSError as e:
+    result = e.errorCode notin [2'i32, 3'i32]
+
+
 proc firmaCartella(): string =
   ## 005:2:5 Cartella, nome, data e dimensione di ogni `.csc`: basta a sapere se qualcosa è cambiato fuori, senza lanciare
   ## `bcdd` e senza bloccare la finestra quando torna attiva (con l'inoltro X di SSH il blocco si vede lampeggiare).
@@ -309,6 +355,7 @@ proc firmaCartella(): string =
     let f = cartelle[i] / p
     try: righe.add $i & "/" & p & "|" & $getLastModificationTime(f).toUnixFloat() & "|" & $getFileSize(f)
     except OSError: righe.add $i & "/" & p & "|?"
+  for i in 0 ..< cartelle.len: righe.add $i & "/giornale|" & $giornaleInCartella(i)       # un giornale comparso o sparito da fuori è un cambiamento
   righe.sort()
   righe.join("\n")
 
@@ -333,10 +380,27 @@ proc scansiona(): (seq[(string, JsonNode)], string) =
     result[0].add (f, j)
   ultimaFirma = firma
 
-proc nomeCartella(i: int): string =
-  ## L'ultimo pezzo del percorso, per dirlo alla persona; la radice di un'unità resta com'è.
-  let n = lastPathPart(cartelle[i])
-  if n.len > 0: n else: cartelle[i]
+proc giornali(): seq[(int, string, string)] =
+  ## (indice della cartella, nome vecchio, nome nuovo); i nomi sono vuoti se la terza riga del giornale non è `KIND VECCHIO NUOVO`.
+  for i in 0 ..< cartelle.len:
+    if not giornaleInCartella(i): continue
+    var v, n = ""
+    try:
+      let f = open(cartelle[i] / nomeGiornale)
+      defer: f.close()
+      discard f.readLine()
+      discard f.readLine()
+      let c = f.readLine().splitWhitespace()
+      if c.len == 3 and c[0] in ["csc", "entity", "part", "id"] and c[1].len in 1 .. 64 and c[2].len in 1 .. 64 and
+          c[1].allCharsInSet({'A'..'Z', 'a'..'z', '0'..'9', '_', '-'}) and c[2].allCharsInSet({'A'..'Z', 'a'..'z', '0'..'9', '_', '-'}):
+        v = c[1]
+        n = c[2]
+    except CatchableError: discard
+    result.add (i, v, n)
+
+proc giornaleBlocca(): string =
+  ## Il messaggio che rifiuta una scrittura, o "" se nessuna cartella ha il giornale: bcdd rifiuterebbe comunque (K1), l'editor non lo lancia nemmeno.
+  for (i, _, _) in giornali(): return tx(kGiornalePresente, cartelle[i])
 
 proc modelloTesto(): string =
   ## Il banco più le cartelle: per ognuna il percorso, i suoi file (quelli lasciati fuori sono segnati) e se è l'evidenziata;
@@ -348,11 +412,23 @@ proc modelloTesto(): string =
     for (k, n) in tuttiCsc:
       if k != i: continue
       fs.add %*{"nome": n, "fuori": dove.getOrDefault(n, -1) != i}
-    cs.add %*{"percorso": d, "nome": nomeCartella(i), "selezionata": i == cartellaSel, "file": fs}
+    cs.add %*{"percorso": d, "selezionata": i == cartellaSel, "file": fs}
   m["cartelle"] = cs
+  # : i riferimenti a documenti esterni, le decisioni e il primo D-nnn libero, per file `.csc`
+  var fin: seq[FileIn]
+  for (f, j) in caricati: fin.add (f, absolutePath(cartelle[dove.getOrDefault(f, cartellaSel)]), j)
+  let (ext, registri) = analisiRiferimenti(fin, paroleRiservate)
+  m["ext"] = ext
+  m["registri"] = registri
+  for o in m["nomi"]:                   # : di quale cartella è la dichiarazione (il percorso: l'etichetta la calcola la pagina) (i file sono unici fra le cartelle lette)
+    let i = dove.getOrDefault(o["file"].getStr, cartellaSel)
+    o["cartella"] = %cartelle[i]
   var dd = newJArray()
   for (n, t, f) in doppi: dd.add %*{"nome": n, "tenuta": cartelle[t], "fuori": cartelle[f]}
   m["doppi"] = dd
+  var gj = newJArray()
+  for (i, v, n) in giornali(): gj.add %*{"indice": i, "cartella": cartelle[i], "vecchio": v, "nuovo": n}
+  m["giornali"] = gj                    # le cartelle con una rinomina interrotta (la striscia «Ripristina», le azioni che scrivono spente)
   $m
 
 # 005:2:4 Nim -> pagina
@@ -1223,6 +1299,7 @@ proc gestisciCartelle(j: JsonNode) =
   ## di scelta), toglierne. Ogni cambio dell'insieme è ricordato; dopo, tutto si rilegge.
   let az = j["azione"].getStr
   var esito: JsonNode = nil
+  azzeraRif()                                  # E4: i file `.md` e il registro si rileggono quando cambia l'insieme delle cartelle
   let i = parseInt(j["indice"].getStr)
   case az
   of "cartella_scegli":
@@ -1259,6 +1336,121 @@ proc gestisciCartelle(j: JsonNode) =
       elif errori.len > 0: esito = esitoJson(false, errori.join(" "))
       else: return                                   # annullata: niente cambia
   rinfresca(esito)
+
+# 005:4:5 La rinomina. Nessuna regola è calcolata qui: l'anteprima e la scrittura sono `bcdd rename`
+# (`--dry-run --json`, poi `--expect IMPRONTA`, con le `--dir` come per `check` e `ratify`); la pagina riceve l'oggetto `bcdd-rename` versione 1 com'è.
+# Solo la scrittura riuscita rilegge tutto (come Ricarica) e svuota «Torna indietro» (E3): la rinomina tocca più file e i `.prima` non le corrispondono.
+proc aggiornaRinomina(payload: JsonNode) =
+  inc numDisegno
+  traccia("disegno " & $numDisegno & " rinomina")
+  let chiamata = "bcddRinomina(" & escapeJson($payload) & ");"
+  when defined(bcddEditorProva):
+    valuta(chiamata, "document.body.textContent + bcddProvaStato()", cbDisegno, numDisegno)
+  else:
+    valuta(chiamata, "", cbDisegno, numDisegno)
+
+proc pluraleRin(n: int, uno, molti: Chiave): string = (if n == 1: tx(uno) else: tx(molti, n))
+
+proc esitoScrittoRin(r: JsonNode, kind, vecchio, nuovo: string): string =
+  ## «Rinominato Luce in Lampadina: 6 righe in 4 file, 1 file rinominato; 1 testo resta con il nome vecchio.» e come tornare indietro (E3).
+  var righe, file, rinominati, restano = 0
+  for f in r["file"]:
+    if f["modifiche"].len > 0 or f["nome_nuovo"].kind == JString: inc file
+    righe += f["modifiche"].len
+    if f["nome_nuovo"].kind == JString: inc rinominati
+  for t in r["testi"]:
+    if not t["scelto"].getBool: inc restano
+  tx(kRinomEsito, vecchio, nuovo, pluraleRin(righe, kRinomRiga1, kRinomRighe), pluraleRin(file, kRinomFile1, kRinomFile),
+    (if rinominati == 0: "" else: pluraleRin(rinominati, kRinomFileRin1, kRinomFileRin)),
+    (if restano == 0: "" else: pluraleRin(restano, kRinomTestiResta1, kRinomTestiResta)),
+    tx(kRinomTornare, nuovo, vecchio))
+
+proc eseguiRinomina(j: JsonNode, scrivi: bool) =
+  let kind = j["kind"].getStr
+  let vecchio = j["vecchio"].getStr
+  let nuovo = j["nuovo"].getStr
+  let blocco = j["blocco"].getStr
+  let dove = j["dove"].getStr
+  var p = %*{"kind": kind, "vecchio": vecchio, "nuovo": nuovo, "blocco": blocco, "dove": dove, "fase": (if scrivi: "scrittura" else: "anteprima"),
+    "codice": 0, "errore": "", "r": newJNull()}
+  if scrivi:
+    let gb = giornaleBlocca()
+    if gb.len > 0:
+      p["codice"] = %1
+      p["errore"] = %gb
+      aggiornaRinomina(p)
+      return
+  var file, csc = ""
+  case kind
+  of "csc": file = fileDiCsc(vecchio)
+  of "entity": file = fileDiEntita(vecchio)
+  of "part":
+    file = fileDiEntita(blocco)
+    csc = blocco
+  else:
+    file = if dove == "csc": fileDiCsc(blocco) else: fileDiEntita(blocco)
+    csc = blocco
+  if file.len == 0:
+    p["codice"] = %2
+    p["errore"] = %tx(kNonTrovoCartella, if blocco.len > 0: blocco else: vecchio)
+    aggiornaRinomina(p)
+    return
+  var args = @["rename", file]
+  if csc.len > 0: args.add @["--csc", csc]
+  args.add argomentiDir(cartelle, cartellaDi(file))
+  if scrivi:
+    args.add @["--expect", j["impronta"].getStr]
+    if j["testi"].len == 0: args.add @["--text", "none"]
+    else:
+      for t in j["testi"]: args.add @["--text-at", t.getStr]
+  else: args.add "--dry-run"
+  args.add @["--json", kind, vecchio, nuovo]
+  let (o, e, c) = eseguiBcdd(args)
+  var r: JsonNode = nil
+  try:
+    let x = parseJson(o)
+    if x.kind == JObject and x{"forma"}.getStr == "bcdd-rename" and x{"versione"}.getInt == 1 and x{"esito"}.kind == JString: r = x
+  except CatchableError: discard
+  p["codice"] = %c
+  p["errore"] = %e.strip(leading = false, chars = {'\n'})
+  if r == nil:
+    if c in [0, 1]: p["errore"] = %tx(kRinomRisposta, (if e.strip.len > 0: e.strip else: o.strip))
+  else:
+    # bcdd scrive `.` per la cartella del file e il percorso dato per le altre: alla pagina si dà sempre il percorso intero (poi mostra l'ultimo pezzo)
+    let propria = cartelle[cartellaDi(file)]
+    for k in ["file", "compagni", "testi", "bloccanti"]:
+      if r.hasKey(k) and r[k].kind == JArray:
+        for x in r[k]:
+          if x.kind == JObject and x.hasKey("cartella") and x["cartella"].kind == JString and x["cartella"].getStr == ".": x["cartella"] = %propria
+    p["r"] = r
+  if scrivi and r != nil and r["esito"].getStr == "scritto" and c == 0:
+    ultima = @[]
+    descrUltima = ""
+    ultimaVersione = false
+    azzeraRif()
+    memo.voci.clear()
+    memo.digest = ""
+    let es = esitoJson(true, esitoScrittoRin(r, kind, vecchio, nuovo))
+    es["rinomina"] = %*{"kind": kind, "vecchio": vecchio, "nuovo": nuovo, "blocco": blocco, "dove": dove}
+    rinfresca(es)
+    return
+  aggiornaRinomina(p)
+
+proc ripristinaRinomina(indice: int) =
+  ## `bcdd rename --recover CARTELLA` (R4), poi Ricarica: l'esito di bcdd (anche «estraneo», con i percorsi delle copie) è il messaggio di stato.
+  if indice >= cartelle.len: return
+  let (o, e, c) = eseguiBcdd(@["rename", "--recover", cartelle[indice], "--json"])
+  var msg = ""
+  try:
+    let x = parseJson(o)
+    if x.kind == JObject and x{"forma"}.getStr == "bcdd-rename" and x{"messaggio"}.kind == JString: msg = x["messaggio"].getStr
+  except CatchableError: discard
+  if msg.len == 0: msg = e.strip(leading = false, chars = {'\n'})
+  if msg.len == 0 and c == 0: msg = tx(kRipristinoFatto)
+  azzeraRif()
+  memo.voci.clear()
+  memo.digest = ""
+  rinfresca(esitoJson(c == 0, msg))
 
 proc alCambioFuoco(attiva: bool) {.nimcall.} =
   if attiva:
@@ -1322,6 +1514,31 @@ proc campiDichOk(j: JsonNode): bool =
     if j[k].getStr.len > 64: return false
   true
 
+proc nomeRin(s: string): bool =
+  ## Un nome della rinomina com'arriva dalla pagina: lettera, poi lettere, cifre, `_` e `-`, al massimo 64 caratteri. Se è un nome valido per
+  ## il linguaggio lo decide bcdd (N1-N7): qui basta che non possa essere un'opzione né contenere altro.
+  s.len in 1 .. 64 and s[0] in {'A'..'Z', 'a'..'z'} and s.allCharsInSet({'A'..'Z', 'a'..'z', '0'..'9', '_', '-'})
+
+proc rinomValido(j: JsonNode, scrivi: bool): bool =
+  ## 005:4:4 `rinomina_anteprima`: tutte stringhe; `rinomina_scrivi` in più l'impronta dell'anteprima e l'elenco dei testi scelti (`tN`).
+  var base = newJObject()
+  for k, v in j:
+    if k != "testi": base[k] = v
+  if scrivi:
+    if not (j.hasKey("testi") and j["testi"].kind == JArray and j["testi"].len <= 500): return false
+    for x in j["testi"]:
+      if x.kind != JString or x.getStr.len notin 2 .. 7 or x.getStr[0] != 't' or not cifre(x.getStr[1 .. ^1]): return false
+    if not campiEsatti(base, ["azione", "kind", "vecchio", "nuovo", "blocco", "dove", "impronta"]): return false
+    let im = base["impronta"].getStr
+    if not (im.len == 71 and im.startsWith("sha256:") and im[7 .. ^1].allCharsInSet({'0'..'9', 'a'..'f'})): return false
+  elif not campiEsatti(base, ["azione", "kind", "vecchio", "nuovo", "blocco", "dove"]): return false
+  let kind = j["kind"].getStr
+  if kind notin ["csc", "entity", "part", "id"] or not nomeRin(j["vecchio"].getStr) or not nomeRin(j["nuovo"].getStr): return false
+  case kind
+  of "csc", "entity": result = j["blocco"].getStr == "" and j["dove"].getStr == ""
+  of "part": result = nomeRin(j["blocco"].getStr) and j["dove"].getStr == "entita"
+  else: result = nomeRin(j["blocco"].getStr) and j["dove"].getStr in ["csc", "entita"]
+
 proc messaggioValido(j: JsonNode): bool =
   ## Il ponte accetta solo le cinque azioni del banco, con i campi esatti, tutti stringhe e di forma ammessa.
   if j.kind != JObject or not (j.hasKey("azione") and j["azione"].kind == JString): return false
@@ -1331,6 +1548,10 @@ proc messaggioValido(j: JsonNode): bool =
     result = campiEsatti(j, ["azione", "indice"]) and cifre(j["indice"].getStr)
   of "cartella_aggiungi":
     result = campiEsatti(j, ["azione", "indice"]) and j["indice"].getStr == "0"
+  of "ricarica":
+    result = campiEsatti(j, ["azione"])
+  of "apri_rif":
+    result = campiEsatti(j, ["azione", "file", "chiave"]) and j["file"].getStr.len in 1 .. 255 and j["chiave"].getStr.len in 1 .. 400
   of "nuova_entita":
     result = campiEsatti(j, ["azione", "nome", "scopo"]) and nome("nome") and j["scopo"].getStr.len <= 200
   of "pubblico":
@@ -1397,6 +1618,12 @@ proc messaggioValido(j: JsonNode): bool =
     if result:
       for x in j["righe"]:
         if x.kind != JString or not idRigaOk(x.getStr): return false
+  of "rinomina_anteprima":
+    result = rinomValido(j, false)
+  of "rinomina_scrivi":
+    result = rinomValido(j, true)
+  of "rinomina_ripristina":
+    result = campiEsatti(j, ["azione", "indice"]) and cifre(j["indice"].getStr)
   of "lingua":
     result = campiEsatti(j, ["azione", "lingua"]) and j["lingua"].kind == JString and j["lingua"].getStr in ["it", "en"]
   of "annulla":
@@ -1528,6 +1755,20 @@ proc alMessaggio(testo: string) {.nimcall.} =
       fermaAsincrono()
     return
   if asincronoInCorso(): return                 # mentre l'LLM lavora si può solo fermarlo
+  if az == "rinomina_anteprima":
+    eseguiRinomina(j, false)
+    return
+  if az == "rinomina_scrivi":
+    eseguiRinomina(j, true)
+    return
+  if az == "rinomina_ripristina":
+    ripristinaRinomina(parseInt(j["indice"].getStr))
+    return
+  if az in ["completa_avvia", "completa_risposte"]:
+    let gb0 = giornaleBlocca()                   # `refine` con un giornale presente non scrive e non chiama il modello; l'editor non lo lancia
+    if gb0.len > 0:
+      consegnaRefine(1, 255, "", gb0)
+      return
   if az in ["completa_avvia", "completa_riprendi", "completa_risposte"]:
     let file = if j["tipo"].getStr == "entita": fileDiEntita(j["nome"].getStr) else: fileDiCsc(j["nome"].getStr)
     if file.len == 0:
@@ -1543,12 +1784,35 @@ proc alMessaggio(testo: string) {.nimcall.} =
   if az in ["cartella_scegli", "cartella_togli", "cartella_aggiungi"]:
     gestisciCartelle(j)
     return
+  if az == "apri_rif":
+    # : «Apri il file» e «Apri nel browser». Si apre solo ciò che il modello ha risolto (un `.md` letto o un
+    # indirizzo http(s) di una definizione): la pagina manda la chiave, mai un percorso. Niente `rinfresca`: non cambia niente.
+    let bersaglio = apribili.getOrDefault(j["file"].getStr & "\0" & j["chiave"].getStr)
+    if bersaglio.len == 0: traccia("apri_rif unknown")
+    else:
+      when defined(bcddEditorProva):
+        traccia("apri_rif " & bersaglio)               # la versione di prova non lancia niente
+      else:
+        if not apriEsterno(bersaglio): traccia("apri_rif failed")
+    return
+  if az == "ricarica":
+    azzeraRif()
+    # : comando manuale, sempre: si butta la memoria dei controlli, si rilegge tutto e si ridisegna (aggiorna `ultimaFirma`).
+    # Nessun timer: parte solo dal clic. Con una modifica non salvata la scelta l'ha già fatta la pagina (garanzia e-9).
+    memo.voci.clear()
+    memo.digest = ""
+    rinfresca(esitoJson(true, tx(kRicaricato)))
+    return
   if az == "lingua":
     # : la scelta è subito applicata (bcdd rilanciato con la lingua nuova su tutti i file, pagina ridisegnata col dizionario
     # nuovo), ricordata nel file di configurazione; se non si riesce a scrivere vale per la finestra aperta e lo Stato lo dice.
     lingua = if j["lingua"].getStr == "it": lgIt else: lgEn
     let ricordata = ricordaLingua(lingua)
     rinfresca(esitoJson(true, tx(kLinguaCambiata, if lingua == lgIt: "Italiano" else: "English") & (if ricordata: "" else: "; " & tx(kLinguaRicordataNo))))
+    return
+  let gb = giornaleBlocca()                       # : con un giornale presente nessuna azione scrive
+  if gb.len > 0:
+    rinfresca(esitoJson(false, gb))
     return
   completaEsito = nil
   scritti = @[]

@@ -2,7 +2,7 @@
 # Copyright (c) 2026, Noli Paolo
 # 070:1:1 Archivio: lettura dei file dell'utente e scrittura sicura.
 # 070:1:2 Unica parte di BcddTool che sostituisce un file esistente: o tutto o niente, mai a metà.
-import std/os
+import std/[os, strutils]
 import bcddlex, bcddtesti, bcddsys
 
 proc cExitNow(c: cint) {.importc: "exit", header: "<stdlib.h>", noreturn.}
@@ -47,7 +47,55 @@ proc loadSource*(prefix, file: string): string =
   raw
 
 type WriteRes* = enum
-  wrOk, wrFailed, wrChanged, wrMultiLink
+  wrOk, wrFailed, wrChanged, wrMultiLink, wrJournal
+
+# 075:1:1 con un giornale `.bcdd-rinomina` nella cartella del file i comandi che
+# 075:1:2 scrivono (new, ratify, refine, save) non scrivono nulla. `armGiornale` fa il primo controllo e lascia armato il secondo,
+# 075:1:3 che `safeReplace` e `createExclusive` ripetono subito prima di scrivere (K6).
+var
+  giornaleCmd*: string       # "" = nessun controllo armato; altrimenti `new`, `ratify`, `refine`, `save`
+  giornaleFolder*: string    # la cartella come la scrive il messaggio (K5)
+
+const NomeGiornale* = ".bcdd-rinomina"
+
+proc folderForMessage*(fileArg: string): string =
+  ## 075:2:1 K5: la parte di FILE prima dell'ultimo separatore, come è scritta; `.` se non ne ha; `/` se il separatore è il primo.
+  var i = fileArg.len - 1
+  while i >= 0 and not isSepChar(fileArg[i]): dec i
+  if i < 0: return "."
+  if i == 0: return $fileArg[0]
+  if fileArg[i] == ':': fileArg[0 .. i] else: fileArg[0 ..< i]
+
+proc journalPath*(folderShown: string): string =
+  ## 075:2:2 Il percorso del giornale nella cartella (`.` o vuota: il nome solo).
+  if folderShown.len == 0 or folderShown == ".": NomeGiornale
+  else: joinShown(folderShown, NomeGiornale)
+
+proc journalPresent*(folderShown: string): bool =
+  ## 075:2:3 K2: una voce di nome `.bcdd-rinomina` di qualunque tipo, senza seguire i collegamenti; se il sistema non sa dire che manca,
+  ## si comporta come se ci fosse.
+  probeEntry(journalPath(folderShown)) != epAbsent
+
+proc journalRefusal*(cmd, folderShown: string): string =
+  testo(kRinGiornaleScrivo, cmd, folderShown)
+
+proc armGiornale*(cmd, fileArg: string) =
+  ## 075:3:1 Il primo controllo di K6: dopo i controlli con codice 2 e prima di ogni altro con codice 1. Esce con 1, stdout vuoto.
+  ## Nell'eseguibile di prova (-d:bcddProva) BCDD_PROVA_GIORNALE_DOPO_CONTROLLO=1 crea il giornale subito dopo questo controllo,
+  ## prima della scrittura: serve ad AC-457 per provare il secondo controllo.
+  giornaleCmd = cmd
+  giornaleFolder = folderForMessage(fileArg)
+  if journalPresent(giornaleFolder):
+    giornaleCmd = ""
+    die(journalRefusal(cmd, giornaleFolder), 1)
+  when defined(bcddProva):
+    if getEnv("BCDD_PROVA_GIORNALE_DOPO_CONTROLLO") == "1":
+      try: writeFile(journalPath(giornaleFolder), "")
+      except IOError, OSError: discard
+
+proc giornaleRicontrolla*(): bool =
+  ## 075:3:2 Il secondo controllo: vero se il giornale c'è (comparso nel frattempo).
+  giornaleCmd.len > 0 and journalPresent(giornaleFolder)
 
 proc readAllFd(path: string, content: var string): bool =
   try:
@@ -61,6 +109,7 @@ proc safeReplace*(path, content, expected: string, expectedExists: bool, why: va
   ## all'inizio (`expectedExists` falso: il file non c'era). Procedimento della sezione 3.1:
   ## file temporaneo nella stessa cartella, fsync, stessi permessi, riletura prima di sostituire, rename.
   ## Un collegamento simbolico si segue (si scrive il file a cui punta); più collegamenti fisici: rifiuto.
+  if giornaleRicontrolla(): return wrJournal
   var target = path
   var mode = -1
   var exists = false
@@ -108,4 +157,5 @@ proc writeErrorMessage*(prefix, shown: string, r: WriteRes, why: string): string
   of wrFailed: testo(kNonRiescoScrivere, prefix, shown, why)
   of wrChanged: testo(kCambiatoDuranteComando, prefix, shown)
   of wrMultiLink: testo(kPiuCollegamenti, prefix, shown)
+  of wrJournal: journalRefusal(if prefix.startsWith("bcdd "): prefix[5 .. ^1] else: prefix, giornaleFolder)
   of wrOk: ""

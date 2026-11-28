@@ -52,7 +52,7 @@ catalogo:
   # 095:8:1 bcdd new
   voce kScheletro,
     "-- CSC creata da bcdd new. Si scrive a mano; bcdd check controlla la forma.\n" &
-      "-- Senza STATUS RATIFIED nessuna riga è contratto: è da approvare finché l'operatore non la approva.\n" &
+      "-- Senza STATUS RATIFIED nessuna riga fa parte del contratto: è da approvare finché l'operatore non la approva.\n" &
       "\n" &
       "CSC $1 VERSION 0.1\n" &
       "  STATUS HYPOTHESIS\n" &
@@ -96,8 +96,8 @@ catalogo:
   voce kNewNonRiescoCreare, "bcdd new: non riesco a creare $1: $2", "bcdd new: I cannot create $1: $2"
 
   # 095:8:1 bcdd: scelta della lingua, uso generale e di check
-  voce kUsoGenerale, "uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero",
-    "usage: bcdd [--lang it|en] COMMAND; commands: new NAME | check [--strict] [--json] [--dir FOLDER]... FILE | refine FILE [--csc NAME] | ratify FILE [--csc NAME] [--dir FOLDER]... [ID | --all] D-number"
+  voce kUsoGenerale, "uso: bcdd [--lang it|en] COMANDO; comandi: new NOME | check [--strict] [--json] [--dir CARTELLA]... FILE | refine FILE [--csc NOME] | ratify FILE [--csc NOME] [--dir CARTELLA]... [ID | --all] D-numero | rename FILE [--csc NOME] [--dir CARTELLA]... (--dry-run | --expect IMPRONTA) csc|entity|part|id VECCHIO NUOVO | rename --recover CARTELLA",
+    "usage: bcdd [--lang it|en] COMMAND; commands: new NAME | check [--strict] [--json] [--dir FOLDER]... FILE | refine FILE [--csc NAME] | ratify FILE [--csc NAME] [--dir FOLDER]... [ID | --all] D-number | rename FILE [--csc NAME] [--dir FOLDER]... (--dry-run | --expect FINGERPRINT) csc|entity|part|id OLD NEW | rename --recover FOLDER"
   voce kUsoCheck, "uso: bcdd check [--strict] [--json] [--dir CARTELLA]... FILE",
     "usage: bcdd check [--strict] [--json] [--dir FOLDER]... FILE"
   voce kLangAccetta, "bcdd: --lang accetta it oppure en: $1", "bcdd: --lang accepts it or en: $1"
@@ -413,13 +413,13 @@ catalogo:
     "$1 was modified after the last save: I am writing nothing"
   voce kEStatoModificatoDaUn2, "$1 è stato modificato da un altro programma dopo che l'hai letto: non scrivo niente; ricarica",
     "$1 was modified by another program after you read it: I am writing nothing; reload"
-  voce kLaRigaDiDiventerebbeContratto, "la riga $1 $2 di $3 diventerebbe contratto senza un'approvazione. È una riga da approvare: scrivila con STATUS HYPOTHESIS, oppure approvala con bcdd ratify",
+  voce kLaRigaDiDiventerebbeContratto, "la riga $1 $2 di $3 diventerebbe parte del contratto senza un'approvazione. È una riga da approvare: scrivila con STATUS HYPOTHESIS, oppure approvala con bcdd ratify",
     "the line $1 $2 of $3 would become part of the contract without approval. It is a line pending approval: write it with STATUS HYPOTHESIS, or approve it with bcdd ratify"
-  voce kLaRigaDiEContratto, "la riga $1 $2 di $3 è contratto: non si cambia (serve una VERSION nuova)",
+  voce kLaRigaDiEContratto, "la riga $1 $2 di $3 fa parte del contratto: non si cambia (serve una VERSION nuova)",
     "the line $1 $2 of $3 is part of the contract: it cannot be changed (a new VERSION is needed)"
-  voce kLaRigaEContrattoNon, "la riga $1, $2 $3, è contratto ($4): non può cambiare segmento VARIANT; per cambiarla serve una VERSION nuova",
+  voce kLaRigaEContrattoNon, "la riga $1, $2 $3, fa parte del contratto ($4): non può cambiare segmento VARIANT; per cambiarla serve una VERSION nuova",
     "the line $1, $2 $3, is part of the contract ($4): it cannot change its VARIANT segment; to change it a new VERSION is needed"
-  voce kDiventerebbeContrattoSenzaUnaRatifica, "$1 diventerebbe contratto senza un'approvazione. È una riga da approvare: approvala con bcdd ratify",
+  voce kDiventerebbeContrattoSenzaUnaRatifica, "$1 diventerebbe parte del contratto senza un'approvazione. È una riga da approvare: approvala con bcdd ratify",
     "$1 would become part of the contract without approval. It is a line pending approval: approve it with bcdd ratify"
   voce kEApprovataIlNumeroDella, "$1 è approvata: il numero della versione non si cambia; per una versione nuova rimetti l'intestazione da approvare",
     "$1 is approved: the version number cannot be changed; for a new version put the header back to pending approval"
@@ -495,7 +495,7 @@ catalogo:
     "$1: no GUARANTEE with id $2 in the $3"
   voce kNonEUnaGUARANTEEIn, "$1: $2 non è una GUARANTEE: in una ENTITY si approvano solo promesse",
     "$1: $2 is not a GUARANTEE: in an ENTITY only guarantees are approved"
-  voce kEGiaContrattoRigaNon, "$1: $2 è già contratto (riga $3): non cambio nulla",
+  voce kEGiaContrattoRigaNon, "$1: $2 fa già parte del contratto (riga $3): non cambio nulla",
     "$1: $2 is already part of the contract (line $3): I am changing nothing"
   voce kLaCSCEGiaRatificata, "$1: la CSC $2 è già approvata ($3): non cambio nulla",
     "$1: the CSC $2 is already approved ($3): I am changing nothing"
@@ -513,7 +513,7 @@ catalogo:
   voce kRatTrovataCheHa, "$1 trovata $2, che ha $3$4", "$1 found $2, which has $3$4"
   voce kRatEntitySenzaIpotesi, "$1: la ENTITY $2 non ha promesse ancora da approvare: non cambio nulla",
     "$1: ENTITY $2 has no guarantees still pending approval: I am changing nothing"
-  voce kRatCscTuttaContratto, "$1: la CSC $2 è già tutta contratto: non cambio nulla",
+  voce kRatCscTuttaContratto, "$1: la CSC $2 fa già interamente parte del contratto: non cambio nulla",
     "$1: CSC $2 is already entirely part of the contract: I am changing nothing"
   voce kRatApprovateEntity, "approvate con $1 nella ENTITY $2: $3", "approved with $1 in ENTITY $2: $3"
   voce kRatApprovateCsc, "approvate con $1 nella CSC $2: $3", "approved with $1 in CSC $2: $3"
@@ -744,7 +744,7 @@ catalogo:
     "replaces a line that is not a GUARANTEE of ENTITY $1: $2"
   voce kRgSostituisceNonGaranziaCsc, "sostituisce una riga che non è una GUARANTEE né una ASSUME della CSC $1: $2",
     "replaces a line that is neither a GUARANTEE nor an ASSUME of CSC $1: $2"
-  voce kRgSostituisceContratto, "sostituisce $1, che è contratto (riga $2): una riga approvata non si sostituisce",
+  voce kRgSostituisceContratto, "sostituisce $1, che fa parte del contratto (riga $2): una riga approvata non si sostituisce",
     "replaces $1, which is part of the contract (line $2): an approved line is not replaced"
   voce kRgSostituisceNonVerbale, "sostituisce $1, che non è una riga verbale (riga $2): si sostituiscono solo righe verbali",
     "replaces $1, which is not a verbal line (line $2): only verbal lines are replaced"
@@ -829,6 +829,111 @@ catalogo:
     "in a BINDING the header or --all is approved, not a line"
   voce kRatProfileNonRiga, "nel PROFILE si approva il profilo intero, non una riga",
     "in a PROFILE the whole profile is approved, not a line"
+  # 095:10:1 bcdd rename (GRAMMATICA_F1 sezione 15): uso, anteprima, rifiuti, ripristino
+  voce kRinUso,
+    "uso: bcdd rename FILE [--csc NOME] [--dir CARTELLA]... (--dry-run | --expect IMPRONTA [--text default|none|all | --text-at tN...]) [--json] csc|entity|part|id VECCHIO NUOVO\n" &
+      "     bcdd rename --recover CARTELLA [--json]",
+    "usage: bcdd rename FILE [--csc NAME] [--dir FOLDER]... (--dry-run | --expect FINGERPRINT [--text default|none|all | --text-at tN...]) [--json] csc|entity|part|id OLD NEW\n" &
+      "       bcdd rename --recover FOLDER [--json]"
+  voce kRinNomeNonValido, "nome non valido per $1: $2", "invalid name for $1: $2"
+  voce kRinNonContiene, "$1 non contiene $2 $3", "$1 does not contain $2 $3"
+  voce kRinNessunId, "nessuna GUARANTEE, ASSUME né SCENARIO con id $1 nel blocco $2",
+    "no GUARANTEE, ASSUME or SCENARIO with id $1 in block $2"
+  voce kRinNessunaParte, "nessuna parte $1 nella ENTITY $2", "no part $1 in ENTITY $2"
+  voce kRinUguale, "il nome nuovo è uguale al vecchio: non cambio nulla",
+    "the new name is the same as the old one: I am changing nothing"
+  voce kRinApprovato1, "$1 non si rinomina: compare in 1 riga approvata:",
+    "$1 cannot be renamed: it appears in 1 approved line:"
+  voce kRinApprovatoN, "$1 non si rinomina: compare in $2 righe approvate:",
+    "$1 cannot be renamed: it appears in $2 approved lines:"
+  voce kRinApprovatoRiga, "  $1, riga $2: $3 ($4)", "  $1, line $2: $3 ($4)"
+  voce kRinApprovatoFine,
+    "Un nome approvato cambia solo con una versione nuova: rimetti da approvare le righe elencate (Nuova versione), rinomina, poi approva con una decisione nuova.",
+    "An approved name changes only with a new version: put the listed lines back to pending approval (New version), rename, then approve with a new decision."
+  voce kRinMotIntestazione, "intestazione approvata, $1", "approved header, $1"
+  voce kRinMotRiga, "riga approvata, $1", "approved line, $1"
+  voce kRinMotBlocco, "il blocco ha righe approvate: riga $1, $2", "the block has approved lines: line $1, $2"
+  voce kRinMotProfilo, "profilo approvato, $1", "approved profile, $1"
+  voce kRinCollisione, "$1 è già usato: $2, riga $3: $4", "$1 is already used: $2, line $3: $4"
+  voce kRinCattura, "$1 è già citato in $2, riga $3, senza essere dichiarato: dopo la rinomina la citazione indicherebbe $4",
+    "$1 is already cited in $2, line $3, without being declared: after the rename the citation would indicate $4"
+  voce kRinFileEsiste, "esiste già $1: non lo sovrascrivo", "$1 already exists: I am not overwriting it"
+  voce kRinFileEsisteWin, "esiste già $1, che su Windows è lo stesso nome di $2",
+    "$1 already exists, and on Windows it is the same name as $2"
+  voce kRinDoppio, "il file $1 è in due cartelle ($2, $3): rename non sceglie quale riscrivere; indica una sola delle due cartelle",
+    "the file $1 is in two folders ($2, $3): rename does not choose which one to rewrite; give only one of the two folders"
+  voce kRinLinkSimbolico, "$1 è un collegamento simbolico: rename non lo sposta",
+    "$1 is a symbolic link: rename does not move it"
+  voce kRinPiuLink, "$1 ha più collegamenti fisici: non lo riscrivo", "$1 has more than one hard link: I am not rewriting it"
+  voce kRinIllegg, "non riesco a leggere $1 ($2): niente scritto", "I cannot read $1 ($2): nothing written"
+  voce kRinNonLeggibile, "non leggibile", "not readable"
+  voce kRinNonUtf8, "non UTF-8", "not UTF-8"
+  voce kRinGiornale, "in $1 c'è una rinomina interrotta ($2 -> $3): esegui bcdd rename --recover $1",
+    "there is an interrupted rename in $1 ($2 -> $3): run bcdd rename --recover $1"
+  voce kRinCambiato, "i file sono cambiati dopo l'anteprima: niente scritto. Rifai l'anteprima",
+    "the files have changed since the preview: nothing written. Run the preview again"
+  voce kRinTestoNonEsiste, "$1 non esiste nell'anteprima", "$1 does not exist in the preview"
+  voce kRinTestoBloccato, "$1 è in una riga approvata: resta con il nome vecchio",
+    "$1 is in an approved line: it keeps the old name"
+  voce kRinScrittura1, "non riesco a scrivere $1: $2; niente scritto", "I cannot write $1: $2; nothing written"
+  voce kRinScrittura2, "non riesco a scrivere $1: $2; i file già scritti sono tornati com'erano",
+    "I cannot write $1: $2; the files already written are back as they were"
+  voce kRinScrittura3, "scrittura interrotta su $1 ($2) e ripristino non riuscito: esegui bcdd rename --recover $3",
+    "write interrupted on $1 ($2) and recovery failed: run bcdd rename --recover $3"
+  voce kRinNoGiornale, "in $1 non c'è una rinomina interrotta", "there is no interrupted rename in $1"
+  voce kRinEstraneo, "$1 non è né il testo di prima né quello nuovo: non tocco niente; il testo di prima è in $2",
+    "$1 is neither the previous text nor the new one: I am touching nothing; the previous text is in $2"
+  voce kRinInterno1, "errore interno: il controllo di $1 cambierebbe (prima: $2; dopo: $3); niente scritto",
+    "internal error: the check of $1 would change (before: $2; after: $3); nothing written"
+  voce kRinInterno2, "errore interno: $1 non passa le regole di bcdd save; niente scritto",
+    "internal error: $1 does not pass the rules of bcdd save; nothing written"
+  voce kRinGiornaleScrivo, "bcdd $1: in $2 c'è una rinomina interrotta: non scrivo nulla; esegui bcdd rename --recover $2",
+    "bcdd $1: there is an interrupted rename in $2: I am not writing anything; run bcdd rename --recover $2"
+  voce kRinPercorsoStrano, "il percorso $1 contiene un tabulatore o un a capo: niente scritto",
+    "the path $1 contains a tab or a line feed: nothing written"
+  voce kRinGiornaleIllegibile, "non riesco a leggere il giornale $1 ($2): non tocco niente",
+    "I cannot read the journal $1 ($2): I am touching nothing"
+  voce kRinGiornaleStorto, "il giornale $1 non è nella forma attesa: non tocco niente",
+    "the journal $1 is not in the expected form: I am touching nothing"
+  # 095:10:5 C-8 (R6): la causa quando la copia del testo di prima manca o ha un'altra impronta; il messaggio di R6
+  voce kRinCopiaMancante, "copia del testo di prima mancante o diversa: $1",
+    "copy of the previous text missing or different: $1"
+  voce kRinRipristinoFallito, "ripristino non riuscito su $1 ($2): i giornali restano; elimina la causa e riesegui bcdd rename --recover $3",
+    "recovery failed on $1 ($2): the journals remain; fix the cause and run bcdd rename --recover $3 again"
+  # 095:10:2 anteprima e scrittura
+  voce kRinAnteprima, "bcdd rename: anteprima, $1 $2 -> $3", "bcdd rename: preview, $1 $2 -> $3"
+  voce kRinScritto, "bcdd rename: scritto, $1 $2 -> $3", "bcdd rename: written, $1 $2 -> $3"
+  voce kRinFileRinominato, "file rinominato: $1 -> $2", "file renamed: $1 -> $2"
+  voce kRinFileNonRinominato, "il file $1 non si rinomina: non si chiama come il blocco",
+    "the file $1 is not renamed: it is not named like the block"
+  voce kRinRiga, "  riga $1: ", "  line $1: "
+  voce kRinTestiTitolo, "testi ([x] cambia, [ ] resta, [=] resta: riga approvata):",
+    "texts ([x] changes, [ ] stays, [=] stays: approved line):"
+  voce kRinTesto, "  t$1 [$2] $3, riga $4, $5: $6", "  t$1 [$2] $3, line $4, $5: $6"
+  voce kRinCatStringa, "stringa", "string"
+  voce kRinCatCommento, "commento", "comment"
+  voce kRinCatNonRic, "non riconosciuta", "unrecognised"
+  voce kRinControllo, "controllo: invariato su $1", "check: unchanged on $1"
+  # 095:10:6 C-9: il nome contato, al singolare solo con il numero 1 (§7.3, nota 3)
+  voce kRinNumRighe1, "1 riga", "1 line"
+  voce kRinNumRigheN, "$1 righe", "$1 lines"
+  voce kRinNumFile1, "1 file", "1 file"
+  voce kRinNumFileN, "$1 file", "$1 files"
+  voce kRinImpronta, "impronta: $1", "fingerprint: $1"
+  voce kRinPerScrivere, "per scrivere: $1", "to write: $1"
+  voce kRinRiepilogo, "nomi cambiati: $1 in $2; testi cambiati: $3; testi rimasti con il nome vecchio: $4",
+    "names changed: $1 in $2; texts changed: $3; texts left with the old name: $4"
+  voce kRinRipristinoCompleto, "bcdd rename: la rinomina era già scritta per intero: tolti copie e giornali",
+    "bcdd rename: the rename was already fully written: copies and journals removed"
+  voce kRinRipristinoIndietro, "bcdd rename: i file sono com'erano prima della rinomina: tolti copie e giornali",
+    "bcdd rename: the files are back as they were before the rename: copies and journals removed"
+  # 095:10:3 valori enumerati del JSON di bcdd rename (uguali nelle due lingue: non si traducono) e cause di un errore di scrittura
+  voce kRinJsonIntestazione, "intestazione approvata", "intestazione approvata"
+  voce kRinJsonRiga, "riga approvata", "riga approvata"
+  voce kRinJsonBlocco, "blocco con righe approvate", "blocco con righe approvate"
+  voce kRinJsonProfilo, "profilo approvato", "profilo approvato"
+  voce kRinCausaEsiste, "esiste già", "already exists"
+  voce kRinCausaDiverso, "il file scritto non coincide con il testo controllato", "the written file does not match the checked text"
   # 095:9:9 fine del catalogo
 
 proc modello*(k: Chiave, lg: Lingua): string =
